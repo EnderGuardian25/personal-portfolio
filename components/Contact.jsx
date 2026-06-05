@@ -32,7 +32,7 @@ export default function Contact() {
               style={{
                 writingMode: "vertical-rl",
                 transform: "rotate(180deg)",
-                fontSize: "clamp(3rem, 5.8vw, 6.5rem)",
+                fontSize: "7rem",
               }}
             >
               hello.

@@ -10,7 +10,7 @@ export default function Footer() {
         <div className="col-span-12 md:col-span-4 text-center font-display italic text-ink text-xl">
           Made by hand, in Colombo.
         </div>
-        <div className="col-span-12 md:col-span-4 md:text-right font-mono text-[11px] uppercase tracking-[0.2em] text-ink-soft">
+        <div className="col-span-12 md:col-span-4 text-right font-mono text-[11px] uppercase tracking-[0.2em] text-ink-soft">
           v0.1 / Always evolving
         </div>
       </div>
