@@ -25,7 +25,7 @@ export default function Resume() {
         <div className="col-span-12 md:col-span-3 md:text-right">
           <Reveal delay={0.2}>
             <a
-              href="/resume.pdf"
+              href="/damiandc-resume.pdf"
               download
               data-hover
               className="group inline-flex items-center gap-3 px-6 py-4 border border-ink rounded-full hover:bg-ink hover:text-ivory transition-colors duration-500"
