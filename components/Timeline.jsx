@@ -14,7 +14,7 @@ const entries = [
     year: "2026",
     title: "Ranmal Flora",
     place: "Client project · solo build",
-    detail: "Designed and built a small florist site as a study in layout, colour, and warmth.",
+    detail: "Designed and built the website for Sri Lanka's foremost tissue culture laboratory — bridging cutting-edge biotechnology with clean, accessible design.",
   },
   {
     year: "2026",

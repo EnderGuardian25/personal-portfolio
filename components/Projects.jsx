@@ -28,7 +28,7 @@ const projects = [
     title: "Ranmal Flora",
     year: "2026",
     blurb:
-      "A small storefront-style site for a local florist — built as a study in layout, color, and warmth.",
+      "Website for Sri Lanka's foremost tissue culture laboratory — producing 1.2 million pathogen-free plantlets annually and scaling to 6 million.",
     tags: ["HTML/CSS/JS", "Client Project", "Design"],
     href: "https://enderguardian25.github.io/ranmal-flora/",
     status: "live",
