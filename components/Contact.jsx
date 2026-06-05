@@ -11,24 +11,35 @@ const socials = [
 
 export default function Contact() {
   return (
-    <section id="contact" className="relative px-6 md:px-10 pt-32 md:pt-48 pb-64 md:pb-80 border-t border-rule overflow-hidden">
-      {/* decorative oversize word */}
-      <motion.div
-        initial={{ opacity: 0, x: -100 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
-        className="pointer-events-none absolute bottom-8 md:bottom-14 right-2 md:right-6 font-display italic text-electric/15 text-[22vw] leading-none select-none"
-        aria-hidden
-      >
-        hello.
-      </motion.div>
-
+    <section
+      id="contact"
+      className="relative px-6 md:px-10 pt-32 md:pt-48 pb-20 md:pb-32 border-t border-rule overflow-hidden"
+    >
       <div className="grid grid-cols-12 gap-6 relative">
-        <div className="col-span-12 md:col-span-3">
+
+        {/* Left column — label at top, "hello." pinned beside the socials grid */}
+        <div className="col-span-12 md:col-span-3 flex flex-col">
           <div className="section-label">§ 07 — Contact</div>
+
+          {/* Spacer pushes "hello." down so it sits level with the socials */}
+          <div className="hidden md:flex flex-1 items-end mt-8">
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+              aria-hidden
+              className="pointer-events-none select-none font-display italic leading-[0.82] text-electric/20"
+              /* clamp: min 2rem · fluid 5.8vw · max 6.5rem
+                 At 1280px → ~74px. Fills the ~280px column without overflowing. */
+              style={{ fontSize: "clamp(2rem, 5.8vw, 6.5rem)" }}
+            >
+              hello.
+            </motion.div>
+          </div>
         </div>
 
+        {/* Right column — all content */}
         <div className="col-span-12 md:col-span-9 md:col-start-4">
           <Reveal>
             <h2 className="font-display text-6xl md:text-[9rem] leading-[0.88] tracking-ultra text-ink">

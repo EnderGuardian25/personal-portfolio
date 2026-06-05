@@ -5,20 +5,17 @@ import { useRef } from "react";
 const easeOut = [0.22, 1, 0.36, 1];
 
 function Word({ children, delay = 0 }) {
-  // px/-mx pair: the overflow-hidden mask gets horizontal breathing room so
-  // slanted italic glyphs (and trailing punctuation) aren't clipped, while the
-  // negative margin keeps the visual layout position unchanged.
+  // No overflow-hidden here — clipping is handled at the line-div level so
+  // italic glyph overhang is never cut on either side.
   return (
-    <span className="inline-block overflow-hidden align-bottom px-[0.16em] -mx-[0.16em]">
-      <motion.span
-        initial={{ y: "110%" }}
-        animate={{ y: 0 }}
-        transition={{ duration: 1.1, ease: easeOut, delay }}
-        className="inline-block"
-      >
-        {children}
-      </motion.span>
-    </span>
+    <motion.span
+      initial={{ y: "110%" }}
+      animate={{ y: 0 }}
+      transition={{ duration: 1.1, ease: easeOut, delay }}
+      className="inline-block"
+    >
+      {children}
+    </motion.span>
   );
 }
 
@@ -58,10 +55,10 @@ export default function Hero() {
 
       <motion.div style={{ y, opacity }} className="relative px-6 md:px-10">
         <h1 className="font-display tracking-tightest leading-[0.82] text-ink text-[17vw] md:text-[13.5vw] uppercase">
-          <div className="flex flex-wrap items-end gap-x-[0.04em]">
+          <div className="overflow-hidden pb-[0.04em] flex flex-wrap items-end gap-x-[0.04em]">
             <Word delay={0.4}>Damian</Word>
           </div>
-          <div className="flex flex-wrap items-end gap-x-[0.04em] -mt-2 md:-mt-4">
+          <div className="overflow-hidden pb-[0.04em] flex flex-wrap items-end gap-x-[0.04em] -mt-2 md:-mt-4">
             <Word delay={0.55}>
               <span className="italic font-display text-electric">de&nbsp;</span>
             </Word>

@@ -1,6 +1,5 @@
 "use client";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { motion } from "framer-motion";
 import Reveal from "./Reveal";
 
 const projects = [
@@ -31,7 +30,7 @@ const projects = [
     blurb:
       "A small storefront-style site for a local florist — built as a study in layout, color, and warmth.",
     tags: ["HTML/CSS/JS", "Client Project", "Design"],
-    href: "https://enderguardian25.github.io/Ranmal-Flora/",
+    href: "https://enderguardian25.github.io/ranmal-flora/",
     status: "live",
   },
   {
@@ -57,15 +56,10 @@ const projects = [
 ];
 
 function Card({ p, i }) {
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], [40, -40]);
-
   const isSoon = p.status === "soon";
   const isExternal = p.href.startsWith("http");
   return (
     <motion.a
-      ref={ref}
       href={p.href}
       target={isExternal ? "_blank" : undefined}
       rel={isExternal ? "noopener noreferrer" : undefined}
@@ -80,8 +74,7 @@ function Card({ p, i }) {
         </div>
 
         <div className="col-span-12 md:col-span-6">
-          <motion.h3
-            style={{ y }}
+          <h3
             className="font-display text-5xl md:text-7xl leading-[0.9] tracking-tight text-ink group-hover:text-electric transition-colors duration-500"
           >
             {p.title}
@@ -90,7 +83,7 @@ function Card({ p, i }) {
                 soon
               </sup>
             )}
-          </motion.h3>
+          </h3>
           <p className="mt-5 md:mt-7 max-w-md text-base md:text-lg leading-relaxed text-ink-soft">
             {p.blurb}
           </p>
@@ -150,7 +143,7 @@ export default function Projects() {
           </Reveal>
           <Reveal delay={0.1}>
             <p className="mt-6 max-w-xl text-base md:text-lg text-ink-soft">
-              Two projects out in the world. Three more in motion. This shelf will keep growing
+              Three projects out in the world. Two more in motion. This shelf will keep growing
               year over year — bookmark it.
             </p>
           </Reveal>
