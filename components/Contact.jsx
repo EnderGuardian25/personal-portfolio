@@ -1,4 +1,5 @@
 "use client";
+import { motion } from "framer-motion";
 import Reveal from "./Reveal";
 
 const socials = [
@@ -16,10 +17,27 @@ export default function Contact() {
     >
       <div className="grid grid-cols-12 gap-6 relative">
 
-        {/* Left column — label at top, "hello." pinned beside the socials grid */}
+        {/* Left column — label at top, "hello." vertical beside the socials grid */}
         <div className="col-span-12 md:col-span-3 flex flex-col">
           <div className="section-label">§ 07 — Contact</div>
 
+          <div className="hidden md:flex flex-1 items-center justify-start mt-8 overflow-hidden">
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+              aria-hidden
+              className="pointer-events-none select-none font-display italic leading-none text-electric/15"
+              style={{
+                writingMode: "vertical-rl",
+                transform: "rotate(180deg)",
+                fontSize: "clamp(3rem, 5.8vw, 6.5rem)",
+              }}
+            >
+              hello.
+            </motion.div>
+          </div>
         </div>
 
         {/* Right column — all content */}
