@@ -37,7 +37,7 @@ export default function Resume() {
                 ↓
               </span>
             </a>
-            <div className="mt-3 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-soft/60">
+            <div className="mt-3 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-faint">
               PDF · v1 · 2026
             </div>
           </Reveal>

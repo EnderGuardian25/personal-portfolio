@@ -40,7 +40,7 @@ export default function Hero() {
       >
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.6, duration: 0.8 }}>
           <div>N 6.9271° / E 79.8612°</div>
-          <div className="mt-1 opacity-60">Colombo · Sri Lanka</div>
+          <div className="mt-1 text-ink-faint">Colombo · Sri Lanka</div>
         </motion.div>
       </motion.div>
       <motion.div
@@ -49,7 +49,7 @@ export default function Hero() {
       >
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.6, duration: 0.8 }}>
           <div>(001)</div>
-          <div className="mt-1 opacity-60">Index / Landing</div>
+          <div className="mt-1 text-ink-faint">Index / Landing</div>
         </motion.div>
       </motion.div>
 

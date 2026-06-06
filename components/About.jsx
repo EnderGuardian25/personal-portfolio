@@ -9,7 +9,7 @@ export default function About() {
           <Reveal>
             <div className="sticky top-32">
               <div className="section-label mb-3">§ 01 — About</div>
-              <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-soft opacity-60">
+              <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-faint">
                 Notes on the maker
               </div>
             </div>

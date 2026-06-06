@@ -1,5 +1,6 @@
 import { Instrument_Serif, Manrope, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import MotionProvider from "@/components/MotionProvider";
 
 const display = Instrument_Serif({
   subsets: ["latin"],
@@ -82,7 +83,7 @@ export default function RootLayout({ children }) {
       <body className="font-sans bg-ivory text-ink antialiased">
         <div className="grain" aria-hidden />
         <div className="top-fade" aria-hidden />
-        {children}
+        <MotionProvider>{children}</MotionProvider>
       </body>
     </html>
   );
