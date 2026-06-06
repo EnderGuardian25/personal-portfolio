@@ -26,8 +26,14 @@ export const metadata = {
   metadataBase: new URL("https://damiandecruz.com"),
   openGraph: {
     title: "Damian De Cruz — Creative Technologist",
-    description: "Code, design, and curious side projects.",
+    description: "Code, design, and curious side projects. BSc Computer Science @ IIT Colombo.",
     type: "website",
+    siteName: "Damian De Cruz",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Damian De Cruz — Creative Technologist",
+    description: "Code, design, and curious side projects. BSc Computer Science @ IIT Colombo.",
   },
 };
 
