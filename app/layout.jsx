@@ -23,7 +23,7 @@ export const metadata = {
   title: "DDC - Creative Technologist",
   description:
     "Portfolio of Damian De Cruz — reading BSc (Hons) Computer Science at the Informatics Institute of Technology (University of Westminster), Sri Lanka. Building at the intersection of code and design.",
-  metadataBase: new URL("https://damiandecruz.com"),
+  metadataBase: new URL("https://damiandc.com"),
   openGraph: {
     title: "Damian De Cruz — Creative Technologist",
     description: "Code, design, and curious side projects. BSc Computer Science @ IIT Colombo.",
