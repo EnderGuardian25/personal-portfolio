@@ -7,6 +7,9 @@ git pull origin main
 echo "→ Installing dependencies..."
 npm install --legacy-peer-deps
 
+echo "→ Clearing old build..."
+rm -rf .next
+
 echo "→ Building..."
 npm run build
 
