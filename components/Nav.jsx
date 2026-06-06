@@ -1,6 +1,7 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import ThemeToggle from "./ThemeToggle";
 
 const links = [
   { href: "#about", label: "About" },
@@ -18,53 +19,59 @@ export default function Nav() {
         initial={{ y: -40, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
-        className="fixed top-0 left-0 right-0 z-50 mix-blend-multiply"
+        className="fixed top-0 left-0 right-0 z-50 mix-blend-multiply dark:mix-blend-screen"
       >
         <div className="px-6 md:px-10 py-6 flex items-center justify-between">
           <a href="#top" className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink">
             <span className="opacity-50">DDC</span> / <span>Portfolio &rsquo;26</span>
           </a>
 
-          {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-8">
-            {links.map((l) => (
-              <a
-                key={l.href}
-                href={l.href}
-                className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink link-line"
-              >
-                {l.label}
-              </a>
-            ))}
-          </nav>
+          {/* Right cluster: nav links · theme toggle · availability · mobile menu */}
+          <div className="flex items-center gap-6 md:gap-8">
+            {/* Desktop nav */}
+            <nav className="hidden md:flex items-center gap-8">
+              {links.map((l) => (
+                <a
+                  key={l.href}
+                  href={l.href}
+                  className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink link-line"
+                >
+                  {l.label}
+                </a>
+              ))}
+            </nav>
 
-          <span className="hidden md:inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-ink">
-            <span className="w-1.5 h-1.5 rounded-full bg-electric animate-pulse" />
-            Available · 2026
-          </span>
+            <div className="flex items-center gap-4">
+              <ThemeToggle />
+              <span className="hidden md:inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-ink">
+                <span className="w-1.5 h-1.5 rounded-full bg-electric animate-pulse" />
+                Available · 2026
+              </span>
+            </div>
 
-          {/* Mobile hamburger */}
-          <button
-            className="md:hidden flex flex-col justify-center gap-[5px] w-8 h-8 relative z-50"
-            onClick={() => setOpen((o) => !o)}
-            aria-label={open ? "Close menu" : "Open menu"}
-          >
-            <motion.span
-              animate={open ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
-              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              className="block h-px w-full bg-ink origin-center"
-            />
-            <motion.span
-              animate={open ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
-              transition={{ duration: 0.2 }}
-              className="block h-px w-full bg-ink"
-            />
-            <motion.span
-              animate={open ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }}
-              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              className="block h-px w-full bg-ink origin-center"
-            />
-          </button>
+            {/* Mobile hamburger */}
+            <button
+              className="md:hidden flex flex-col justify-center gap-[5px] w-8 h-8 relative z-50"
+              onClick={() => setOpen((o) => !o)}
+              aria-label={open ? "Close menu" : "Open menu"}
+            >
+              <motion.span
+                animate={open ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                className="block h-px w-full bg-ink origin-center"
+              />
+              <motion.span
+                animate={open ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
+                transition={{ duration: 0.2 }}
+                className="block h-px w-full bg-ink"
+              />
+              <motion.span
+                animate={open ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }}
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                className="block h-px w-full bg-ink origin-center"
+              />
+            </button>
+          </div>
         </div>
       </motion.header>
 
