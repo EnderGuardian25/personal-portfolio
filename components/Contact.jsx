@@ -19,7 +19,7 @@ export default function Contact() {
 
         {/* Left column — label at top, "hello." vertical beside the socials grid */}
         <div className="col-span-12 md:col-span-3 flex flex-col">
-          <div className="section-label">§ 07 — Contact</div>
+          <div className="section-label">§ 08 — Contact</div>
 
           <div className="hidden md:flex flex-1 items-center justify-start mt-8 overflow-hidden">
             <motion.div

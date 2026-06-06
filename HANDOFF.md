@@ -9,6 +9,7 @@
 - **Repo:** https://github.com/EnderGuardian25/personal-portfolio (`main` branch)
 - **Local path:** `D:\personal-portfolio`
 - **Last commit:** `1cad459` — feat: use real hero screenshot as OG image (1200x630 crop)
+- **Active branch:** `feature/nothing-ddc` — Lens section + photography pipeline (uncommitted)
 
 ---
 
@@ -57,12 +58,18 @@ components/
   Projects.jsx        — selected work (5 projects)
   Timeline.jsx        — chronological milestones
   Resume.jsx          — CV download
+  Lens.jsx            — phone photography gallery (private IG mirror)
   Contact.jsx         — email + socials, vertical "hello." accent
   Footer.jsx          — v0.1 / Always Evolving
 
 public/
   og.png              — 1200x630 OG image (real hero screenshot, top-cropped)
   damiandc-resume.pdf — downloadable CV
+  photography/        — optimized 1600px-wide JPEGs served to Lens.jsx
+  photography/originals/ — raw phone JPEGs (untouched, ~3-8MB each)
+
+scripts/
+  optimize-photos.mjs — sharp-based resize: originals/ → photography/, max 1600px, JPEG q82
 
 ecosystem.config.js   — PM2 config (name: damiandc-website, port: 3000)
 ```
@@ -70,7 +77,9 @@ ecosystem.config.js   — PM2 config (name: damiandc-website, port: 3000)
 ---
 
 ## Sections (in order)
-`§ 01 Hero` · `§ 02 About` · `§ 03 Leadership` · `§ 04 Selected Work` · `§ 05 Timeline` · `§ 06 Resume` · `§ 07 Contact`
+`§ 01 About` · `§ 02 Beyond the Code` · `§ 03 Stack` · `§ 04 Selected Work` · `§ 05 Timeline` · `§ 06 Résumé` · `§ 07 Lens` · `§ 08 Contact`
+
+> Note: Hero has no `§` label. Section numbering starts at About.
 
 ---
 
@@ -119,7 +128,21 @@ Ranmal Flora description: *"Website for Sri Lanka's foremost tissue culture labo
 - 2020 — Video games as a hobby
 - 2018 — Where it began (Scratch, Micro:bit & Arduino)
 
-### Contact
+### Lens (§ 07)
+- Private IG mirror — curated phone photography hosted on the site itself (IG account `@nothing._.ddc` stays private).
+- Photo entries live in the `photos` array at the top of `components/Lens.jsx` — `{ n, src, caption, location }`. Set `src: null` for a placeholder card.
+- All shots tagged as "shot on Nothing Phone (3a) Pro" in the section blurb.
+- CTA: outbound to https://www.instagram.com/nothing._.ddc/ with copy "Private account — request access for the full feed."
+- Card hover: tile lifts (`whileHover y:-4`); image itself does NOT zoom (user preference).
+
+#### Adding new photos
+1. Drop raw phone JPEG into `public/photography/originals/`.
+2. Run `npm run optimize-photos` (uses sharp — devDep, allow-scripts approved).
+3. Output `.jpg` lands in `public/photography/` (resized to max 1600px wide, ~85% smaller).
+4. Add a new entry to the `photos` array in `components/Lens.jsx` pointing at `/photography/<filename>.jpg`.
+5. URL-encode any spaces or parens in filenames (e.g. `IMG_x (1).jpg` → `IMG_x%20(1).jpg`).
+
+### Contact (§ 08)
 - Email: damianmdc@outlook.com (italic display link)
 - LinkedIn: @damian-de-cruz
 - GitHub: @EnderGuardian25
