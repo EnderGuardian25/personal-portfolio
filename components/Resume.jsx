@@ -3,7 +3,7 @@ import Reveal from "./Reveal";
 
 export default function Resume() {
   return (
-    <section className="relative px-6 md:px-10 py-32 md:py-44 border-t border-rule">
+    <section id="resume" className="relative px-6 md:px-10 py-32 md:py-44 border-t border-rule">
       <div className="grid grid-cols-12 gap-6 items-center">
         <div className="col-span-12 md:col-span-3">
           <div className="section-label">§ 06 — Résumé</div>
