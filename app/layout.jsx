@@ -29,11 +29,13 @@ export const metadata = {
     description: "Code, design, and curious side projects. BSc Computer Science @ IIT Colombo.",
     type: "website",
     siteName: "Damian De Cruz",
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Damian De Cruz — Creative Technologist" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Damian De Cruz — Creative Technologist",
     description: "Code, design, and curious side projects. BSc Computer Science @ IIT Colombo.",
+    images: ["/og.png"],
   },
 };
 
