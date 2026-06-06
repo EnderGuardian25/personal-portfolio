@@ -55,7 +55,7 @@ function Card({ p, i }) {
                     "radial-gradient(120% 80% at 30% 20%, rgba(37,99,235,0.18), transparent 60%), radial-gradient(120% 80% at 80% 100%, rgba(11,31,58,0.12), transparent 55%)",
                 }}
               />
-              <div className="relative font-mono text-[10px] uppercase tracking-[0.22em] text-ink-soft/70">
+              <div className="relative font-mono text-[10px] uppercase tracking-[0.22em] text-ink-faint">
                 Frame {p.n} · soon
               </div>
             </div>
@@ -77,7 +77,7 @@ function Card({ p, i }) {
               {p.caption || "Untitled"}
             </div>
           </div>
-          <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-soft/60 whitespace-nowrap">
+          <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-faint whitespace-nowrap">
             {p.location || "—"}
           </div>
         </div>
@@ -120,7 +120,7 @@ export default function Lens() {
 
       <div className="mt-12 md:mt-16 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
         <Reveal>
-          <p className="max-w-md font-mono text-[11px] uppercase tracking-[0.2em] text-ink-soft/70">
+          <p className="max-w-md font-mono text-[11px] uppercase tracking-[0.2em] text-ink-faint">
             Private account — request access for the full feed.
           </p>
         </Reveal>
