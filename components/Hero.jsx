@@ -30,7 +30,7 @@ export default function Hero() {
   return (
     <section id="top" ref={ref} className="relative min-h-screen w-full overflow-hidden pt-44 md:pt-52">
       {/* atmospheric blue blob */}
-      <div className="absolute -top-40 -right-32 w-[60vw] h-[60vw] rounded-full bg-sky/70 blur-3xl blob pointer-events-none" />
+      <div className="absolute -top-40 -right-32 w-[60vw] h-[60vw] rounded-full bg-sky/70 dark:bg-sky/40 blur-3xl blob pointer-events-none" />
       <div className="absolute top-1/3 -left-40 w-[40vw] h-[40vw] rounded-full bg-mist blur-3xl blob pointer-events-none" style={{ animationDelay: "-6s" }} />
 
       {/* corner metadata — coordinates top-left, index top-right; both fade out on scroll */}

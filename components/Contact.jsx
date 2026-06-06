@@ -1,13 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import Reveal from "./Reveal";
-
-const socials = [
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/damian-de-cruz/", handle: "@damian-de-cruz" },
-  { label: "GitHub", href: "https://github.com/EnderGuardian25", handle: "@EnderGuardian25" },
-  { label: "Instagram", href: "https://www.instagram.com/damian._.dc", handle: "@damian._.dc" },
-  { label: "Discord", href: "https://discord.com/users/1123626535786659910", handle: "enderguardian_22" },
-];
+import { SOCIALS, EMAIL } from "@/lib/site";
 
 export default function Contact() {
   return (
@@ -57,11 +51,11 @@ export default function Contact() {
 
           <Reveal delay={0.15}>
             <a
-              href="mailto:damianmdc@outlook.com"
+              href={`mailto:${EMAIL}`}
               data-hover
               className="group mt-8 inline-flex items-center gap-3 link-line font-display text-2xl md:text-4xl italic text-ink"
             >
-              damianmdc@outlook.com
+              {EMAIL}
               <span className="font-sans not-italic text-base transition-transform duration-500 group-hover:translate-x-1.5">
                 →
               </span>
@@ -69,7 +63,7 @@ export default function Contact() {
           </Reveal>
 
           <div className="mt-14 md:mt-20 grid grid-cols-1 md:grid-cols-2 gap-px bg-rule border-y border-rule">
-            {socials.map((s, i) => (
+            {SOCIALS.map((s, i) => (
               <Reveal key={s.label} delay={i * 0.06}>
                 <a
                   href={s.href}

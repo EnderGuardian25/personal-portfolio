@@ -1,18 +1,58 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ThemeToggle from "./ThemeToggle";
-
-const links = [
-  { href: "#about", label: "About" },
-  { href: "#work", label: "Work" },
-  { href: "#timeline", label: "Timeline" },
-  { href: "#resume", label: "Résumé" },
-  { href: "#contact", label: "Contact" },
-];
+import Availability from "./Availability";
+import { NAV_LINKS, SHORT_YEAR } from "@/lib/site";
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
+  const overlayRef = useRef(null);
+  const buttonRef = useRef(null);
+
+  // Accessibility for the mobile menu: Escape closes it, Tab is trapped inside,
+  // focus moves in on open and returns to the toggle on close, and background
+  // scroll is locked while it's open.
+  useEffect(() => {
+    if (!open) return;
+
+    const getFocusables = () =>
+      overlayRef.current
+        ? Array.from(overlayRef.current.querySelectorAll('a[href], button:not([disabled])'))
+        : [];
+
+    getFocusables()[0]?.focus();
+
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        return;
+      }
+      if (e.key === "Tab") {
+        const items = getFocusables();
+        if (!items.length) return;
+        const firstEl = items[0];
+        const lastEl = items[items.length - 1];
+        if (e.shiftKey && document.activeElement === firstEl) {
+          e.preventDefault();
+          lastEl.focus();
+        } else if (!e.shiftKey && document.activeElement === lastEl) {
+          e.preventDefault();
+          firstEl.focus();
+        }
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = prevOverflow;
+      buttonRef.current?.focus();
+    };
+  }, [open]);
 
   return (
     <>
@@ -25,12 +65,12 @@ export default function Nav() {
         <div className="px-6 md:px-10 py-6 flex items-center justify-between">
           {/* Left: logo */}
           <a href="#top" className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink">
-            <span className="opacity-50">DDC</span> / <span>Portfolio &rsquo;26</span>
+            <span className="opacity-50">DDC</span> / <span>Portfolio &rsquo;{SHORT_YEAR}</span>
           </a>
 
           {/* Centre: nav links (desktop) */}
           <nav className="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
-            {links.map((l) => (
+            {NAV_LINKS.map((l) => (
               <a
                 key={l.href}
                 href={l.href}
@@ -44,16 +84,16 @@ export default function Nav() {
           {/* Right: theme toggle + availability + mobile hamburger */}
           <div className="flex items-center gap-4">
             <ThemeToggle />
-            <span className="hidden md:inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-ink">
-              <span className="w-1.5 h-1.5 rounded-full bg-electric animate-pulse" />
-              Available · 2026
-            </span>
+            <Availability className="hidden md:inline-flex" />
 
             {/* Mobile hamburger */}
             <button
+              ref={buttonRef}
               className="md:hidden flex flex-col justify-center gap-[5px] w-8 h-8 relative z-50"
               onClick={() => setOpen((o) => !o)}
               aria-label={open ? "Close menu" : "Open menu"}
+              aria-expanded={open}
+              aria-controls="mobile-menu"
             >
               <motion.span
                 animate={open ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
@@ -79,6 +119,11 @@ export default function Nav() {
       <AnimatePresence>
         {open && (
           <motion.div
+            ref={overlayRef}
+            id="mobile-menu"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Site menu"
             initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -16 }}
@@ -86,7 +131,7 @@ export default function Nav() {
             className="fixed inset-0 z-40 bg-ivory/95 backdrop-blur-sm flex flex-col items-start justify-center px-8 md:hidden"
           >
             <nav className="flex flex-col gap-8">
-              {links.map((l, i) => (
+              {NAV_LINKS.map((l, i) => (
                 <motion.a
                   key={l.href}
                   href={l.href}
@@ -101,15 +146,14 @@ export default function Nav() {
               ))}
             </nav>
 
-            <motion.span
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.35, duration: 0.4 }}
-              className="mt-16 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-ink"
+              className="mt-16"
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-electric animate-pulse" />
-              Available · 2026
-            </motion.span>
+              <Availability className="inline-flex" />
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
