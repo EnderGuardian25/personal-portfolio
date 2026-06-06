@@ -1,5 +1,5 @@
 # DDC Portfolio — Session Handoff
-> Generated: 2026-06-06 | Branch: `main`
+> Generated: 2026-06-06 | Updated: 2026-06-06 | Branch: `main`
 
 ---
 
@@ -8,8 +8,7 @@
 - **Owner:** Damian De Cruz — Creative Technologist, BSc (Hons) Computer Science, IIT Sri Lanka (University of Westminster)
 - **Repo:** https://github.com/EnderGuardian25/personal-portfolio (`main` branch)
 - **Local path:** `D:\personal-portfolio`
-- **Last commit:** `1cad459` — feat: use real hero screenshot as OG image (1200x630 crop)
-- **Active branch:** `feature/nothing-ddc` — Lens section + photography pipeline (uncommitted)
+- **Last commit:** `4304637` — photography page added (Lens section merged to main)
 
 ---
 
