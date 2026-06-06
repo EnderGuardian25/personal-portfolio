@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: "portfolio",
+      name: "damiandc-website",
       script: "node_modules/.bin/next",
       args: "start",
       cwd: "./",
