@@ -7,6 +7,7 @@ import Skills from "@/components/Skills";
 import Projects from "@/components/Projects";
 import Timeline from "@/components/Timeline";
 import Resume from "@/components/Resume";
+import Lens from "@/components/Lens";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import Cursor from "@/components/Cursor";
@@ -27,6 +28,7 @@ export default function Home() {
         <Projects />
         <Timeline />
         <Resume />
+        <Lens />
         <Contact />
         <Footer />
       </main>
