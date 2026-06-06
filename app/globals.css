@@ -46,12 +46,16 @@ html, body {
 
 html { scroll-behavior: smooth; }
 
-/* Smooth cross-fade when the theme flips. Scoped to base layer so
-   per-element transition-* utilities (hovers) still win. */
+/* Smooth cross-fade when the theme flips.
+   Only background-color and border-color on *, so Framer Motion's
+   own colour/opacity transitions on text elements aren't overridden.
+   body gets an explicit color transition for the base text fade. */
 @layer base {
   *, *::before, *::after {
-    transition: background-color 0.45s ease, border-color 0.45s ease,
-      color 0.45s ease, fill 0.45s ease, stroke 0.45s ease;
+    transition: background-color 0.45s ease, border-color 0.45s ease;
+  }
+  body {
+    transition: background-color 0.45s ease, color 0.45s ease;
   }
 }
 
