@@ -54,6 +54,16 @@ export default function Hero() {
       </motion.div>
 
       <motion.div style={{ y, opacity }} className="relative px-6 md:px-10">
+        {/* Role kicker — fades in before the name animates */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.8, ease: easeOut }}
+          className="mb-4 md:mb-6 font-mono text-[11px] uppercase tracking-[0.22em] text-ink-soft"
+        >
+          Creative Technologist · Code × Design
+        </motion.div>
+
         <h1 className="font-display tracking-tightest leading-[0.82] text-ink text-[17vw] md:text-[13.5vw] uppercase">
           <div className="overflow-hidden pb-[0.04em] flex flex-wrap items-end gap-x-[0.04em]">
             <Word delay={0.4}>Damian</Word>

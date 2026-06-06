@@ -44,7 +44,7 @@ html, body {
   text-rendering: optimizeLegibility;
 }
 
-html { scroll-behavior: smooth; }
+/* scroll-behavior: smooth intentionally omitted — Lenis handles smooth scrolling */
 
 /* Smooth cross-fade when the theme flips.
    Only background-color and border-color on *, so Framer Motion's
@@ -60,6 +60,13 @@ html { scroll-behavior: smooth; }
 }
 
 ::selection { background: rgb(var(--c-ink)); color: rgb(var(--c-ivory)); }
+
+/* Keyboard focus ring — electric token works in both light and dark themes */
+:focus-visible {
+  outline: 2px solid rgb(var(--c-electric));
+  outline-offset: 3px;
+  border-radius: 2px;
+}
 
 /* Grain overlay */
 .grain {
@@ -107,7 +114,15 @@ html { scroll-behavior: smooth; }
 }
 .blob { animation: float-slow 14s ease-in-out infinite; }
 
-/* Custom cursor — mix-blend-difference keeps it legible on either theme */
+/* Custom cursor — hide native arrow on true pointer devices so the
+   custom dot+ring is the only cursor. Touch/stylus devices keep the
+   default cursor untouched. */
+@media (hover: hover) and (pointer: fine) {
+  html, body, a, button, [data-hover], [role="button"] {
+    cursor: none !important;
+  }
+}
+
 .cursor-dot, .cursor-ring {
   position: fixed; top: 0; left: 0;
   pointer-events: none; z-index: 70;
