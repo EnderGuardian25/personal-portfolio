@@ -35,6 +35,16 @@ const projects = [
   },
   {
     n: "04",
+    title: "Danella De Cruz",
+    year: "2026",
+    blurb:
+      "Portfolio and booking site for an upcoming vocal artist — a clean, expressive stage for her music, story, and performance schedule.",
+    tags: ["Next.js", "Client Work", "Music"],
+    href: "#",
+    status: "soon",
+  },
+  {
+    n: "05",
     title: "Project Field",
     year: "2026",
     blurb:
@@ -44,7 +54,7 @@ const projects = [
     status: "soon",
   },
   {
-    n: "05",
+    n: "06",
     title: "Coursework Archive",
     year: "2026 →",
     blurb:
@@ -152,7 +162,7 @@ export default function Projects() {
           </Reveal>
           <Reveal delay={0.1}>
             <p className="mt-6 max-w-xl text-base md:text-lg text-ink-soft">
-              Three projects out in the world. Two more in motion. This shelf will keep growing
+              Three projects out in the world. Three more in motion. This shelf will keep growing
               year over year — bookmark it.
             </p>
           </Reveal>
