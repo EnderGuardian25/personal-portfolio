@@ -12,6 +12,13 @@ const entries = [
   },
   {
     year: "2026",
+    title: "Danella De Cruz",
+    place: "Client project · Portfolio & Booking",
+    detail:
+      "Designing and building a portfolio and booking website for an upcoming vocal artist — giving her music and story a proper stage online.",
+  },
+  {
+    year: "2026",
     title: "Ranmal Flora",
     place: "Client project · solo build",
     detail: "Designed and built the website for Sri Lanka's foremost tissue culture laboratory — bridging cutting-edge biotechnology with clean, accessible design.",
@@ -21,13 +28,6 @@ const entries = [
     title: "Personal Dashboard",
     place: "Side project",
     detail: "A self-updating homepage I open every morning. RSS, reading queue, and quick links.",
-  },
-  {
-    year: "2026",
-    title: "Danella De Cruz",
-    place: "Client project · Portfolio & Booking",
-    detail:
-      "Designing and building a portfolio and booking website for an upcoming vocal artist — giving her music and story a proper stage online.",
   },
   {
     year: "2025 — 2026",
