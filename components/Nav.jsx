@@ -12,12 +12,14 @@ export default function Nav() {
   const buttonRef = useRef(null);
   const pathname = usePathname();
   const isHome = pathname === "/";
+  const isServices = pathname === "/services";
 
   // In-page anchors (#id) only resolve on the homepage. From any other route
   // (e.g. /services), rewrite them to "/#id" so they navigate home and scroll.
   const resolveHref = (href) =>
     href.startsWith("#") && !isHome ? `/${href}` : href;
-  const logoHref = isHome ? "#top" : "/";
+  const logoHref = isHome || isServices ? "#top" : "/";
+  const logoLabel = isServices ? `Services ’${SHORT_YEAR}` : `Portfolio ’${SHORT_YEAR}`;
 
   // Accessibility for the mobile menu: Escape closes it, Tab is trapped inside,
   // focus moves in on open and returns to the toggle on close, and background
@@ -74,7 +76,7 @@ export default function Nav() {
         <div className="px-6 md:px-10 py-6 flex items-center justify-between">
           {/* Left: logo */}
           <a href={logoHref} className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink">
-            <span className="opacity-50">DDC</span> / <span>Portfolio &rsquo;{SHORT_YEAR}</span>
+            <span className="opacity-50">DDC</span> / <span>{logoLabel}</span>
           </a>
 
           {/* Centre: nav links (desktop) */}
