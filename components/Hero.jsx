@@ -43,15 +43,27 @@ export default function Hero() {
           <div className="mt-1 text-ink-faint">Colombo · Sri Lanka</div>
         </motion.div>
       </motion.div>
-      <motion.div
-        style={{ opacity: metaOpacity }}
-        className="absolute top-28 right-6 md:right-10 section-label text-right"
-      >
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.6, duration: 0.8 }}>
-          <div>(001)</div>
-          <div className="mt-1 text-ink-faint">Index / Landing</div>
+      <div className="absolute top-28 right-6 md:right-10 flex flex-col items-end gap-4 z-10">
+        <motion.div style={{ opacity: metaOpacity }} className="section-label text-right">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.6, duration: 0.8 }}>
+            <div>(001)</div>
+            <div className="mt-1 text-ink-faint">Index / Landing</div>
+          </motion.div>
         </motion.div>
-      </motion.div>
+
+        {/* Prominent Services CTA — stays visible while at the top, scrolls away with the hero */}
+        <motion.a
+          href="/services"
+          data-hover
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.9, duration: 0.6, ease: easeOut }}
+          className="group inline-flex items-center gap-2 bg-electric px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.2em] text-ivory hover:bg-electric/90 transition-colors duration-300"
+        >
+          Services
+          <span className="transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
+        </motion.a>
+      </div>
 
       <motion.div style={{ y, opacity }} className="relative px-6 md:px-10">
         {/* Role kicker — fades in before the name animates */}
