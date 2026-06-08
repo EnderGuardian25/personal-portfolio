@@ -14,11 +14,19 @@ export default function SmoothScroll() {
     });
 
     // Lenis only smooths wheel events by default — anchor link clicks (#about,
-    // #work, etc.) bypass it and cause an instant native browser jump. This
-    // intercepts those clicks and delegates them to lenis.scrollTo() so the
+    // #work, etc.) bypass it and cause an instant native browser jump. We
+    // intercept those clicks and delegate them to lenis.scrollTo() so the
     // smooth scroll kicks in and whileInView animations trigger properly.
+    //
+    // Uses a single delegated listener on `document` rather than attaching to a
+    // one-time snapshot of anchors. This catches every in-page anchor — including
+    // links rendered after mount (e.g. the ServicesNav links and the mobile-menu
+    // overlays, which are conditionally rendered) — so all pages behave alike.
     function handleAnchorClick(e) {
-      const href = e.currentTarget.getAttribute("href");
+      const anchor = e.target.closest?.('a[href^="#"]');
+      if (!anchor) return;
+
+      const href = anchor.getAttribute("href");
       if (!href) return;
 
       if (href === "#top" || href === "#") {
@@ -36,8 +44,7 @@ export default function SmoothScroll() {
       }
     }
 
-    const anchors = document.querySelectorAll('a[href^="#"]');
-    anchors.forEach((a) => a.addEventListener("click", handleAnchorClick));
+    document.addEventListener("click", handleAnchorClick);
 
     function raf(time) {
       lenis.raf(time);
@@ -46,7 +53,7 @@ export default function SmoothScroll() {
     requestAnimationFrame(raf);
 
     return () => {
-      anchors.forEach((a) => a.removeEventListener("click", handleAnchorClick));
+      document.removeEventListener("click", handleAnchorClick);
       lenis.destroy();
     };
   }, []);

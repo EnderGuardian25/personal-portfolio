@@ -23,7 +23,7 @@
 - **Owner:** Damian De Cruz — Creative Technologist, BSc (Hons) Computer Science, IIT Sri Lanka (University of Westminster)
 - **Repo:** https://github.com/EnderGuardian25/personal-portfolio (`v2` branch — see warning above)
 - **Local path:** `D:\personal-portfolio`
-- **Last commit (v2):** `eaacc20` — full ServicesNav with section links + mobile menu
+- **Last commit (v2):** `<pending>` — delegated smooth-scroll for all in-page anchors (incl. ServicesNav)
 
 ---
 
@@ -85,9 +85,10 @@ All of the following were added on the `v2` branch and are absent from productio
 - Services removed from `NAV_LINKS` (homepage keeps 5 clean scroll anchors; avoids breaking smooth-scroll feel)
 
 ### Lenis Smooth Scroll Fix
-- `SmoothScroll.jsx` now intercepts all `a[href^="#"]` click events
-- Calls `lenis.scrollTo(target, { offset: -80 })` so `whileInView` animations fire correctly
-- Without this fix, native anchor jumps bypass Lenis and `whileInView` triggers all at once
+- `SmoothScroll.jsx` intercepts all `a[href^="#"]` clicks via a **single delegated listener on `document`** (`e.target.closest('a[href^="#"]')`)
+- Calls `lenis.scrollTo(target, { offset: -80 })` so smooth scroll runs and `whileInView` animations fire correctly
+- Delegation (not a one-time `querySelectorAll` snapshot) means it catches links rendered *after* mount too — the `ServicesNav` links and both navs' conditionally-rendered mobile-menu overlays now smooth-scroll on every page
+- Without this, native anchor jumps bypass Lenis and `whileInView` triggers all at once
 
 ### Hero
 - Kicker: `"Creative Technologist · Freelance Web Designer"`
@@ -170,7 +171,7 @@ components/
   Availability.jsx      — reusable pulse dot + "Available · 2026"
   MotionProvider.jsx    — <MotionConfig reducedMotion="user"> wrapper
   ClientEnhancements.jsx— lazy-loads Cursor + SmoothScroll (ssr:false)
-  SmoothScroll.jsx      — Lenis init + anchor click interception (lenis.scrollTo with offset -80)
+  SmoothScroll.jsx      — Lenis init + delegated anchor click interception on document (lenis.scrollTo, offset -80)
   Hero.jsx              — oversized name, kicker, scroll parallax, corner + mobile Services buttons
   About.jsx             — bio, "What I build" + "How I work" + Services link
   Services.jsx          — full /services page content (6 sections, pricing, WhatsApp + email CTAs)
@@ -317,7 +318,7 @@ Ranmal Flora description: *"Website for Sri Lanka's foremost tissue culture labo
 9. **Soon cards** — `motion.div` (not `motion.a`), `opacity-60 cursor-default select-none`, no `data-hover`
 10. **Services not in `NAV_LINKS`** — it's a route, not an anchor; adding it breaks the smooth-scroll feel and clutters the nav; surface via in-page links instead
 11. **Dark mode Services button** — `dark:bg-ink dark:text-ivory` (NOT `dark:bg-ivory` — ivory is navy in dark mode, ink is white)
-12. **Lenis anchors** — all `a[href^="#"]` clicks must go through `lenis.scrollTo()` in `SmoothScroll.jsx`; bypassing Lenis causes `whileInView` animations to misfire
+12. **Lenis anchors** — `SmoothScroll.jsx` uses ONE delegated `click` listener on `document` (`e.target.closest('a[href^="#"]')`), NOT a `querySelectorAll` snapshot. Keep it delegated — a snapshot misses links rendered after mount (ServicesNav, mobile overlays), causing native jumps that make `whileInView` animations misfire
 
 ---
 
