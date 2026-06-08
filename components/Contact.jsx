@@ -44,8 +44,10 @@ export default function Contact() {
 
           <Reveal delay={0.1}>
             <p className="mt-8 md:mt-10 max-w-xl text-lg md:text-xl text-ink-soft leading-relaxed">
-              Internships, collaborations, classmates from IIT, or anyone with a good idea — the
-              inbox is open. Pick the channel you like.
+              Need a website? I take on freelance web design and development for businesses and
+              creatives — many projects delivered within a couple of days. Internships,
+              collaborations, classmates from IIT, or anyone with a good idea — the inbox is open.
+              Pick the channel you like.
             </p>
           </Reveal>
 
