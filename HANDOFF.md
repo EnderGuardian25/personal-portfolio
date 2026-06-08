@@ -23,7 +23,7 @@
 - **Owner:** Damian De Cruz — Creative Technologist, BSc (Hons) Computer Science, IIT Sri Lanka (University of Westminster)
 - **Repo:** https://github.com/EnderGuardian25/personal-portfolio (`v2` branch — see warning above)
 - **Local path:** `D:\personal-portfolio`
-- **Last commit (v2):** `<pending>` — delegated smooth-scroll for all in-page anchors (incl. ServicesNav)
+- **Last commit (v2):** `d3fa299` — delegated smooth-scroll for all in-page anchors (incl. ServicesNav)
 
 ---
 
