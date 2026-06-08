@@ -1,6 +1,8 @@
 "use client";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 import Reveal from "./Reveal";
-import { EMAIL, WHATSAPP_LINK, YEAR } from "@/lib/site";
+import { EMAIL, WHATSAPP_LINK } from "@/lib/site";
 
 const services = [
   {
@@ -107,11 +109,41 @@ function CTAButtons() {
 }
 
 export default function Services() {
+  const introRef = useRef(null);
+  const { scrollYProgress } = useScroll({ target: introRef, offset: ["start start", "end start"] });
+  // The (001) index label fades quickly on scroll, exactly like the homepage hero.
+  const metaOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
+
   return (
     <>
       {/* Intro */}
-      <section id="top" className="relative px-6 md:px-10 pt-40 md:pt-56 pb-20 md:pb-28 overflow-hidden">
+      <section id="top" ref={introRef} className="relative px-6 md:px-10 pt-40 md:pt-56 pb-20 md:pb-28 overflow-hidden">
         <div className="absolute -top-40 -right-32 w-[55vw] h-[55vw] rounded-full bg-sky/60 dark:bg-sky/30 blur-3xl blob pointer-events-none" />
+
+        {/* Corner index + Portfolio CTA — mirrors the homepage hero's top-right
+            block (index label that fades on scroll, electric button below it).
+            Desktop only; mobile reaches the portfolio via the nav overlay. */}
+        <div className="hidden md:flex absolute top-28 right-6 md:right-10 flex-col items-end gap-4 z-10">
+          <motion.div style={{ opacity: metaOpacity }} className="section-label text-right">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5, duration: 0.8 }}>
+              <div>(001)</div>
+              <div className="mt-1 text-ink-faint">Index / Landing</div>
+            </motion.div>
+          </motion.div>
+
+          <motion.a
+            href="/"
+            data-hover
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="group inline-flex items-center gap-2 bg-electric text-ivory hover:bg-electric/90 dark:bg-ink dark:text-ivory dark:hover:bg-ink/90 px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.2em] transition-colors duration-300"
+          >
+            Portfolio
+            <span className="transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
+          </motion.a>
+        </div>
+
         <div className="grid grid-cols-12 gap-6 relative">
           <div className="col-span-12 md:col-span-3">
             <Reveal>

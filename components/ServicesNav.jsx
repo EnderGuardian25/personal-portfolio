@@ -108,10 +108,11 @@ export default function ServicesNav() {
             ))}
           </nav>
 
-          {/* Right: theme toggle + Portfolio button + mobile hamburger */}
+          {/* Right: theme toggle + mobile hamburger. The desktop Portfolio CTA
+              lives in the hero corner (Services.jsx), mirroring the homepage
+              hero's Services button — not in the header. */}
           <div className="flex items-center gap-4">
             <ThemeToggle />
-            <PortfolioButton className="hidden md:inline-flex" />
 
             {/* Mobile hamburger */}
             <button
