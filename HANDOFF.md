@@ -23,7 +23,7 @@
 - **Owner:** Damian De Cruz — Creative Technologist, BSc (Hons) Computer Science, IIT Sri Lanka (University of Westminster)
 - **Repo:** https://github.com/EnderGuardian25/personal-portfolio (`v2` branch — see warning above)
 - **Local path:** `D:\personal-portfolio`
-- **Last commit (v2):** `307d41c` — dynamic logo label + top link on services page
+- **Last commit (v2):** `eaacc20` — full ServicesNav with section links + mobile menu
 
 ---
 
@@ -73,14 +73,16 @@ All of the following were added on the `v2` branch and are absent from productio
   - Portfolio & booking — from LKR 65,000 / $800, 5–7 days
   - Redesign & refresh — from LKR 25,000 / $200, 2–3 days
 - CTA buttons: WhatsApp (electric fill) + email (outline) — constants from `lib/site.js`
-- Nav logo reads **DDC / Services '26** on this page (not Portfolio), and links to `#top`
-- **Not** in the navbar — surfaced via in-page links from About and Hero instead
+- Uses its own `ServicesNav` (logo **DDC / Services '26**, section links, **Portfolio →** button) — see Navigation above
+- Recent Work section has a **See the full portfolio →** link (→ `/`) plus a "This Portfolio" project card
+- "Start a project" CTA section: label in left column, no redundant "Or reach me at" line (email CTA covers it)
+- Page itself is **not** in the homepage navbar — surfaced via in-page links from About and Hero instead
 
 ### Navigation
-- `usePathname()` — `resolveHref()` rewrites `#anchor` → `/#anchor` when on a non-home route
-- Logo href: `#top` on homepage and `/services`; `/` on all other routes
-- Logo label: `"Portfolio '26"` on homepage; `"Services '26"` on `/services`
-- Services removed from `NAV_LINKS` (kept 5 clean scroll anchors; avoids breaking smooth-scroll feel)
+- **Two separate navbars** — the homepage uses `Nav.jsx`; `/services` uses its own `ServicesNav.jsx`
+- `Nav.jsx` (homepage): logo `"Portfolio '26"` → `#top`; `usePathname()` + `resolveHref()` rewrites `#anchor` → `/#anchor` on non-home routes (defensive — only the homepage currently uses it)
+- `ServicesNav.jsx` (`/services`): logo `"Services '26"` → `#top`; centred section links (Services · Process · Work · FAQ → `#what-i-do`, `#process`, `#recent`, `#faq`); electric **Portfolio →** button mirroring the hero Services button; theme toggle; accessible mobile menu (hamburger → overlay, focus trap, Escape, scroll lock)
+- Services removed from `NAV_LINKS` (homepage keeps 5 clean scroll anchors; avoids breaking smooth-scroll feel)
 
 ### Lenis Smooth Scroll Fix
 - `SmoothScroll.jsx` now intercepts all `a[href^="#"]` click events
@@ -159,10 +161,11 @@ app/
   sitemap.js            — homepage + /services entries
 
   services/
-    page.jsx            — /services metadata, OfferCatalog JSON-LD, renders Nav + Services + Footer
+    page.jsx            — /services metadata, OfferCatalog JSON-LD, renders ServicesNav + Services + Footer
 
 components/
-  Nav.jsx               — fixed header; dynamic logo label/href per route; ThemeToggle; desktop nav + a11y mobile menu
+  Nav.jsx               — homepage fixed header; ThemeToggle; desktop nav + a11y mobile menu (NAV_LINKS)
+  ServicesNav.jsx       — /services fixed header; section links + Portfolio button + ThemeToggle + a11y mobile menu
   ThemeToggle.jsx       — sun/moon animated toggle, localStorage + .dark class
   Availability.jsx      — reusable pulse dot + "Available · 2026"
   MotionProvider.jsx    — <MotionConfig reducedMotion="user"> wrapper
@@ -226,14 +229,19 @@ ecosystem.config.js     — PM2 config (name: damiandc-website, port: 3000)
 - Services button mobile: below "currently" grid — `md:hidden`, fades with hero `opacity` transform
 - Section padding: `pt-44 md:pt-52`
 
-### Nav
+### Nav (homepage — `Nav.jsx`)
 - Links: About · Work · Timeline · Résumé · Contact (from `NAV_LINKS` in `lib/site.js`)
-- Logo homepage: `DDC / Portfolio '26` → `#top`
-- Logo /services: `DDC / Services '26` → `#top`
-- Logo elsewhere: `DDC / Portfolio '26` → `/`
+- Logo: `DDC / Portfolio '26` → `#top` (→ `/` if ever rendered off-home)
 - "Available · 2026" — `<Availability />` component with pulse dot, NOT a link
 - `<ThemeToggle />` — sun/moon, next to availability on desktop
 - Mobile: hamburger (3 lines → X), full-screen overlay with italic large links + Availability
+
+### ServicesNav (`/services` — `ServicesNav.jsx`)
+- Logo: `DDC / Services '26` → `#top`
+- Links: Services · Process · Work · FAQ (→ `#what-i-do`, `#process`, `#recent`, `#faq`) — local `SERVICES_LINKS` array in the component, smooth-scrolled by SmoothScroll/Lenis
+- Right: `<ThemeToggle />` + electric **Portfolio →** button (links to `/`, mirrors the hero Services button; `mix-blend-normal isolate` keeps it solid in the multiply-blended header)
+- Mobile: hamburger → full-screen overlay with italic large links + Portfolio button (same a11y pattern as Nav)
+- No "Available" badge here (kept focused; the homepage nav carries it)
 
 ### Projects
 | # | Title | Status | Notes |
