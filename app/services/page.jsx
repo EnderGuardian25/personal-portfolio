@@ -1,4 +1,4 @@
-import Nav from "@/components/Nav";
+import ServicesNav from "@/components/ServicesNav";
 import Footer from "@/components/Footer";
 import Services from "@/components/Services";
 import ClientEnhancements from "@/components/ClientEnhancements";
@@ -83,7 +83,7 @@ export default function ServicesPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(servicesJsonLd) }}
       />
       <ClientEnhancements />
-      <Nav />
+      <ServicesNav />
       <main className="relative">
         <Services />
         <Footer />

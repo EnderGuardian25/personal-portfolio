@@ -249,6 +249,16 @@ export default function Services() {
                 A few things I&rsquo;ve <span className="italic text-electric">shipped</span>.
               </h2>
             </Reveal>
+            <Reveal delay={0.1}>
+              <a
+                href="/"
+                data-hover
+                className="group mt-5 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-electric link-line"
+              >
+                See the full portfolio
+                <span className="transition-transform duration-500 group-hover:translate-x-1">→</span>
+              </a>
+            </Reveal>
           </div>
         </div>
 
