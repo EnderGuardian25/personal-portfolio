@@ -2,6 +2,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import ThemeToggle from "./ThemeToggle";
+import Availability from "./Availability";
 import { SHORT_YEAR } from "@/lib/site";
 
 // In-page section anchors for the /services route. These resolve on this page
@@ -113,6 +114,7 @@ export default function ServicesNav() {
               hero's Services button — not in the header. */}
           <div className="flex items-center gap-4">
             <ThemeToggle />
+            <Availability className="hidden md:inline-flex" />
 
             {/* Mobile hamburger */}
             <button
@@ -178,9 +180,10 @@ export default function ServicesNav() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.35, duration: 0.4 }}
-              className="mt-16"
+              className="mt-16 flex flex-col items-start gap-8"
             >
               <PortfolioButton onClick={() => setOpen(false)} />
+              <Availability className="inline-flex" />
             </motion.div>
           </motion.div>
         )}
