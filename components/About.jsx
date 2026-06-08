@@ -34,6 +34,14 @@ export default function About() {
                 for businesses and creatives in Colombo and beyond. Tools, generative experiments,
                 and client builds that sit at the edge of software and design.
               </p>
+              <a
+                href="/services"
+                data-hover
+                className="group mt-4 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-electric link-line"
+              >
+                Services &amp; pricing
+                <span className="transition-transform duration-500 group-hover:translate-x-1">→</span>
+              </a>
             </Reveal>
             <Reveal delay={0.25}>
               <h3 className="section-label mb-4">How I work</h3>
