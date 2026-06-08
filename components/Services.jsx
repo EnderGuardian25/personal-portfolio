@@ -320,10 +320,12 @@ export default function Services() {
       <section id="start" className="relative px-6 md:px-10 py-28 md:py-40 border-t border-rule overflow-hidden">
         <div className="absolute -bottom-40 -left-32 w-[55vw] h-[55vw] rounded-full bg-sky/50 dark:bg-sky/25 blur-3xl blob pointer-events-none" />
         <div className="grid grid-cols-12 gap-6 relative">
-          <div className="col-span-12 md:col-span-9 md:col-start-4">
+          <div className="col-span-12 md:col-span-3">
             <Reveal>
-              <div className="section-label mb-6">§ — Start a project</div>
+              <div className="section-label">§ — Start a project</div>
             </Reveal>
+          </div>
+          <div className="col-span-12 md:col-span-9 md:col-start-4">
             <Reveal delay={0.1}>
               <h2 className="font-display text-5xl md:text-8xl leading-[0.9] tracking-tight text-ink">
                 Let&rsquo;s build <span className="italic text-electric">your</span> site.
@@ -339,14 +341,6 @@ export default function Services() {
               <div className="mt-10">
                 <CTAButtons />
               </div>
-            </Reveal>
-            <Reveal delay={0.4}>
-              <p className="mt-8 font-mono text-[11px] uppercase tracking-[0.2em] text-ink-faint">
-                Or reach me at{" "}
-                <a href={`mailto:${EMAIL}`} className="text-ink link-line">
-                  {EMAIL}
-                </a>
-              </p>
             </Reveal>
           </div>
         </div>
