@@ -124,7 +124,7 @@ export default function Services() {
           <div className="col-span-12 md:col-span-9 md:col-start-4">
             <Reveal delay={0.05}>
               <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-soft mb-5">
-                Freelance · Colombo, Sri Lanka · Available {YEAR}
+                Freelance · Colombo, Sri Lanka
               </div>
             </Reveal>
             <Reveal delay={0.1}>
