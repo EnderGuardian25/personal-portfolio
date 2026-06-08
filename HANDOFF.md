@@ -23,7 +23,7 @@
 - **Owner:** Damian De Cruz — Creative Technologist, BSc (Hons) Computer Science, IIT Sri Lanka (University of Westminster)
 - **Repo:** https://github.com/EnderGuardian25/personal-portfolio (`v2` branch — see warning above)
 - **Local path:** `D:\personal-portfolio`
-- **Last commit (v2):** `3ddecb9` — remove redundant mobile hero Services button; doc refresh
+- **Last commit (v2):** `250968e` — number services sections with homepage § 0N scheme
 
 ---
 
