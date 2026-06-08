@@ -160,8 +160,19 @@ export default function Nav() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.35, duration: 0.4 }}
-              className="mt-16"
+              className="mt-16 flex flex-col items-start gap-8"
             >
+              {/* Cross-link to the services page — mirrors the Portfolio button
+                  in the services nav's mobile overlay. */}
+              <a
+                href="/services"
+                data-hover
+                onClick={() => setOpen(false)}
+                className="group inline-flex items-center gap-2 bg-electric text-ivory hover:bg-electric/90 dark:bg-ink dark:text-ivory dark:hover:bg-ink/90 px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.2em] transition-colors duration-300"
+              >
+                Services
+                <span className="transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
+              </a>
               <Availability className="inline-flex" />
             </motion.div>
           </motion.div>
