@@ -23,7 +23,7 @@
 - **Owner:** Damian De Cruz — Creative Technologist, BSc (Hons) Computer Science, IIT Sri Lanka (University of Westminster)
 - **Repo:** https://github.com/EnderGuardian25/personal-portfolio (`v2` branch — see warning above)
 - **Local path:** `D:\personal-portfolio`
-- **Last commit (v2):** `d3fa299` — delegated smooth-scroll for all in-page anchors (incl. ServicesNav)
+- **Last commit (v2):** `<pending>` — remove redundant mobile hero Services button; doc refresh
 
 ---
 
@@ -73,15 +73,17 @@ All of the following were added on the `v2` branch and are absent from productio
   - Portfolio & booking — from LKR 65,000 / $800, 5–7 days
   - Redesign & refresh — from LKR 25,000 / $200, 2–3 days
 - CTA buttons: WhatsApp (electric fill) + email (outline) — constants from `lib/site.js`
-- Uses its own `ServicesNav` (logo **DDC / Services '26**, section links, **Portfolio →** button) — see Navigation above
-- Recent Work section has a **See the full portfolio →** link (→ `/`) plus a "This Portfolio" project card
+- Uses its own `ServicesNav` (logo **DDC / Services '26**, section links Pricing · Process · Work · FAQ) — see Navigation above
+- **Hero corner block mirrors the homepage hero**: `(002) Services / Hire` label (fades on scroll via `useScroll`/`metaOpacity`) with an electric **Portfolio →** button below it, desktop only (`hidden md:flex`)
+- Hero left-column label reads **Damian De Cruz** (not "Services" — avoids triple-repeating the word on landing)
+- Recent Work section has a **See the full portfolio →** link (→ `/`) plus a **"My Portfolio"** project card (→ `/`)
 - "Start a project" CTA section: label in left column, no redundant "Or reach me at" line (email CTA covers it)
-- Page itself is **not** in the homepage navbar — surfaced via in-page links from About and Hero instead
+- Page itself is **not** in the homepage navbar — surfaced via in-page links from About + the homepage hero corner button instead
 
 ### Navigation
-- **Two separate navbars** — the homepage uses `Nav.jsx`; `/services` uses its own `ServicesNav.jsx`
-- `Nav.jsx` (homepage): logo `"Portfolio '26"` → `#top`; `usePathname()` + `resolveHref()` rewrites `#anchor` → `/#anchor` on non-home routes (defensive — only the homepage currently uses it)
-- `ServicesNav.jsx` (`/services`): logo `"Services '26"` → `#top`; centred section links (Services · Process · Work · FAQ → `#what-i-do`, `#process`, `#recent`, `#faq`); electric **Portfolio →** button mirroring the hero Services button; theme toggle; accessible mobile menu (hamburger → overlay, focus trap, Escape, scroll lock)
+- **Two separate, mirrored navbars** — the homepage uses `Nav.jsx`; `/services` uses its own `ServicesNav.jsx`. Both carry: section links · theme toggle · `Available · 2026` badge (desktop right + mobile overlay) · and a cross-link to the *other* page in the mobile overlay.
+- `Nav.jsx` (homepage): logo `"Portfolio '26"` → `#top`; links About · Work · Timeline · Résumé · Contact (`NAV_LINKS`); `usePathname()` + `resolveHref()` rewrites `#anchor` → `/#anchor` on non-home routes (defensive — only the homepage currently uses it); mobile overlay has a **Services →** cross-link button
+- `ServicesNav.jsx` (`/services`): logo `"Services '26"` → `#top`; centred section links (Pricing · Process · Work · FAQ → `#what-i-do`, `#process`, `#recent`, `#faq`); theme toggle; mobile overlay has a **Portfolio →** cross-link button. **No desktop nav cross-link button** — the Portfolio CTA lives in the services hero corner instead (mirrors how the homepage's Services CTA lives in its hero corner)
 - Services removed from `NAV_LINKS` (homepage keeps 5 clean scroll anchors; avoids breaking smooth-scroll feel)
 
 ### Lenis Smooth Scroll Fix
@@ -92,8 +94,8 @@ All of the following were added on the `v2` branch and are absent from productio
 
 ### Hero
 - Kicker: `"Creative Technologist · Freelance Web Designer"`
-- Services button — desktop: top-right corner, `hidden md:inline-flex`, fades in at delay 1.9s, fades out on scroll via `metaOpacity`
-- Services button — mobile: below content grid (`md:hidden`), same fade-in timing, scrolls away with content
+- Services CTA — desktop only: electric button in the top-right corner below the `(001) Index / Landing` label, `hidden md:inline-flex`, fades in at delay 1.9s
+- On **mobile** the homepage Services link lives in the **nav hamburger overlay** (no separate hero button — that was removed as redundant)
 - Button dark mode: light → `bg-electric text-ivory`; dark → `bg-ink text-ivory` (white fill, navy text)
   - Token note: `ivory` = navy in dark, `ink` = white in dark — the CSS vars swap symmetrically
 
@@ -172,9 +174,9 @@ components/
   MotionProvider.jsx    — <MotionConfig reducedMotion="user"> wrapper
   ClientEnhancements.jsx— lazy-loads Cursor + SmoothScroll (ssr:false)
   SmoothScroll.jsx      — Lenis init + delegated anchor click interception on document (lenis.scrollTo, offset -80)
-  Hero.jsx              — oversized name, kicker, scroll parallax, corner + mobile Services buttons
+  Hero.jsx              — oversized name, kicker, scroll parallax, desktop corner Services button
   About.jsx             — bio, "What I build" + "How I work" + Services link
-  Services.jsx          — full /services page content (6 sections, pricing, WhatsApp + email CTAs)
+  Services.jsx          — full /services page content (6 sections, pricing, hero corner Portfolio button, WhatsApp + email CTAs)
   Leadership.jsx        — prefect/interact roles
   Skills.jsx            — tech skills
   Projects.jsx          — selected work (live = motion.a, soon = motion.div dimmed)
@@ -226,8 +228,8 @@ ecosystem.config.js     — PM2 config (name: damiandc-website, port: 3000)
 - Kicker (above h1): `"Creative Technologist · Freelance Web Designer"` — font-mono, fades in at delay 0.2
 - Tagline: *"learning, shipping, breaking things."*
 - Top-left: coordinates (N 6.9271° / E 79.8612°) · Top-right: (001) Index/Landing — both fade on scroll via `metaOpacity`
-- Services button desktop: top-right corner below (001) label — `hidden md:inline-flex`, fades with `metaOpacity`
-- Services button mobile: below "currently" grid — `md:hidden`, fades with hero `opacity` transform
+- Services button: desktop only, top-right corner below the (001) label — `hidden md:inline-flex`, fades in at delay 1.9s
+- Mobile Services link: in the nav hamburger overlay (no separate hero button — removed as redundant)
 - Section padding: `pt-44 md:pt-52`
 
 ### Nav (homepage — `Nav.jsx`)
@@ -235,14 +237,14 @@ ecosystem.config.js     — PM2 config (name: damiandc-website, port: 3000)
 - Logo: `DDC / Portfolio '26` → `#top` (→ `/` if ever rendered off-home)
 - "Available · 2026" — `<Availability />` component with pulse dot, NOT a link
 - `<ThemeToggle />` — sun/moon, next to availability on desktop
-- Mobile: hamburger (3 lines → X), full-screen overlay with italic large links + Availability
+- Mobile: hamburger (3 lines → X), full-screen overlay with italic large links + a **Services →** cross-link button + Availability
 
 ### ServicesNav (`/services` — `ServicesNav.jsx`)
 - Logo: `DDC / Services '26` → `#top`
-- Links: Services · Process · Work · FAQ (→ `#what-i-do`, `#process`, `#recent`, `#faq`) — local `SERVICES_LINKS` array in the component, smooth-scrolled by SmoothScroll/Lenis
-- Right: `<ThemeToggle />` + electric **Portfolio →** button (links to `/`, mirrors the hero Services button; `mix-blend-normal isolate` keeps it solid in the multiply-blended header)
-- Mobile: hamburger → full-screen overlay with italic large links + Portfolio button (same a11y pattern as Nav)
-- No "Available" badge here (kept focused; the homepage nav carries it)
+- Links: Pricing · Process · Work · FAQ (→ `#what-i-do`, `#process`, `#recent`, `#faq`) — local `SERVICES_LINKS` array in the component, smooth-scrolled by SmoothScroll/Lenis
+- Right: `<ThemeToggle />` + `<Availability />` (`hidden md:inline-flex`). The Portfolio CTA is NOT here — it lives in the services hero corner (`Services.jsx`), mirroring the homepage hero
+- Mobile: hamburger → full-screen overlay with italic large links + a **Portfolio →** cross-link button + Availability (same a11y pattern as Nav)
+- `PortfolioButton` helper carries `mix-blend-normal isolate` (legacy from when it lived in the multiply-blended header; harmless in the overlay)
 
 ### Projects
 | # | Title | Status | Notes |
