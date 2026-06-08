@@ -7,7 +7,7 @@ import { SHORT_YEAR } from "@/lib/site";
 // In-page section anchors for the /services route. These resolve on this page
 // directly; SmoothScroll.jsx intercepts the clicks and Lenis-scrolls to them.
 const SERVICES_LINKS = [
-  { href: "#what-i-do", label: "Services" },
+  { href: "#what-i-do", label: "Pricing" },
   { href: "#process", label: "Process" },
   { href: "#recent", label: "Work" },
   { href: "#faq", label: "FAQ" },

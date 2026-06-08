@@ -50,7 +50,7 @@ const steps = [
 
 const work = [
   { title: "Ranmal Flora", note: "Website for Sri Lanka's foremost tissue-culture laboratory.", href: "https://enderguardian25.github.io/ranmal-flora/", tag: "Business site" },
-  { title: "This Portfolio", note: "The site you're on — built with Next.js, Tailwind & Framer Motion.", href: "/", tag: "Portfolio" },
+  { title: "My Portfolio", note: "Personal portfolio built with Next.js, Tailwind & Framer Motion — see the full body of work.", href: "/", tag: "Portfolio" },
   { title: "Personal Dashboard", note: "A self-updating homepage with RSS, a reading queue, and quick links.", href: "https://enderguardian25.github.io/personal-dashboard/", tag: "Web app" },
 ];
 
@@ -115,7 +115,7 @@ export default function Services() {
         <div className="grid grid-cols-12 gap-6 relative">
           <div className="col-span-12 md:col-span-3">
             <Reveal>
-              <div className="section-label">Services</div>
+              <div className="section-label">Damian De Cruz</div>
               <div className="mt-3 font-mono text-[11px] uppercase tracking-[0.18em] text-ink-faint">
                 Web design & development
               </div>
