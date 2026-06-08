@@ -66,7 +66,7 @@ All of the following were added on the `v2` branch and are absent from productio
 
 ### Services Page (`/services`)
 - Standalone route with its own metadata, canonical, OG, Twitter, and `OfferCatalog` JSON-LD
-- 6 sections: Intro · What I Do · How It Works · Recent Work · FAQ · Start a Project CTA
+- 6 sections: Intro (unnumbered, like the homepage hero) · `§ 01 — What I do` · `§ 02 — How it works` · `§ 03 — Recent work` · `§ 04 — FAQ` · `§ 05 — Start a project` (numbered with the same `§ 0N — Label` scheme as the homepage)
 - 4 services with LKR/USD pricing and turnarounds:
   - Web design & development — from LKR 18,000 / $150, 48–72 hrs
   - Business website — from LKR 40,000 / $500, 3–5 days

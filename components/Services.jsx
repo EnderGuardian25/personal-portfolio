@@ -184,7 +184,7 @@ export default function Services() {
       <section id="what-i-do" className="relative px-6 md:px-10 py-24 md:py-36 border-t border-rule">
         <div className="grid grid-cols-12 gap-6 mb-12 md:mb-16">
           <div className="col-span-12 md:col-span-3">
-            <div className="section-label">§ — What I do</div>
+            <div className="section-label">§ 01 — What I do</div>
           </div>
           <div className="col-span-12 md:col-span-9 md:col-start-4">
             <Reveal>
@@ -241,7 +241,7 @@ export default function Services() {
       <section id="process" className="relative px-6 md:px-10 py-24 md:py-36 border-t border-rule bg-paper">
         <div className="grid grid-cols-12 gap-6 mb-12 md:mb-16">
           <div className="col-span-12 md:col-span-3">
-            <div className="section-label">§ — How it works</div>
+            <div className="section-label">§ 02 — How it works</div>
           </div>
           <div className="col-span-12 md:col-span-9 md:col-start-4">
             <Reveal>
@@ -273,7 +273,7 @@ export default function Services() {
       <section id="recent" className="relative px-6 md:px-10 py-24 md:py-36 border-t border-rule">
         <div className="grid grid-cols-12 gap-6 mb-12 md:mb-16">
           <div className="col-span-12 md:col-span-3">
-            <div className="section-label">§ — Recent work</div>
+            <div className="section-label">§ 03 — Recent work</div>
           </div>
           <div className="col-span-12 md:col-span-9 md:col-start-4">
             <Reveal>
@@ -328,7 +328,7 @@ export default function Services() {
       <section id="faq" className="relative px-6 md:px-10 py-24 md:py-36 border-t border-rule bg-paper">
         <div className="grid grid-cols-12 gap-6 mb-12 md:mb-16">
           <div className="col-span-12 md:col-span-3">
-            <div className="section-label">§ — FAQ</div>
+            <div className="section-label">§ 04 — FAQ</div>
           </div>
           <div className="col-span-12 md:col-span-9 md:col-start-4">
             <Reveal>
@@ -364,7 +364,7 @@ export default function Services() {
         <div className="grid grid-cols-12 gap-6 relative">
           <div className="col-span-12 md:col-span-3">
             <Reveal>
-              <div className="section-label">§ — Start a project</div>
+              <div className="section-label">§ 05 — Start a project</div>
             </Reveal>
           </div>
           <div className="col-span-12 md:col-span-9 md:col-start-4">
