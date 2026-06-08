@@ -58,7 +58,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.9, duration: 0.6, ease: easeOut }}
-          className="group inline-flex items-center gap-2 bg-electric px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.2em] text-ivory hover:bg-electric/90 transition-colors duration-300"
+          className="hidden md:inline-flex items-center gap-2 bg-electric px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.2em] text-ivory hover:bg-electric/90 transition-colors duration-300 group"
         >
           Services
           <span className="transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
