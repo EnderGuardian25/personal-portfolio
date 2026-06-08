@@ -119,6 +119,19 @@ export default function Hero() {
             </div>
           </motion.div>
         </div>
+
+        {/* Mobile-only Services CTA — desktop version lives in the top-right corner */}
+        <motion.a
+          href="/services"
+          data-hover
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.9, duration: 0.6, ease: easeOut }}
+          className="md:hidden mt-12 inline-flex items-center gap-2 bg-electric text-ivory dark:bg-ink dark:text-ivory px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.2em] transition-colors duration-300 group"
+        >
+          Services
+          <span className="transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
+        </motion.a>
       </motion.div>
 
       {/* scroll indicator */}
