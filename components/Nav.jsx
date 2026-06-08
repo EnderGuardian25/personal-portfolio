@@ -1,6 +1,7 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import ThemeToggle from "./ThemeToggle";
 import Availability from "./Availability";
 import { NAV_LINKS, SHORT_YEAR } from "@/lib/site";
@@ -9,6 +10,14 @@ export default function Nav() {
   const [open, setOpen] = useState(false);
   const overlayRef = useRef(null);
   const buttonRef = useRef(null);
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+
+  // In-page anchors (#id) only resolve on the homepage. From any other route
+  // (e.g. /services), rewrite them to "/#id" so they navigate home and scroll.
+  const resolveHref = (href) =>
+    href.startsWith("#") && !isHome ? `/${href}` : href;
+  const logoHref = isHome ? "#top" : "/";
 
   // Accessibility for the mobile menu: Escape closes it, Tab is trapped inside,
   // focus moves in on open and returns to the toggle on close, and background
@@ -64,7 +73,7 @@ export default function Nav() {
       >
         <div className="px-6 md:px-10 py-6 flex items-center justify-between">
           {/* Left: logo */}
-          <a href="#top" className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink">
+          <a href={logoHref} className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink">
             <span className="opacity-50">DDC</span> / <span>Portfolio &rsquo;{SHORT_YEAR}</span>
           </a>
 
@@ -73,7 +82,7 @@ export default function Nav() {
             {NAV_LINKS.map((l) => (
               <a
                 key={l.href}
-                href={l.href}
+                href={resolveHref(l.href)}
                 className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink link-line"
               >
                 {l.label}
@@ -134,7 +143,7 @@ export default function Nav() {
               {NAV_LINKS.map((l, i) => (
                 <motion.a
                   key={l.href}
-                  href={l.href}
+                  href={resolveHref(l.href)}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.07, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
