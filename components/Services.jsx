@@ -126,8 +126,8 @@ export default function Services() {
         <div className="hidden md:flex absolute top-28 right-6 md:right-10 flex-col items-end gap-4 z-10">
           <motion.div style={{ opacity: metaOpacity }} className="section-label text-right">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5, duration: 0.8 }}>
-              <div>(001)</div>
-              <div className="mt-1 text-ink-faint">Index / Landing</div>
+              <div>(002)</div>
+              <div className="mt-1 text-ink-faint">Services / Hire</div>
             </motion.div>
           </motion.div>
 
