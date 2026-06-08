@@ -61,7 +61,7 @@ export default function Hero() {
           transition={{ delay: 0.2, duration: 0.8, ease: easeOut }}
           className="mb-4 md:mb-6 font-mono text-[11px] uppercase tracking-[0.22em] text-ink-soft"
         >
-          Creative Technologist · Code × Design
+          Creative Technologist · Freelance Web Designer
         </motion.div>
 
         <h1 className="font-display tracking-tightest leading-[0.82] text-ink text-[17vw] md:text-[13.5vw] uppercase">
