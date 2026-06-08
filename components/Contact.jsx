@@ -51,6 +51,17 @@ export default function Contact() {
             </p>
           </Reveal>
 
+          <Reveal delay={0.13}>
+            <a
+              href="/services"
+              data-hover
+              className="group mt-6 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-electric link-line"
+            >
+              See services &amp; pricing
+              <span className="transition-transform duration-500 group-hover:translate-x-1">→</span>
+            </a>
+          </Reveal>
+
           <Reveal delay={0.15}>
             <a
               href={`mailto:${EMAIL}`}
