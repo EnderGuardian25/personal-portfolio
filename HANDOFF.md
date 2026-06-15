@@ -1,29 +1,14 @@
 # DDC Portfolio — Session Handoff
-> Generated: 2026-06-06 | Updated: 2026-06-08 | Branch: `v2`
-
----
-
-## ⚠️ Branch Status
-**You are on branch `v2`. This branch is NOT deployed and NOT merged into `main` yet.**
-
-- `main` — live on https://damiandc.com (pre-v2, older code)
-- `v2` — all improvements from this and the previous session; intentionally held back for continued development
-
-### Before merging `v2` → `main`
-1. Update this document: change branch header to `main`, remove this warning block, and update "Last commit" below.
-2. Run the merge locally: `git checkout main && git merge v2 --no-ff && git push origin main`
-3. SSH into the VPS and run `~/deploy.sh`
-4. Verify live: https://damiandc.com — dark mode toggle, favicon, OG image, `/sitemap.xml`, `/robots.txt`, `/services`
-5. Submit `sitemap.xml` in Google Search Console and request indexing of homepage + `/services`
+> Generated: 2026-06-06 | Updated: 2026-06-15 | Branch: `main`
 
 ---
 
 ## Project Identity
 - **Site:** https://damiandc.com
 - **Owner:** Damian De Cruz — Creative Technologist, BSc (Hons) Computer Science, IIT Sri Lanka (University of Westminster)
-- **Repo:** https://github.com/EnderGuardian25/personal-portfolio (`v2` branch — see warning above)
+- **Repo:** https://github.com/EnderGuardian25/personal-portfolio (`main` branch)
 - **Local path:** `D:\personal-portfolio`
-- **Last commit (v2):** `250968e` — number services sections with homepage § 0N scheme
+- **Last commit:** `dad5300` — fix(pre-deploy): audit fixes — SEO, copy, cursor, cleanup
 
 ---
 
@@ -41,7 +26,7 @@
 
 ---
 
-## v2 Changes (not yet in main)
+## What's in main (shipped from v2)
 All of the following were added on the `v2` branch and are absent from production:
 
 ### Dark Mode
@@ -54,7 +39,7 @@ All of the following were added on the `v2` branch and are absent from productio
 
 ### SEO & Metadata
 - Title: `"Damian De Cruz — Creative Technologist & Freelance Web Designer"`
-- Meta description: freelance web designer/developer, Colombo, Sri Lanka, 48-hour delivery
+- Meta description: freelance web designer/developer, Colombo, Sri Lanka, delivered in days often 2–3
 - OG + Twitter cards updated to match
 - `app/icon.svg` + `app/icon.png` (512×512) + `app/apple-icon.png` (180×180) — DDC favicon
 - `app/robots.js` + `app/sitemap.js` — auto-wired by Next.js App Router; sitemap includes `/services`
@@ -337,24 +322,18 @@ npm.cmd run dev
 
 ---
 
-## Deploying (when ready — v2 is NOT deployed yet)
+## Deploying
 ```bash
-# 1. Locally — merge v2 into main
-git checkout main
-git merge v2 --no-ff -m "Merge v2: dark mode, SEO, a11y, perf, services page, content updates"
-git push origin main
-
-# 2. Update HANDOFF.md: change branch header to `main`, remove the ⚠️ warning block
-
-# 3. SSH into Hetzner VPS, then:
+# main is merged and pushed. To deploy:
+# 1. SSH into Hetzner VPS, then:
 ~/deploy.sh
 
-# 4. Verify
+# 2. Verify
 # https://damiandc.com — dark mode toggle, favicon, sitemap, OG image, /services page
 # https://damiandc.com/sitemap.xml
 # https://damiandc.com/robots.txt
 
-# 5. Post-deploy GSC tasks
+# 3. Post-deploy GSC tasks
 # - Submit sitemap.xml in Google Search Console
 # - Request indexing of https://damiandc.com and https://damiandc.com/services
 ```
