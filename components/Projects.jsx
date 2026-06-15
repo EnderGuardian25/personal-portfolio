@@ -35,11 +35,11 @@ const projects = [
   },
   {
     n: "04",
-    title: "Project Field",
+    title: "Danella De Cruz",
     year: "2026",
     blurb:
-      "Something at the intersection of LLMs and personal knowledge. In sketches.",
-    tags: ["Next.js", "AI", "WIP"],
+      "Portfolio and booking site for an upcoming vocal artist — a clean, expressive stage for her music, story, and performance schedule.",
+    tags: ["Next.js", "Client Work", "Music"],
     href: "#",
     status: "soon",
   },
@@ -57,15 +57,22 @@ const projects = [
 
 function Card({ p, i }) {
   const isSoon = p.status === "soon";
-  const isExternal = p.href.startsWith("http");
+  const isExternal = !isSoon && p.href.startsWith("http");
+
+  // Live cards are links; "soon" cards render as a non-interactive, dimmed div.
+  const Wrapper = isSoon ? motion.div : motion.a;
+  const wrapperProps = isSoon
+    ? { className: "block border-t border-rule py-10 md:py-14 first:border-t-0 opacity-60 cursor-default select-none" }
+    : {
+        href: p.href,
+        target: isExternal ? "_blank" : undefined,
+        rel: isExternal ? "noopener noreferrer" : undefined,
+        "data-hover": true,
+        className: "group block border-t border-rule py-10 md:py-14 first:border-t-0",
+      };
+
   return (
-    <motion.a
-      href={p.href}
-      target={isExternal ? "_blank" : undefined}
-      rel={isExternal ? "noopener noreferrer" : undefined}
-      data-hover
-      className="group block border-t border-rule py-10 md:py-14 first:border-t-0"
-    >
+    <Wrapper {...wrapperProps}>
       <div className="grid grid-cols-12 gap-6 items-start">
         <div className="col-span-12 md:col-span-1">
           <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink-soft">
@@ -75,7 +82,9 @@ function Card({ p, i }) {
 
         <div className="col-span-12 md:col-span-6">
           <h3
-            className="font-display text-5xl md:text-7xl leading-[0.9] tracking-tight text-ink group-hover:text-electric transition-colors duration-500"
+            className={`font-display text-5xl md:text-7xl leading-[0.9] tracking-tight text-ink transition-colors duration-500 ${
+              isSoon ? "" : "group-hover:text-electric"
+            }`}
           >
             {p.title}
             {isSoon && (
@@ -124,7 +133,7 @@ function Card({ p, i }) {
           )}
         </div>
       </div>
-    </motion.a>
+    </Wrapper>
   );
 }
 

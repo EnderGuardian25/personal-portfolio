@@ -1,28 +1,46 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { usePathname } from "next/navigation";
 import ThemeToggle from "./ThemeToggle";
 import Availability from "./Availability";
-import { NAV_LINKS, SHORT_YEAR } from "@/lib/site";
+import { SHORT_YEAR } from "@/lib/site";
 
-export default function Nav() {
+// In-page section anchors for the /services route. These resolve on this page
+// directly; SmoothScroll.jsx intercepts the clicks and Lenis-scrolls to them.
+const SERVICES_LINKS = [
+  { href: "#what-i-do", label: "Pricing" },
+  { href: "#process", label: "Process" },
+  { href: "#recent", label: "Work" },
+  { href: "#faq", label: "FAQ" },
+];
+
+// PortfolioButton — mirrors the homepage hero's "Services" button exactly
+// (electric fill, ivory text, dark-mode token inversion). mix-blend-normal +
+// isolate keep it solid inside the multiply-blended header.
+function PortfolioButton({ onClick, className = "" }) {
+  return (
+    <a
+      href="/"
+      data-hover
+      onClick={onClick}
+      className={`group inline-flex items-center gap-2 bg-electric text-ivory hover:bg-electric/90 dark:bg-ink dark:text-ivory dark:hover:bg-ink/90 mix-blend-normal isolate px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.2em] transition-colors duration-300 ${className}`}
+    >
+      Portfolio
+      <span className="transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
+    </a>
+  );
+}
+
+// Dedicated navbar for the /services route. Mirrors the homepage nav's shape
+// (logo · centred section links · controls) but with services-page anchors and
+// a Portfolio button in place of the homepage's hero "Services" button.
+export default function ServicesNav() {
   const [open, setOpen] = useState(false);
   const overlayRef = useRef(null);
   const buttonRef = useRef(null);
-  const pathname = usePathname();
-  const isHome = pathname === "/";
 
-  // In-page anchors (#id) only resolve on the homepage. From any other route,
-  // rewrite them to "/#id" so they navigate home and scroll. (The /services
-  // route uses its own ServicesNav, not this component.)
-  const resolveHref = (href) =>
-    href.startsWith("#") && !isHome ? `/${href}` : href;
-  const logoHref = isHome ? "#top" : "/";
-
-  // Accessibility for the mobile menu: Escape closes it, Tab is trapped inside,
-  // focus moves in on open and returns to the toggle on close, and background
-  // scroll is locked while it's open.
+  // Mirror the homepage mobile-menu a11y: Escape closes, Tab is trapped,
+  // focus moves in on open and back to the toggle on close, body scroll locks.
   useEffect(() => {
     if (!open) return;
 
@@ -73,17 +91,17 @@ export default function Nav() {
         className="fixed top-0 left-0 right-0 z-50 mix-blend-multiply dark:mix-blend-screen"
       >
         <div className="px-6 md:px-10 py-6 flex items-center justify-between">
-          {/* Left: logo */}
-          <a href={logoHref} className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink">
-            <span className="opacity-50">DDC</span> / <span>Portfolio &rsquo;{SHORT_YEAR}</span>
+          {/* Left: logo — scrolls back to the top of the services page */}
+          <a href="#top" className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink">
+            <span className="opacity-50">DDC</span> / <span>Services &rsquo;{SHORT_YEAR}</span>
           </a>
 
-          {/* Centre: nav links (desktop) */}
+          {/* Centre: section links (desktop) */}
           <nav className="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
-            {NAV_LINKS.map((l) => (
+            {SERVICES_LINKS.map((l) => (
               <a
                 key={l.href}
-                href={resolveHref(l.href)}
+                href={l.href}
                 className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink link-line"
               >
                 {l.label}
@@ -91,7 +109,9 @@ export default function Nav() {
             ))}
           </nav>
 
-          {/* Right: theme toggle + availability + mobile hamburger */}
+          {/* Right: theme toggle + mobile hamburger. The desktop Portfolio CTA
+              lives in the hero corner (Services.jsx), mirroring the homepage
+              hero's Services button — not in the header. */}
           <div className="flex items-center gap-4">
             <ThemeToggle />
             <Availability className="hidden md:inline-flex" />
@@ -103,7 +123,7 @@ export default function Nav() {
               onClick={() => setOpen((o) => !o)}
               aria-label={open ? "Close menu" : "Open menu"}
               aria-expanded={open}
-              aria-controls="mobile-menu"
+              aria-controls="services-mobile-menu"
             >
               <motion.span
                 animate={open ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
@@ -130,10 +150,10 @@ export default function Nav() {
         {open && (
           <motion.div
             ref={overlayRef}
-            id="mobile-menu"
+            id="services-mobile-menu"
             role="dialog"
             aria-modal="true"
-            aria-label="Site menu"
+            aria-label="Services menu"
             initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -16 }}
@@ -141,10 +161,10 @@ export default function Nav() {
             className="fixed inset-0 z-40 bg-ivory/95 backdrop-blur-sm flex flex-col items-start justify-center px-8 md:hidden"
           >
             <nav className="flex flex-col gap-8">
-              {NAV_LINKS.map((l, i) => (
+              {SERVICES_LINKS.map((l, i) => (
                 <motion.a
                   key={l.href}
-                  href={resolveHref(l.href)}
+                  href={l.href}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.07, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
@@ -162,17 +182,7 @@ export default function Nav() {
               transition={{ delay: 0.35, duration: 0.4 }}
               className="mt-16 flex flex-col items-start gap-8"
             >
-              {/* Cross-link to the services page — mirrors the Portfolio button
-                  in the services nav's mobile overlay. */}
-              <a
-                href="/services"
-                data-hover
-                onClick={() => setOpen(false)}
-                className="group inline-flex items-center gap-2 bg-electric text-ivory hover:bg-electric/90 dark:bg-ink dark:text-ivory dark:hover:bg-ink/90 px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.2em] transition-colors duration-300"
-              >
-                Services
-                <span className="transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
-              </a>
+              <PortfolioButton onClick={() => setOpen(false)} />
               <Availability className="inline-flex" />
             </motion.div>
           </motion.div>

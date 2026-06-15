@@ -2,9 +2,9 @@ import { readdir, mkdir, stat } from "node:fs/promises";
 import { join, extname, basename } from "node:path";
 import sharp from "sharp";
 
-const ROOT = new URL("../public/photography/", import.meta.url).pathname.replace(/^\//, "");
-const SRC = join(ROOT, "originals");
-const OUT = ROOT;
+const ROOT = new URL("../", import.meta.url).pathname.replace(/^\//, "");
+const SRC = join(ROOT, "assets/photography-originals");
+const OUT = join(ROOT, "public/photography");
 
 const MAX_WIDTH = 1600;
 const QUALITY = 82;

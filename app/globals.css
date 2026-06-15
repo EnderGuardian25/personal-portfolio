@@ -13,6 +13,7 @@
   --c-paper: 251 251 247;   /* #FBFBF7  elevated surface      */
   --c-ink: 11 31 58;        /* #0B1F3A  primary text          */
   --c-ink-soft: 22 49 90;   /* #16315A  secondary text        */
+  --c-ink-faint: 90 107 130;/* #5A6B82  faint micro-labels — AA-safe on ivory (~5:1), replaces low-opacity ink-soft */
   --c-electric: 37 99 235;  /* #2563EB  accent                */
   --c-sky: 219 234 254;     /* #DBEAFE  atmospheric glow       */
   --c-mist: 238 244 253;    /* #EEF4FD  soft surface glow      */
@@ -31,6 +32,7 @@
   --c-paper: 17 38 70;      /* #112646  elevated surface                       */
   --c-ink: 246 246 241;     /* #F6F6F1  ivory text — navy inverts to white      */
   --c-ink-soft: 162 180 208;/* #A2B4D0  muted blue-grey secondary text          */
+  --c-ink-faint: 142 161 192;/* #8EA1C0 faint micro-labels — AA-safe on navy (~6:1) */
   --c-electric: 59 130 246; /* #3B82F6  brightened accent for navy contrast     */
   --c-sky: 45 84 150;       /* #2D5496  luminous glow                           */
   --c-mist: 20 44 82;       /* #142C52  deep surface glow                       */
@@ -44,7 +46,7 @@ html, body {
   text-rendering: optimizeLegibility;
 }
 
-html { scroll-behavior: smooth; }
+/* scroll-behavior: smooth intentionally omitted — Lenis handles smooth scrolling */
 
 /* Smooth cross-fade when the theme flips.
    Only background-color and border-color on *, so Framer Motion's
@@ -60,6 +62,13 @@ html { scroll-behavior: smooth; }
 }
 
 ::selection { background: rgb(var(--c-ink)); color: rgb(var(--c-ivory)); }
+
+/* Keyboard focus ring — electric token works in both light and dark themes */
+:focus-visible {
+  outline: 2px solid rgb(var(--c-electric));
+  outline-offset: 3px;
+  border-radius: 2px;
+}
 
 /* Grain overlay */
 .grain {
@@ -107,7 +116,21 @@ html { scroll-behavior: smooth; }
 }
 .blob { animation: float-slow 14s ease-in-out infinite; }
 
-/* Custom cursor — mix-blend-difference keeps it legible on either theme */
+/* Custom cursor — hide native arrow on true pointer devices so the
+   custom dot+ring is the only cursor. Touch/stylus devices keep the
+   default cursor untouched. Scoped to html.js-cursor so a JS failure
+   (Cursor.jsx never mounts) leaves the native cursor visible. */
+@media (hover: hover) and (pointer: fine) {
+  html.js-cursor,
+  html.js-cursor body,
+  html.js-cursor a,
+  html.js-cursor button,
+  html.js-cursor [data-hover],
+  html.js-cursor [role="button"] {
+    cursor: none !important;
+  }
+}
+
 .cursor-dot, .cursor-ring {
   position: fixed; top: 0; left: 0;
   pointer-events: none; z-index: 70;
@@ -145,4 +168,25 @@ html { scroll-behavior: smooth; }
 .outline-num {
   -webkit-text-stroke: 1px rgb(var(--c-ink));
   color: transparent;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Reduced motion — honour the OS setting. Neutralises CSS-driven     */
+/*  loops (marquee, blobs, pulse) and the theme cross-fade. Framer     */
+/*  animations are handled via MotionConfig reducedMotion="user", and  */
+/*  Lenis is skipped in SmoothScroll.jsx.                              */
+/* ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .marquee-track,
+  .blob {
+    animation: none !important;
+  }
+  .animate-pulse {
+    animation: none !important;
+  }
 }
