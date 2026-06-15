@@ -53,7 +53,7 @@ export default function Contact() {
 
           <Reveal delay={0.15}>
             <a
-              href={`mailto:${EMAIL}`}
+              href={`mailto:${EMAIL}?subject=Website%20enquiry`}
               data-hover
               className="group mt-8 inline-flex items-center gap-3 link-line font-display text-2xl md:text-4xl italic text-ink"
             >

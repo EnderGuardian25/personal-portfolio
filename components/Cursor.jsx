@@ -6,6 +6,7 @@ export default function Cursor() {
   const ring = useRef(null);
 
   useEffect(() => {
+    document.documentElement.classList.add("js-cursor");
     let mx = 0, my = 0, rx = 0, ry = 0;
     const move = (e) => { mx = e.clientX; my = e.clientY; };
     const onOver = (e) => {
@@ -34,6 +35,7 @@ export default function Cursor() {
       cancelAnimationFrame(raf);
       window.removeEventListener("mousemove", move);
       window.removeEventListener("mouseover", onOver);
+      document.documentElement.classList.remove("js-cursor");
     };
   }, []);
 
