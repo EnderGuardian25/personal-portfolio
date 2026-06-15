@@ -23,12 +23,12 @@ const mono = JetBrains_Mono({
 export const metadata = {
   title: "Damian De Cruz — Creative Technologist & Freelance Web Designer",
   description:
-    "Damian De Cruz — freelance web designer and developer based in Colombo, Sri Lanka. Clean, fast, custom websites for businesses and creatives, often delivered within 48 hours. Available for hire.",
+    "Damian De Cruz — freelance web designer and developer based in Colombo, Sri Lanka. Clean, fast, custom websites for businesses and creatives, delivered in days, often 2–3. Available for hire.",
   metadataBase: new URL("https://damiandc.com"),
   alternates: { canonical: "/" },
   openGraph: {
     title: "Damian De Cruz — Creative Technologist & Freelance Web Designer",
-    description: "Freelance web designer & developer in Colombo, Sri Lanka. Clean, fast, custom websites — often delivered within 48 hours.",
+    description: "Freelance web designer & developer in Colombo, Sri Lanka. Clean, fast, custom websites — delivered in days, often 2–3.",
     type: "website",
     siteName: "Damian De Cruz",
     images: [{ url: "/og.jpg", width: 1200, height: 630, alt: "Damian De Cruz — Creative Technologist & Freelance Web Designer" }],
@@ -36,7 +36,7 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Damian De Cruz — Creative Technologist & Freelance Web Designer",
-    description: "Freelance web designer & developer in Colombo, Sri Lanka. Clean, fast, custom websites — often delivered within 48 hours.",
+    description: "Freelance web designer & developer in Colombo, Sri Lanka. Clean, fast, custom websites — delivered in days, often 2–3.",
     images: ["/og.jpg"],
   },
 };
@@ -79,7 +79,7 @@ const serviceJsonLd = {
   serviceType: "Web Design and Development",
   name: "Freelance Web Design & Development",
   description:
-    "Custom websites — design, build, and launch. Clean, fast, responsive sites for businesses and creatives, often delivered within 48 hours.",
+    "Custom websites — design, build, and launch. Clean, fast, responsive sites for businesses and creatives, delivered in days, often 2–3.",
   url: "https://damiandc.com",
   areaServed: {
     "@type": "Place",

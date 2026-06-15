@@ -74,6 +74,10 @@ const faqs = [
     a: "Typically 30–40% up front to begin, with the balance on delivery. For larger projects we can split it across milestones. I'll confirm the full price before any work starts.",
   },
   {
+    q: "What happens to the deposit if the project is cancelled?",
+    a: "The upfront deposit covers the scoping and design work done before a single line of code is written — that time is spent regardless of what happens next. If you cancel after work has started, the deposit is non-refundable, but you keep everything produced up to that point (designs, wireframes, any partial build). If I fail to deliver what was agreed, I'll refund in full. Either way, the full price is locked in writing before work begins — no surprises.",
+  },
+  {
     q: "Do you work with clients outside Sri Lanka?",
     a: "Yes — I work with clients anywhere. International projects are quoted in USD (roughly the figures shown), and we handle everything over email, WhatsApp, or a call.",
   },
@@ -97,7 +101,7 @@ function CTAButtons() {
         <span className="transition-transform duration-300 group-hover:translate-x-1">↗</span>
       </a>
       <a
-        href={`mailto:${EMAIL}`}
+        href={`mailto:${EMAIL}?subject=Website%20enquiry`}
         data-hover
         className="group inline-flex items-center gap-3 border border-ink px-7 py-4 font-mono text-[11px] uppercase tracking-[0.2em] text-ink hover:bg-ink hover:text-ivory transition-colors duration-300"
       >
