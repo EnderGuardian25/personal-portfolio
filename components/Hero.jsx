@@ -30,7 +30,7 @@ export default function Hero() {
   return (
     <section id="top" ref={ref} className="relative min-h-screen w-full overflow-hidden pt-44 md:pt-52">
       {/* atmospheric blue blob */}
-      <div className="absolute -top-40 -right-32 w-[60vw] h-[60vw] rounded-full bg-sky/70 blur-3xl blob pointer-events-none" />
+      <div className="absolute -top-40 -right-32 w-[60vw] h-[60vw] rounded-full bg-sky/70 dark:bg-sky/40 blur-3xl blob pointer-events-none" />
       <div className="absolute top-1/3 -left-40 w-[40vw] h-[40vw] rounded-full bg-mist blur-3xl blob pointer-events-none" style={{ animationDelay: "-6s" }} />
 
       {/* corner metadata — coordinates top-left, index top-right; both fade out on scroll */}
@@ -40,20 +40,42 @@ export default function Hero() {
       >
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.6, duration: 0.8 }}>
           <div>N 6.9271° / E 79.8612°</div>
-          <div className="mt-1 opacity-60">Colombo · Sri Lanka</div>
+          <div className="mt-1 text-ink-faint">Colombo · Sri Lanka</div>
         </motion.div>
       </motion.div>
-      <motion.div
-        style={{ opacity: metaOpacity }}
-        className="absolute top-28 right-6 md:right-10 section-label text-right"
-      >
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.6, duration: 0.8 }}>
-          <div>(001)</div>
-          <div className="mt-1 opacity-60">Index / Landing</div>
+      <div className="absolute top-28 right-6 md:right-10 flex flex-col items-end gap-4 z-10">
+        <motion.div style={{ opacity: metaOpacity }} className="section-label text-right">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.6, duration: 0.8 }}>
+            <div>(001)</div>
+            <div className="mt-1 text-ink-faint">Index / Landing</div>
+          </motion.div>
         </motion.div>
-      </motion.div>
+
+        {/* Prominent Services CTA — stays visible while at the top, scrolls away with the hero */}
+        <motion.a
+          href="/services"
+          data-hover
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.9, duration: 0.6, ease: easeOut }}
+          className="hidden md:inline-flex items-center gap-2 bg-electric text-ivory hover:bg-electric/90 dark:bg-ink dark:text-ivory dark:hover:bg-ink/90 px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.2em] transition-colors duration-300 group"
+        >
+          Services
+          <span className="transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
+        </motion.a>
+      </div>
 
       <motion.div style={{ y, opacity }} className="relative px-6 md:px-10">
+        {/* Role kicker — fades in before the name animates */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.8, ease: easeOut }}
+          className="mb-4 md:mb-6 font-mono text-[11px] uppercase tracking-[0.22em] text-ink-soft"
+        >
+          Creative Technologist · Freelance Web Designer
+        </motion.div>
+
         <h1 className="font-display tracking-tightest leading-[0.82] text-ink text-[17vw] md:text-[13.5vw] uppercase">
           <div className="overflow-hidden pb-[0.04em] flex flex-wrap items-end gap-x-[0.04em]">
             <Word delay={0.4}>Damian</Word>

@@ -42,7 +42,7 @@ export default function Skills() {
             <div className="p-8 md:p-10 h-full flex flex-col gap-6 min-h-[260px]">
               <div className="flex items-baseline justify-between">
                 <span className="section-label">{g.label}</span>
-                <span className="font-mono text-[10px] text-ink-soft/50">
+                <span className="font-mono text-[10px] text-ink-faint">
                   0{i + 1}
                 </span>
               </div>

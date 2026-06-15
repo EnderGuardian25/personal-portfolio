@@ -10,14 +10,12 @@ import Resume from "@/components/Resume";
 import Lens from "@/components/Lens";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
-import Cursor from "@/components/Cursor";
-import SmoothScroll from "@/components/SmoothScroll";
+import ClientEnhancements from "@/components/ClientEnhancements";
 
 export default function Home() {
   return (
     <>
-      <SmoothScroll />
-      <Cursor />
+      <ClientEnhancements />
       <Nav />
       <main className="relative">
         <Hero />

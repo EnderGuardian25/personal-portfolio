@@ -11,6 +11,7 @@ module.exports = {
         paper: "rgb(var(--c-paper) / <alpha-value>)",
         ink: "rgb(var(--c-ink) / <alpha-value>)",
         "ink-soft": "rgb(var(--c-ink-soft) / <alpha-value>)",
+        "ink-faint": "rgb(var(--c-ink-faint) / <alpha-value>)",
         electric: "rgb(var(--c-electric) / <alpha-value>)",
         sky: "rgb(var(--c-sky) / <alpha-value>)",
         mist: "rgb(var(--c-mist) / <alpha-value>)",
