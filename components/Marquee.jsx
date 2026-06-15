@@ -11,7 +11,7 @@ const words = [
   "✦",
   "Colombo · Sri Lanka",
   "✦",
-  "Portfolio Vol. 01",
+  "Portfolio Vol. 02",
   "✦",
 ];
 
