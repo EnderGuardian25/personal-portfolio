@@ -41,6 +41,15 @@ const services = [
     fromUSD: "$200",
     turnaround: "1–3 days",
   },
+  {
+    n: "05",
+    title: "SEO & AI visibility audit",
+    desc: "A full audit of how your site performs on Google and in AI answers — ChatGPT, Perplexity, Google AI Overviews. You get a plain-English report of what's holding you back and a prioritised roadmap to fix it.",
+    includes: ["On-page & technical SEO", "GEO / AI answer visibility score", "Priority recommendations report"],
+    fromLKR: "LKR 24,000",
+    fromUSD: "$175",
+    turnaround: "2–4 days",
+  },
 ];
 
 const steps = [
@@ -193,7 +202,7 @@ export default function Services() {
           <div className="col-span-12 md:col-span-9 md:col-start-4">
             <Reveal>
               <h2 className="font-display text-4xl md:text-6xl leading-tight tracking-tight text-ink">
-                Four ways I can <span className="italic text-electric">help</span>.
+                Five ways I can <span className="italic text-electric">help</span>.
               </h2>
             </Reveal>
           </div>
