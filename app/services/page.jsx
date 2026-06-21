@@ -134,6 +134,13 @@ const servicesJsonLd = {
         price: "25000",
         description: "Visual refreshes and performance / Core Web Vitals optimisation.",
       },
+      {
+        "@type": "Offer",
+        itemOffered: { "@type": "Service", name: "SEO & AI visibility audit" },
+        priceCurrency: "LKR",
+        price: "24000",
+        description: "On-page, technical, and GEO audit — how the site ranks on Google and surfaces in AI answers, with a priority roadmap.",
+      },
     ],
   },
 };
