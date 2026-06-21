@@ -1,6 +1,9 @@
 import { Instrument_Serif, Manrope, JetBrains_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import MotionProvider from "@/components/MotionProvider";
+
+const GA_ID = "G-PC1HZKKSEC";
 
 const display = Instrument_Serif({
   subsets: ["latin"],
@@ -107,6 +110,13 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body className="font-sans bg-ivory text-ink antialiased">
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="ga-init" strategy="afterInteractive">
+          {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}');`}
+        </Script>
         <div className="grain" aria-hidden />
         <div className="top-fade" aria-hidden />
         <MotionProvider>{children}</MotionProvider>
