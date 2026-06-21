@@ -46,9 +46,27 @@ const services = [
     title: "SEO & AI visibility audit",
     desc: "A full audit of how your site performs on Google and in AI answers — ChatGPT, Perplexity, Google AI Overviews. You get a plain-English report of what's holding you back and a prioritised roadmap to fix it.",
     includes: ["On-page & technical SEO", "GEO / AI answer visibility score", "Priority recommendations report"],
-    fromLKR: "LKR 24,000",
-    fromUSD: "$175",
+    fromLKR: "LKR 50,000",
+    fromUSD: "$299",
     turnaround: "2–4 days",
+  },
+  {
+    n: "06",
+    title: "SEO & GEO implementation",
+    desc: "Already have an audit? I'll implement the fixes — technical corrections, schema markup, content restructuring, and AI snippet optimisation — so your site actually climbs the rankings it should.",
+    includes: ["Technical & on-page fixes", "Schema & structured data", "AI snippet optimisation"],
+    fromLKR: "LKR 65,000",
+    fromUSD: "$400",
+    turnaround: "1–2 weeks",
+  },
+  {
+    n: "07",
+    title: "Ongoing SEO & GEO retainer",
+    desc: "Monthly management of your search and AI visibility — regular health checks, content updates, and monitoring across Google and AI answer engines, with a report each month.",
+    includes: ["Monthly SEO health checks", "GEO monitoring & updates", "Monthly performance report"],
+    fromLKR: "LKR 35,000",
+    fromUSD: "$175",
+    turnaround: "Monthly",
   },
 ];
 
@@ -202,7 +220,7 @@ export default function Services() {
           <div className="col-span-12 md:col-span-9 md:col-start-4">
             <Reveal>
               <h2 className="font-display text-4xl md:text-6xl leading-tight tracking-tight text-ink">
-                Five ways I can <span className="italic text-electric">help</span>.
+                Seven ways I can <span className="italic text-electric">help</span>.
               </h2>
             </Reveal>
           </div>
