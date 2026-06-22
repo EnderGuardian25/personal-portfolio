@@ -53,7 +53,7 @@ const services = [
   {
     n: "06",
     title: "SEO & GEO implementation",
-    desc: "Already have an audit? I'll implement the fixes — technical corrections, schema markup, content restructuring, and AI snippet optimisation — so your site actually climbs the rankings it should.",
+    desc: "The audit scopes the work — once I know exactly what your site needs, I quote the final price. I then implement the technical fixes, schema markup, content restructuring, and AI snippet optimisation identified in your report.",
     includes: ["Technical & on-page fixes", "Schema & structured data", "AI snippet optimisation"],
     fromLKR: "LKR 65,000",
     fromUSD: "$400",
@@ -62,10 +62,10 @@ const services = [
   {
     n: "07",
     title: "Ongoing SEO & GEO retainer",
-    desc: "Monthly management of your search and AI visibility — regular health checks, content updates, and monitoring across Google and AI answer engines, with a report each month.",
+    desc: "For clients who want continued management — monthly health checks, content updates, and AI visibility monitoring across Google, ChatGPT, and Perplexity, with a performance report each month.",
     includes: ["Monthly SEO health checks", "GEO monitoring & updates", "Monthly performance report"],
-    fromLKR: "LKR 35,000",
-    fromUSD: "$175",
+    fromLKR: "LKR 48,000",
+    fromUSD: "$225",
     turnaround: "Monthly",
   },
 ];
