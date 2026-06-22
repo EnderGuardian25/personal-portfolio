@@ -1,5 +1,5 @@
 # DDC Portfolio — Session Handoff
-> Generated: 2026-06-06 | Updated: 2026-06-15 | Branch: `main`
+> Generated: 2026-06-06 | Updated: 2026-06-23 | Branch: `main`
 
 ---
 
@@ -8,7 +8,7 @@
 - **Owner:** Damian De Cruz — Creative Technologist, BSc (Hons) Computer Science, IIT Sri Lanka (University of Westminster)
 - **Repo:** https://github.com/EnderGuardian25/personal-portfolio (`main` branch)
 - **Local path:** `D:\personal-portfolio`
-- **Last commit:** `dad5300` — fix(pre-deploy): audit fixes — SEO, copy, cursor, cleanup
+- **Last commit:** `25b89f7` — fix(services): clarify implementation pricing + bump retainer rate
 
 ---
 
@@ -26,8 +26,7 @@
 
 ---
 
-## What's in main (shipped from v2)
-All of the following were added on the `v2` branch and are absent from production:
+## What's in main
 
 ### Dark Mode
 - Sun/moon `ThemeToggle` in nav — writes to `localStorage`, toggles `.dark` on `<html>`
@@ -44,26 +43,33 @@ All of the following were added on the `v2` branch and are absent from productio
 - `app/icon.svg` + `app/icon.png` (512×512) + `app/apple-icon.png` (180×180) — DDC favicon
 - `app/robots.js` + `app/sitemap.js` — auto-wired by Next.js App Router; sitemap includes `/services`
 - JSON-LD `Person` + `Service` structured data in `app/layout.jsx`
-- OG image converted: `public/og.jpg` (45KB JPEG, was 753KB PNG)
+- `FAQPage` JSON-LD in `app/services/page.jsx` — 7 Q&As, eligible for Google rich results
+- OG image converted: `public/og.jpg` (45KB JPEG, was 753KB PNG); unused `og.png` (771KB) deleted
 - `alternates: { canonical: "/" }` in metadata
 - `next.config.mjs`: removed `unoptimized: true`, added `formats: ['image/avif','image/webp']`
 - Google Search Console: DNS TXT record verified via Squarespace DNS panel
+- **Google Analytics 4** (`G-PC1HZKKSEC`) — added via `next/script strategy="afterInteractive"` in `app/layout.jsx`; covers all pages from root layout
 
 ### Services Page (`/services`)
-- Standalone route with its own metadata, canonical, OG, Twitter, and `OfferCatalog` JSON-LD
-- 6 sections: Intro (unnumbered, like the homepage hero) · `§ 01 — What I do` · `§ 02 — How it works` · `§ 03 — Recent work` · `§ 04 — FAQ` · `§ 05 — Start a project` (numbered with the same `§ 0N — Label` scheme as the homepage)
-- 4 services with LKR/USD pricing and turnarounds:
-  - Web design & development — from LKR 18,000 / $150, 48–72 hrs
-  - Business website — from LKR 40,000 / $500, 3–5 days
-  - Portfolio & booking — from LKR 65,000 / $800, 5–7 days
-  - Redesign & refresh — from LKR 25,000 / $200, 2–3 days
+- Standalone route with its own metadata, canonical, OG, Twitter, `OfferCatalog` JSON-LD, and `FAQPage` JSON-LD
+- 6 sections: Intro (unnumbered) · `§ 01 — What I do` · `§ 02 — How it works` · `§ 03 — Recent work` · `§ 04 — FAQ` · `§ 05 — Start a project`
+- **7 services** with LKR/USD pricing and turnarounds:
+  - § 01 Web design & development — from LKR 18,000 / $150, ~2–3 days
+  - § 02 Business & portfolio sites — from LKR 40,000 / $500, ~1 week
+  - § 03 Booking & scheduling sites — from LKR 65,000 / $800, 1–2 weeks
+  - § 04 Redesigns & speed fixes — from LKR 25,000 / $200, 1–3 days
+  - § 05 SEO & AI visibility audit — from LKR 50,000 / $299, 2–4 days
+  - § 06 SEO & GEO implementation — from LKR 65,000 / $400, 1–2 weeks *(final price quoted from audit scope)*
+  - § 07 Ongoing SEO & GEO retainer — from LKR 48,000 / $225/mo, monthly
+- **SEO/GEO service flow:** audit (§05) → implementation (§06, quoted after audit) → retainer (§07, optional ongoing)
+- FAQ section has 7 entries including deposit/cancellation policy
+- `mailto:` links include `?subject=Website%20enquiry` pre-fill in both `Services.jsx` and `Contact.jsx`
 - CTA buttons: WhatsApp (electric fill) + email (outline) — constants from `lib/site.js`
-- Uses its own `ServicesNav` (logo **DDC / Services '26**, section links Pricing · Process · Work · FAQ) — see Navigation above
-- **Hero corner block mirrors the homepage hero**: `(002) Services / Hire` label (fades on scroll via `useScroll`/`metaOpacity`) with an electric **Portfolio →** button below it, desktop only (`hidden md:flex`)
-- Hero left-column label reads **Damian De Cruz** (not "Services" — avoids triple-repeating the word on landing)
-- Recent Work section has a **See the full portfolio →** link (→ `/`) plus a **"My Portfolio"** project card (→ `/`)
-- "Start a project" CTA section: label in left column, no redundant "Or reach me at" line (email CTA covers it)
-- Page itself is **not** in the homepage navbar — surfaced via in-page links from About + the homepage hero corner button instead
+- Uses its own `ServicesNav` (logo **DDC / Services '26**, section links Pricing · Process · Work · FAQ)
+- **Hero corner block mirrors the homepage hero**: `(002) Services / Hire` label (fades on scroll) with **Portfolio →** button, desktop only
+- Hero left-column label reads **Damian De Cruz**
+- Recent Work: **See the full portfolio →** link + **"My Portfolio"** project card
+- Not in the homepage navbar — surfaced via hero corner button (desktop) and nav hamburger overlay (mobile)
 
 ### Navigation
 - **Two separate, mirrored navbars** — the homepage uses `Nav.jsx`; `/services` uses its own `ServicesNav.jsx`. Both carry: section links · theme toggle · `Available · 2026` badge (desktop right + mobile overlay) · and a cross-link to the *other* page in the mobile overlay.
@@ -112,7 +118,7 @@ All of the following were added on the `v2` branch and are absent from productio
 ### Accessibility & UX
 - Mobile menu: `aria-expanded`, `role="dialog"`, `aria-modal`, focus trap, Escape-to-close, body scroll lock, focus restoration
 - `MotionProvider.jsx` wraps entire app with `<MotionConfig reducedMotion="user">`
-- `cursor: none` scoped to `@media (hover: hover) and (pointer: fine)`
+- `cursor: none` gated behind `html.js-cursor` class — `Cursor.jsx` adds it on mount, removes on unmount; JS failure leaves native cursor visible
 - `:focus-visible` ring using `rgb(var(--c-electric))`
 - `@media (prefers-reduced-motion: reduce)` block in globals.css
 
@@ -312,7 +318,7 @@ Ranmal Flora description: *"Website for Sri Lanka's foremost tissue culture labo
 ## Running Locally
 ```powershell
 cd D:\personal-portfolio
-git checkout v2          # ensure you're on the right branch
+git checkout main
 npm.cmd run dev
 # http://localhost:3000 (or 3001 if 3000 is in use)
 ```
@@ -341,13 +347,14 @@ npm.cmd run dev
 ---
 
 ## Pending / Next Ideas
+- [ ] **Deploy** — SSH into VPS → `~/deploy.sh` (main is ready)
+- [ ] Verify live: dark mode, `/services`, `/sitemap.xml`, `/robots.txt`, OG image
+- [ ] Submit sitemap + request indexing of `/` and `/services` in GSC
+- [ ] Verify GA4 data flowing in Google Analytics dashboard (~24–48 hrs after deploy)
 - [ ] Personal Dashboard — add live link when ready
 - [ ] Danella De Cruz — update project card with live link when site is deployed
 - [ ] Coursework Archive — reveal when ready
-- [ ] Verify OG image live at `https://damiandc.com/og.jpg` after deploy
-- [ ] Check opengraph.xyz with `https://damiandc.com` after deploy
-- [ ] Submit sitemap + request indexing in GSC after deploy
-- [ ] "Introductory rate" framing on services pricing (optional — research recommended for first few clients)
-- [ ] Analytics (Plausible or similar)
+- [ ] Add a testimonial / client outcome to `/services` (biggest remaining trust gap)
+- [ ] Homepage: add WhatsApp CTA above the fold on mobile (Services button is desktop-only)
 - [ ] Lighthouse audit after deploy
-- [ ] D: drive (KINGSTON NVMe) — check Event Viewer → System for disk/nvme/Ntfs errors; consider reseating M.2 drive (intermittent PCIe bus dropouts caused file corruption during this session)
+- [ ] D: drive (KINGSTON NVMe) — check Event Viewer → System for disk/nvme/Ntfs errors; consider reseating M.2 drive (intermittent PCIe bus dropouts caused file corruption in a prior session)
