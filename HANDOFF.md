@@ -8,7 +8,7 @@
 - **Owner:** Damian De Cruz — Creative Technologist, BSc (Hons) Computer Science, IIT Sri Lanka (University of Westminster)
 - **Repo:** https://github.com/EnderGuardian25/personal-portfolio (`main` branch)
 - **Local path:** `D:\personal-portfolio`
-- **Last commit:** `25b89f7` — fix(services): clarify implementation pricing + bump retainer rate
+- **Last commit:** `6f1777d` — fix(services): sync retainer JSON-LD price to LKR 48,000; ignore posts/
 
 ---
 
@@ -189,6 +189,9 @@ public/
 assets/
   photography-originals/ — raw phone JPEGs (gitignored)
 
+posts/                    — local social media exports (gitignored — lives on this machine only)
+  DDC-Services-Poster.png — 2160×2160 light-theme services poster, rendered from /poster route (now deleted)
+
 scripts/
   optimize-photos.mjs   — sharp resize: assets/photography-originals/ → public/photography/
 
@@ -296,6 +299,25 @@ Ranmal Flora description: *"Website for Sri Lanka's foremost tissue culture labo
 ### Footer
 - `v:02 / Always evolving` — `text-right` at **all** screen sizes
 - Copyright: `© {YEAR} — Damian De Cruz` (year from `YEAR` in `lib/site.js`)
+
+---
+
+## Social Poster
+
+A 1:1 (2160×2160 at 2×) services poster lives at `posts/DDC-Services-Poster.png` on this machine. It is gitignored and does not live in the repo.
+
+**To regenerate or update the poster:**
+1. Create `app/poster/page.jsx` — use the real Tailwind tokens (`bg-ivory`, `font-display`, `text-electric`, etc.) and pin light-theme CSS variables inline on the root div so Chrome headless doesn't flip to dark mode
+2. Start dev server: `npm.cmd run dev`
+3. Confirm the route is live: `http://localhost:3000/poster`
+4. Capture with Chrome headless:
+   ```powershell
+   & "C:\Program Files\Google\Chrome\Application\chrome.exe" --headless=new --disable-gpu --hide-scrollbars --force-device-scale-factor=2 --window-size=1080,1080 --screenshot="D:\personal-portfolio\posts\DDC-Services-Poster.png" "http://localhost:3000/poster"
+   ```
+5. Verify with Read tool, refine, re-capture
+6. Delete `app/poster/` once approved — the route is temporary and should never be committed or deployed
+
+**Key lesson:** SVG → sharp renders fonts badly (librsvg ≠ browser). Always use the real Next.js page + headless Chrome pipeline for any poster/export work.
 
 ---
 
