@@ -152,7 +152,7 @@ const servicesJsonLd = {
         "@type": "Offer",
         itemOffered: { "@type": "Service", name: "Ongoing SEO & GEO retainer" },
         priceCurrency: "LKR",
-        price: "35000",
+        price: "48000",
         description: "Monthly SEO health checks, GEO monitoring, content updates, and a performance report.",
       },
     ],

@@ -8,3 +8,6 @@ out/
 
 # Raw photo originals — build-time inputs only, not for production
 assets/photography-originals/
+
+# Local social posts / exports — machine-specific, not tracked
+posts/
