@@ -304,20 +304,10 @@ Ranmal Flora description: *"Website for Sri Lanka's foremost tissue culture labo
 
 ## Social Poster
 
-A 1:1 (2160×2160 at 2×) services poster lives at `posts/DDC-Services-Poster.png` on this machine. It is gitignored and does not live in the repo.
+A 1:1 (2160×2160 at 2×) services poster lives at `posts/DDC-Services-Poster.png` on this machine — gitignored, local only.
 
-**To regenerate or update the poster:**
-1. Create `app/poster/page.jsx` — use the real Tailwind tokens (`bg-ivory`, `font-display`, `text-electric`, etc.) and pin light-theme CSS variables inline on the root div so Chrome headless doesn't flip to dark mode
-2. Start dev server: `npm.cmd run dev`
-3. Confirm the route is live: `http://localhost:3000/poster`
-4. Capture with Chrome headless:
-   ```powershell
-   & "C:\Program Files\Google\Chrome\Application\chrome.exe" --headless=new --disable-gpu --hide-scrollbars --force-device-scale-factor=2 --window-size=1080,1080 --screenshot="D:\personal-portfolio\posts\DDC-Services-Poster.png" "http://localhost:3000/poster"
-   ```
-5. Verify with Read tool, refine, re-capture
-6. Delete `app/poster/` once approved — the route is temporary and should never be committed or deployed
-
-**Key lesson:** SVG → sharp renders fonts badly (librsvg ≠ browser). Always use the real Next.js page + headless Chrome pipeline for any poster/export work.
+> **Full pipeline:** see [`docs/POSTER-PIPELINE.md`](docs/POSTER-PIPELINE.md) — durable reference for building/regenerating any social post (temp Next.js route → headless Chrome screenshot, light-theme guards, teardown).
+> **Key lesson:** never hand-build in SVG (librsvg renders fonts wrong). Always render the real page in a browser.
 
 ---
 
