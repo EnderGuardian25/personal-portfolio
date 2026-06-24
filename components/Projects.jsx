@@ -45,6 +45,26 @@ const projects = [
   },
   {
     n: "05",
+    title: "Spades Solutions",
+    year: "2026",
+    blurb:
+      "Website for a growing solutions company — a sharp, professional presence built to convert.",
+    tags: ["Next.js", "Client Work", "Business"],
+    href: "#",
+    status: "soon",
+  },
+  {
+    n: "06",
+    title: "Aloys Travels",
+    year: "2026",
+    blurb:
+      "Web presence for a travel company — clean booking flows and an inviting design that sells the journey.",
+    tags: ["Next.js", "Client Work", "Travel"],
+    href: "#",
+    status: "soon",
+  },
+  {
+    n: "07",
     title: "Coursework Archive",
     year: "2026 →",
     blurb:
@@ -152,7 +172,7 @@ export default function Projects() {
           </Reveal>
           <Reveal delay={0.1}>
             <p className="mt-6 max-w-xl text-base md:text-lg text-ink-soft">
-              Three projects out in the world. Two more in motion. This shelf will keep growing
+              Three projects out in the world. Four more in motion. This shelf will keep growing
               year over year — bookmark it.
             </p>
           </Reveal>

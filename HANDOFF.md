@@ -1,5 +1,5 @@
 # DDC Portfolio — Session Handoff
-> Generated: 2026-06-06 | Updated: 2026-06-23 | Branch: `main`
+> Generated: 2026-06-06 | Updated: 2026-06-24 | Branch: `main`
 
 ---
 
@@ -8,7 +8,7 @@
 - **Owner:** Damian De Cruz — Creative Technologist, BSc (Hons) Computer Science, IIT Sri Lanka (University of Westminster)
 - **Repo:** https://github.com/EnderGuardian25/personal-portfolio (`main` branch)
 - **Local path:** `D:\personal-portfolio`
-- **Last commit:** `6f1777d` — fix(services): sync retainer JSON-LD price to LKR 48,000; ignore posts/
+- **Last commit:** `2026-06-24` — content: remove client projects from timeline; add Spades Solutions + Aloys Travels placeholders
 
 ---
 
@@ -244,19 +244,19 @@ ecosystem.config.js     — PM2 config (name: damiandc-website, port: 3000)
 | # | Title | Status | Notes |
 |---|---|---|---|
 | 01 | This Portfolio | Live | href: #top — "You're here ↑" |
-| 02 | Personal Dashboard | Live | no link yet |
+| 02 | Personal Dashboard | Live | https://enderguardian25.github.io/personal-dashboard/ |
 | 03 | Ranmal Flora | Live | https://enderguardian25.github.io/ranmal-flora/ |
 | 04 | Danella De Cruz | Soon | Client project — portfolio & booking site for vocal artist |
-| 05 | Coursework Archive | Soon | dim + `cursor-default`, no hover |
+| 05 | Spades Solutions | Soon | Client project — business website, placeholder |
+| 06 | Aloys Travels | Soon | Client project — travel company website, placeholder |
+| 07 | Coursework Archive | Soon | dim + `cursor-default`, no hover |
 
-Blurb: *"Three projects out in the world. Two more in motion."*
+Blurb: *"Three projects out in the world. Four more in motion."*
 
 Ranmal Flora description: *"Website for Sri Lanka's foremost tissue culture laboratory — producing 1.2 million pathogen-free plantlets annually and scaling to 6 million."* (tissue culture lab — NOT a local florist)
 
 ### Timeline (newest → oldest)
 - 2026 — This Portfolio *(accent color)*
-- 2026 — Danella De Cruz *(Client project · Portfolio & Booking)*
-- 2026 — Ranmal Flora
 - 2026 — Personal Dashboard
 - 2025–2026 — Completed first year (IIT · University of Westminster)
 - Sep 2025 — Began BSc (Hons) Computer Science (IIT · University of Westminster)
@@ -365,6 +365,8 @@ npm.cmd run dev
 - [ ] Verify GA4 data flowing in Google Analytics dashboard (~24–48 hrs after deploy)
 - [ ] Personal Dashboard — add live link when ready
 - [ ] Danella De Cruz — update project card with live link when site is deployed
+- [ ] Spades Solutions — update project card with live link when site is deployed
+- [ ] Aloys Travels — update project card with live link when site is deployed
 - [ ] Coursework Archive — reveal when ready
 - [ ] Add a testimonial / client outcome to `/services` (biggest remaining trust gap)
 - [ ] Homepage: add WhatsApp CTA above the fold on mobile (Services button is desktop-only)
