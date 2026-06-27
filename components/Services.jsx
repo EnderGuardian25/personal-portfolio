@@ -81,7 +81,7 @@ const work = [
   { title: "This Portfolio", note: "Personal portfolio built with Next.js, Tailwind & Framer Motion — see the full body of work.", href: "/", tag: "Portfolio" },
   { title: "Ranmal Flora", note: "Website for Sri Lanka's foremost tissue-culture laboratory.", href: "https://enderguardian25.github.io/ranmal-flora/", tag: "Business site" },
   { title: "Spades Solutions", note: "A sharp, professional web presence for a growing solutions company.", href: "https://enderguardian25.github.io/spades-solutions/index.html", tag: "Business site" },
-  { title: "Aloys Travels", note: "Web presence for a travel company — clean booking flows and an inviting, journey-led design.", href: "https://aloys-travels.pages.dev/tours/", tag: "Travel site" },
+  { title: "Aloys Travels", note: "Web presence for a travel company — clean booking flows and an inviting, journey-led design.", href: "https://aloys-travels.pages.dev/", tag: "Travel site" },
 ];
 
 const faqs = [

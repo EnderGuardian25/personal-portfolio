@@ -8,7 +8,7 @@
 - **Owner:** Damian De Cruz — Creative Technologist, BSc (Hons) Computer Science, IIT Sri Lanka (University of Westminster)
 - **Repo:** https://github.com/EnderGuardian25/personal-portfolio (`main` branch)
 - **Local path:** `D:\personal-portfolio`
-- **Last commit:** `2026-06-27` — content: Spades Solutions + Aloys Travels now live (ordered above the in-progress Danella De Cruz); services Recent Work → 4 projects in a 2×2 grid
+- **Last commit:** `2026-06-27` — feat: interactive grab-to-drag marquee ribbon; Aloys Travels link → site homepage
 
 ---
 
@@ -82,6 +82,16 @@
 - Calls `lenis.scrollTo(target, { offset: -80 })` so smooth scroll runs and `whileInView` animations fire correctly
 - Delegation (not a one-time `querySelectorAll` snapshot) means it catches links rendered *after* mount too — the `ServicesNav` links and both navs' conditionally-rendered mobile-menu overlays now smooth-scroll on every page
 - Without this, native anchor jumps bypass Lenis and `whileInView` triggers all at once
+
+### Interactive Marquee (`Marquee.jsx`)
+- The italic ribbon between homepage sections ("Creative Technologist ✦ Code ✦ …") — **JS-driven `requestAnimationFrame` loop**, NOT a CSS keyframe (the old `@keyframes marquee` / `.marquee-track` rule was removed from `globals.css`)
+- **Auto-scrolls** leftward at the same speed as before (`baseline = -single / LOOP_SECONDS`, `LOOP_SECONDS = 38`; `single = track.scrollWidth / 2` since two copies are rendered)
+- **Grab-to-drag:** pointerdown grabs it, pointermove moves the offset 1:1 with the cursor, a smoothed throw velocity is captured
+- **Momentum + settle:** on release the flick keeps gliding, then an exponential blend (`SETTLE_TAU = 0.9`) decelerates it back into the normal leftward rotation. Two tuning knobs live at the top of the file: `LOOP_SECONDS` (speed) + `SETTLE_TAU` (settle laziness)
+- **Pause on grab only** — auto-scroll keeps running on hover; it only stops while actively held
+- Offset wraps modulo `single` for a seamless loop in both directions; `dt` is clamped (0.05s) so tab-switches don't cause jumps
+- `touch-pan-y` lets horizontal drag grab the ribbon while vertical page scroll still works on mobile; `data-hover` expands the custom cursor ring; `cursor: grab` → `grabbing`
+- **Reduced motion:** `baseline = 0` (no perpetual spin) and the loop idle-suspends; drag still works and settles to a stop. `Marquee.jsx` is no longer referenced in the `prefers-reduced-motion` CSS block
 
 ### Hero
 - Kicker: `"Creative Technologist · Freelance Web Designer"`
@@ -174,6 +184,7 @@ components/
   Timeline.jsx          — chronological milestones
   Resume.jsx            — CV download (id="resume")
   Lens.jsx              — phone photography gallery
+  Marquee.jsx           — interactive ribbon: JS rAF auto-scroll + grab-to-drag with momentum/settle
   Contact.jsx           — email + socials (data from lib/site.js)
   Footer.jsx            — v:02 / Always evolving
 
@@ -247,7 +258,7 @@ ecosystem.config.js     — PM2 config (name: damiandc-website, port: 3000)
 | 02 | Personal Dashboard | Live | https://enderguardian25.github.io/personal-dashboard/ |
 | 03 | Ranmal Flora | Live | https://enderguardian25.github.io/ranmal-flora/ |
 | 04 | Spades Solutions | Live | Client project — https://enderguardian25.github.io/spades-solutions/index.html |
-| 05 | Aloys Travels | Live | Client project — https://aloys-travels.pages.dev/tours/ |
+| 05 | Aloys Travels | Live | Client project — https://aloys-travels.pages.dev/ |
 | 06 | Danella De Cruz | Soon | Client project — portfolio & booking site for vocal artist |
 | 07 | Coursework Archive | Soon | dim + `cursor-default`, no hover |
 
@@ -326,6 +337,7 @@ A 1:1 (2160×2160 at 2×) services poster lives at `posts/DDC-Services-Poster.pn
 10. **Services not in `NAV_LINKS`** — it's a route, not an anchor; adding it breaks the smooth-scroll feel and clutters the nav; surface via in-page links instead
 11. **Dark mode Services button** — `dark:bg-ink dark:text-ivory` (NOT `dark:bg-ivory` — ivory is navy in dark mode, ink is white)
 12. **Lenis anchors** — `SmoothScroll.jsx` uses ONE delegated `click` listener on `document` (`e.target.closest('a[href^="#"]')`), NOT a `querySelectorAll` snapshot. Keep it delegated — a snapshot misses links rendered after mount (ServicesNav, mobile overlays), causing native jumps that make `whileInView` animations misfire
+13. **Marquee is JS-driven** — `Marquee.jsx` runs its own rAF loop for grab-to-drag + momentum. Do NOT revert it to a CSS `@keyframes marquee` / `.marquee-track` animation (that removes the drag interaction). The transform is set inline every frame; don't add a competing CSS `animation` or `transition: transform` to the track
 
 ---
 

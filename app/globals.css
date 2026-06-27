@@ -102,12 +102,7 @@ html, body {
 /* Vertical rule */
 .rule-v { background: linear-gradient(to bottom, transparent 0%, rgb(var(--c-rule)) 12%, rgb(var(--c-rule)) 88%, transparent 100%); }
 
-/* Marquee */
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-.marquee-track { animation: marquee 38s linear infinite; }
+/* Marquee — JS-driven (see components/Marquee.jsx); auto-scroll + grab-to-drag */
 
 /* Hero blob */
 @keyframes float-slow {
@@ -182,7 +177,6 @@ html, body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
-  .marquee-track,
   .blob {
     animation: none !important;
   }
