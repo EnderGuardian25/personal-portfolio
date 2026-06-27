@@ -1,5 +1,5 @@
 # DDC Portfolio — Session Handoff
-> Generated: 2026-06-06 | Updated: 2026-06-24 | Branch: `main`
+> Generated: 2026-06-06 | Updated: 2026-06-27 | Branch: `main`
 
 ---
 
@@ -8,7 +8,7 @@
 - **Owner:** Damian De Cruz — Creative Technologist, BSc (Hons) Computer Science, IIT Sri Lanka (University of Westminster)
 - **Repo:** https://github.com/EnderGuardian25/personal-portfolio (`main` branch)
 - **Local path:** `D:\personal-portfolio`
-- **Last commit:** `2026-06-24` — content: remove client projects from timeline; add Spades Solutions + Aloys Travels placeholders
+- **Last commit:** `2026-06-27` — content: Spades Solutions + Aloys Travels now live (ordered above the in-progress Danella De Cruz); services Recent Work → 4 projects in a 2×2 grid
 
 ---
 
@@ -68,7 +68,7 @@
 - Uses its own `ServicesNav` (logo **DDC / Services '26**, section links Pricing · Process · Work · FAQ)
 - **Hero corner block mirrors the homepage hero**: `(002) Services / Hire` label (fades on scroll) with **Portfolio →** button, desktop only
 - Hero left-column label reads **Damian De Cruz**
-- Recent Work: **See the full portfolio →** link + **"My Portfolio"** project card
+- Recent Work (`§ 03`): **See the full portfolio →** link + **4 project cards in a 2×2 grid** (`sm:grid-cols-2`, hairline `gap-px bg-rule` dividers) — This Portfolio (`/`) · Ranmal Flora · Spades Solutions · Aloys Travels. `work[]` array lives at the top of `Services.jsx`
 - Not in the homepage navbar — surfaced via hero corner button (desktop) and nav hamburger overlay (mobile)
 
 ### Navigation
@@ -246,12 +246,14 @@ ecosystem.config.js     — PM2 config (name: damiandc-website, port: 3000)
 | 01 | This Portfolio | Live | href: #top — "You're here ↑" |
 | 02 | Personal Dashboard | Live | https://enderguardian25.github.io/personal-dashboard/ |
 | 03 | Ranmal Flora | Live | https://enderguardian25.github.io/ranmal-flora/ |
-| 04 | Danella De Cruz | Soon | Client project — portfolio & booking site for vocal artist |
-| 05 | Spades Solutions | Soon | Client project — business website, placeholder |
-| 06 | Aloys Travels | Soon | Client project — travel company website, placeholder |
+| 04 | Spades Solutions | Live | Client project — https://enderguardian25.github.io/spades-solutions/index.html |
+| 05 | Aloys Travels | Live | Client project — https://aloys-travels.pages.dev/tours/ |
+| 06 | Danella De Cruz | Soon | Client project — portfolio & booking site for vocal artist |
 | 07 | Coursework Archive | Soon | dim + `cursor-default`, no hover |
 
-Blurb: *"Three projects out in the world. Four more in motion."*
+> Order rule: live projects sit above `soon` ones — Danella De Cruz is still in progress, so it follows the live client work.
+
+Blurb: *"Five projects out in the world. Two more in motion."*
 
 Ranmal Flora description: *"Website for Sri Lanka's foremost tissue culture laboratory — producing 1.2 million pathogen-free plantlets annually and scaling to 6 million."* (tissue culture lab — NOT a local florist)
 
