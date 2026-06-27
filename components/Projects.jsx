@@ -50,7 +50,7 @@ const projects = [
     blurb:
       "Web presence for a travel company — clean booking flows and an inviting design that sells the journey.",
     tags: ["Client Work", "Travel", "Design"],
-    href: "https://aloys-travels.pages.dev/tours/",
+    href: "https://aloys-travels.pages.dev/",
     status: "live",
   },
   {
