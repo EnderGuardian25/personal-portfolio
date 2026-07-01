@@ -90,25 +90,51 @@ export default function GlitchField({ cell = 12, alpha = 0.34, className = "" })
       attributeFilter: ["class"],
     });
 
-    if (!reduce) {
-      const tick = (t) => {
-        if (t - last > 60 && rows && cols) {
-          last = t;
-          const churn = Math.max(1, Math.floor(rows * cols * 0.05));
-          for (let k = 0; k < churn; k++) {
-            grid[(Math.random() * rows) | 0][(Math.random() * cols) | 0] = rnd();
-          }
-          draw();
+    // Animate only while the field is actually on screen AND the tab is
+    // focused. The rAF loop is the main per-frame cost, so gating it keeps two
+    // off-screen fields from churning the main thread during the whole scroll.
+    let onScreen = false;
+    const tick = (t) => {
+      if (t - last > 60 && rows && cols) {
+        last = t;
+        const churn = Math.max(1, Math.floor(rows * cols * 0.05));
+        for (let k = 0; k < churn; k++) {
+          grid[(Math.random() * rows) | 0][(Math.random() * cols) | 0] = rnd();
         }
-        raf = requestAnimationFrame(tick);
-      };
+        draw();
+      }
       raf = requestAnimationFrame(tick);
-    }
+    };
+    const start = () => {
+      if (reduce || raf != null || !onScreen || document.hidden) return;
+      last = 0;
+      raf = requestAnimationFrame(tick);
+    };
+    const stop = () => {
+      if (raf != null) {
+        cancelAnimationFrame(raf);
+        raf = null;
+      }
+    };
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        onScreen = entry.isIntersecting;
+        onScreen ? start() : stop();
+      },
+      { rootMargin: "100px" }
+    );
+    io.observe(wrap);
+
+    const onVisibility = () => (document.hidden ? stop() : start());
+    document.addEventListener("visibilitychange", onVisibility);
 
     return () => {
       ro.disconnect();
       themeObserver.disconnect();
-      if (raf) cancelAnimationFrame(raf);
+      io.disconnect();
+      document.removeEventListener("visibilitychange", onVisibility);
+      stop();
     };
   }, [cell, alpha]);
 
