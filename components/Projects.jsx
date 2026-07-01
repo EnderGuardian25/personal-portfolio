@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import Reveal from "./Reveal";
+import GlitchField from "./GlitchField";
 
 const projects = [
   {
@@ -82,7 +83,7 @@ function Card({ p, i }) {
   // Live cards are links; "soon" cards render as a non-interactive, dimmed div.
   const Wrapper = isSoon ? motion.div : motion.a;
   const wrapperProps = isSoon
-    ? { className: "block border-t border-rule py-10 md:py-14 first:border-t-0 opacity-60 cursor-default select-none" }
+    ? { className: "relative overflow-hidden block border-t border-rule py-10 md:py-14 first:border-t-0 opacity-75 cursor-default select-none" }
     : {
         href: p.href,
         target: isExternal ? "_blank" : undefined,
@@ -93,7 +94,10 @@ function Card({ p, i }) {
 
   return (
     <Wrapper {...wrapperProps}>
-      <div className="grid grid-cols-12 gap-6 items-start">
+      {isSoon && (
+        <GlitchField className="absolute inset-0 text-ink-soft" />
+      )}
+      <div className="relative z-10 grid grid-cols-12 gap-6 items-start">
         <div className="col-span-12 md:col-span-1">
           <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink-soft">
             ({p.n})
@@ -108,7 +112,7 @@ function Card({ p, i }) {
           >
             {p.title}
             {isSoon && (
-              <sup className="ml-3 align-top font-mono text-[10px] tracking-[0.2em] uppercase text-electric not-italic">
+              <sup className="ml-3 align-top font-mono text-[10px] tracking-[0.2em] uppercase text-ink-soft not-italic">
                 soon
               </sup>
             )}
