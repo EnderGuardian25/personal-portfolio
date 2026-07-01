@@ -41,6 +41,33 @@ const services = [
     fromUSD: "$200",
     turnaround: "1–3 days",
   },
+  {
+    n: "05",
+    title: "SEO & AI visibility audit",
+    desc: "A full audit of how your site performs on Google and in AI answers — ChatGPT, Perplexity, Google AI Overviews. You get a plain-English report of what's holding you back and a prioritised roadmap to fix it.",
+    includes: ["On-page & technical SEO", "GEO / AI answer visibility score", "Priority recommendations report"],
+    fromLKR: "LKR 50,000",
+    fromUSD: "$299",
+    turnaround: "2–4 days",
+  },
+  {
+    n: "06",
+    title: "SEO & GEO implementation",
+    desc: "The audit scopes the work — once I know exactly what your site needs, I quote the final price. I then implement the technical fixes, schema markup, content restructuring, and AI snippet optimisation identified in your report.",
+    includes: ["Technical & on-page fixes", "Schema & structured data", "AI snippet optimisation"],
+    fromLKR: "LKR 65,000",
+    fromUSD: "$400",
+    turnaround: "1–2 weeks",
+  },
+  {
+    n: "07",
+    title: "Ongoing SEO & GEO retainer",
+    desc: "For clients who want continued management — monthly health checks, content updates, and AI visibility monitoring across Google, ChatGPT, and Perplexity, with a performance report each month.",
+    includes: ["Monthly SEO health checks", "GEO monitoring & updates", "Monthly performance report"],
+    fromLKR: "LKR 48,000",
+    fromUSD: "$225",
+    turnaround: "Monthly",
+  },
 ];
 
 const steps = [
@@ -51,9 +78,10 @@ const steps = [
 ];
 
 const work = [
+  { title: "This Portfolio", note: "Personal portfolio built with Next.js, Tailwind & Framer Motion — see the full body of work.", href: "/", tag: "Portfolio" },
   { title: "Ranmal Flora", note: "Website for Sri Lanka's foremost tissue-culture laboratory.", href: "https://enderguardian25.github.io/ranmal-flora/", tag: "Business site" },
-  { title: "My Portfolio", note: "Personal portfolio built with Next.js, Tailwind & Framer Motion — see the full body of work.", href: "/", tag: "Portfolio" },
-  { title: "Personal Dashboard", note: "A self-updating homepage with RSS, a reading queue, and quick links.", href: "https://enderguardian25.github.io/personal-dashboard/", tag: "Web app" },
+  { title: "Spades Solutions", note: "A sharp, professional web presence for a growing solutions company.", href: "https://enderguardian25.github.io/spades-solutions/index.html", tag: "Business site" },
+  { title: "Aloys Travels", note: "Web presence for a travel company — clean booking flows and an inviting, journey-led design.", href: "https://aloys-travels.pages.dev/", tag: "Travel site" },
 ];
 
 const faqs = [
@@ -193,7 +221,7 @@ export default function Services() {
           <div className="col-span-12 md:col-span-9 md:col-start-4">
             <Reveal>
               <h2 className="font-display text-4xl md:text-6xl leading-tight tracking-tight text-ink">
-                Four ways I can <span className="italic text-electric">help</span>.
+                Seven ways I can <span className="italic text-electric">help</span>.
               </h2>
             </Reveal>
           </div>
@@ -298,7 +326,7 @@ export default function Services() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-rule border-y border-rule">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-rule border-y border-rule">
           {work.map((w, i) => {
             const external = w.href.startsWith("http");
             return (

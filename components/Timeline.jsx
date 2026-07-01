@@ -4,24 +4,11 @@ import Reveal from "./Reveal";
 const entries = [
   {
     year: "2026",
-    title: "Danella De Cruz",
-    place: "Client project · Portfolio & Booking",
-    detail:
-      "Designing and building a portfolio and booking website for an upcoming vocal artist — giving her music and story a proper stage online.",
-  },
-  {
-    year: "2026",
     title: "This portfolio",
     place: "Personal project · Next.js & Framer Motion",
     detail:
       "Designed and built this site as a living journal of my work — something I'll keep refining across the rest of university.",
     accent: true,
-  },
-  {
-    year: "2026",
-    title: "Ranmal Flora",
-    place: "Client project · solo build",
-    detail: "Designed and built the website for Sri Lanka's foremost tissue culture laboratory — bridging cutting-edge biotechnology with clean, accessible design.",
   },
   {
     year: "2026",
@@ -96,23 +83,21 @@ export default function Timeline() {
 
           <ol className="flex flex-col gap-12 md:gap-16">
             {entries.map((e, i) => (
-              <Reveal key={i} delay={i * 0.07}>
-                <li className="relative pl-12 md:pl-20">
-                  <span
-                    className={`absolute left-[11px] md:left-[-5px] top-3 w-2.5 h-2.5 rounded-full ${
-                      e.accent ? "bg-electric" : "bg-ink"
-                    }`}
-                  />
-                  <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink-soft mb-2">
-                    {e.year} &mdash; {e.place}
-                  </div>
-                  <h3 className="font-display text-3xl md:text-5xl leading-tight text-ink">
-                    {e.title}
-                  </h3>
-                  <p className="mt-3 max-w-xl text-base md:text-lg text-ink-soft">
-                    {e.detail}
-                  </p>
-                </li>
+              <Reveal as="li" key={i} delay={i * 0.07} className="relative pl-12 md:pl-20">
+                <span
+                  className={`absolute left-[11px] md:left-[-5px] top-3 w-2.5 h-2.5 rounded-full ${
+                    e.accent ? "bg-electric" : "bg-ink"
+                  }`}
+                />
+                <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink-soft mb-2">
+                  {e.year} &mdash; {e.place}
+                </div>
+                <h3 className="font-display text-3xl md:text-5xl leading-tight text-ink">
+                  {e.title}
+                </h3>
+                <p className="mt-3 max-w-xl text-base md:text-lg text-ink-soft">
+                  {e.detail}
+                </p>
               </Reveal>
             ))}
           </ol>
