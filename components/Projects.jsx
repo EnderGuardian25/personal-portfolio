@@ -106,8 +106,8 @@ function Card({ p, i }) {
 
         <div className="col-span-12 md:col-span-6">
           <h3
-            className={`font-display text-5xl md:text-7xl leading-[0.9] tracking-tight text-ink transition-colors duration-500 ${
-              isSoon ? "" : "group-hover:text-electric"
+            className={`font-display text-5xl md:text-7xl leading-[0.9] tracking-tight text-ink ${
+              isSoon ? "" : "transition-colors duration-500 group-hover:text-electric"
             }`}
           >
             {p.title}
