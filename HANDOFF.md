@@ -1,5 +1,5 @@
 # DDC Portfolio — Session Handoff
-> Generated: 2026-06-06 | Updated: 2026-06-27 | Branch: `main`
+> Generated: 2026-06-06 | Updated: 2026-07-01 | Branch: `main`
 
 ---
 
@@ -8,7 +8,7 @@
 - **Owner:** Damian De Cruz — Creative Technologist, BSc (Hons) Computer Science, IIT Sri Lanka (University of Westminster)
 - **Repo:** https://github.com/EnderGuardian25/personal-portfolio (`main` branch)
 - **Local path:** `D:\personal-portfolio`
-- **Last commit:** `2026-06-27` — feat: interactive grab-to-drag marquee ribbon; Aloys Travels link → site homepage
+- **Last commit:** `2026-07-01` — perf: pause glitch canvas off-screen/hidden; earlier this session: a11y fixes (Lighthouse a11y **100**) + animated glitch decrypt field behind upcoming projects
 
 ---
 
@@ -127,10 +127,28 @@
 
 ### Accessibility & UX
 - Mobile menu: `aria-expanded`, `role="dialog"`, `aria-modal`, focus trap, Escape-to-close, body scroll lock, focus restoration
+- **Mobile menu now also sets `<main>` `inert`** while open (Nav + ServicesNav) so browse-mode screen readers can't reach content behind the overlay
 - `MotionProvider.jsx` wraps entire app with `<MotionConfig reducedMotion="user">`
-- `cursor: none` gated behind `html.js-cursor` class — `Cursor.jsx` adds it on mount, removes on unmount; JS failure leaves native cursor visible
+- `cursor: none` gated behind `html.js-cursor` class — `Cursor.jsx` adds it on mount, removes on unmount; JS failure leaves native cursor visible. **Also skipped entirely for `prefers-reduced-motion` and `forced-colors: active` users** (JS bail in `Cursor.jsx` + CSS media guards in `globals.css`) so they keep the native cursor
 - `:focus-visible` ring using `rgb(var(--c-electric))`
 - `@media (prefers-reduced-motion: reduce)` block in globals.css
+
+### Accessibility Pass — Lighthouse a11y 100 (2026-07-01)
+Verified **100 / 100 / 100 / 100** (Accessibility · Best Practices · SEO · Agentic) on a production build in dark mode, via chrome-devtools Lighthouse.
+- **Timeline list semantics:** `<ol>` children had been wrapped in a `<div>` (invalid list). `Reveal.jsx` gained an `as` prop so the reveal wrapper renders as the real `<li>` — valid `<ol>`/`<li>` nesting with the animation intact
+- **Heading order:** About's `§ 01 — About` label changed from `<div>` to `<h2>` (keeps the `.section-label` class → no visual change) so headings descend sequentially
+- **Decorative elements hidden:** Hero scroll-cue and the `Availability` pulse dot marked `aria-hidden`
+- **Résumé download:** `aria-label="Download CV — PDF"` so the file type is announced
+- **ThemeToggle:** switched to an isomorphic `useLayoutEffect` so the correct sun/moon icon is set before paint — no icon flash for dark-mode visitors
+- **Contrast:** the two "soon" project cards were `opacity-60`, dragging their text under 4.5:1 in dark mode → lifted to `opacity-75` and the "soon" badge muted from `electric` to `ink-soft`
+
+### Upcoming-Projects Glitch Field (2026-07-01)
+- `GlitchField.jsx` — a decorative, continuously-scrambling field of monospace glyphs rendered behind each "soon" project card (Danella De Cruz, Coursework Archive), matching the reference in `docs/Glitch Text.png` (untracked, local-only)
+- **Canvas-rendered, not DOM text — on purpose:** carries no accessible text (screen readers ignore it) and no DOM glyphs for the contrast audit to flag at its intentionally-faint opacity. Drawn in the real **JetBrains Mono** stack read from the wrapper's computed `font-family` (Canvas can't parse `var(--font-mono)`); redraws once `document.fonts.ready` resolves
+- Radial center-fade mask keeps the overlaid title/blurb readable; `aria-hidden`; glyph colour re-read on theme flip via a `MutationObserver` on `<html>` so it never lags the theme
+- **Reduced motion:** paints a single static frame, no loop
+- **Perf:** the rAF loop is gated by an `IntersectionObserver` (only animates while on screen, 100px rootMargin) **and** a `visibilitychange` listener (pauses on hidden tabs) — off-screen fields don't churn the main thread during scroll
+- A live-title "decrypt" animation was prototyped and **removed** (too janky) — only the "soon" cards animate
 
 ---
 
@@ -180,7 +198,9 @@ components/
   Services.jsx          — full /services page content (6 sections, pricing, hero corner Portfolio button, WhatsApp + email CTAs)
   Leadership.jsx        — prefect/interact roles
   Skills.jsx            — tech skills
-  Projects.jsx          — selected work (live = motion.a, soon = motion.div dimmed)
+  Projects.jsx          — selected work (live = motion.a, soon = motion.div dimmed to 75% + GlitchField bg)
+  GlitchField.jsx       — canvas glitch/decrypt field behind "soon" cards (aria-hidden, JetBrains Mono, IntersectionObserver-gated)
+  Reveal.jsx            — scroll-reveal wrapper; `as` prop renders it as a semantic tag (e.g. <li>) instead of a div
   Timeline.jsx          — chronological milestones
   Resume.jsx            — CV download (id="resume")
   Lens.jsx              — phone photography gallery
@@ -263,6 +283,7 @@ ecosystem.config.js     — PM2 config (name: damiandc-website, port: 3000)
 | 07 | Coursework Archive | Soon | dim + `cursor-default`, no hover |
 
 > Order rule: live projects sit above `soon` ones — Danella De Cruz is still in progress, so it follows the live client work.
+> `soon` cards (06, 07) render on an animated `GlitchField` canvas backdrop at `opacity-75` — see *Upcoming-Projects Glitch Field* under "What's in main".
 
 Blurb: *"Five projects out in the world. Two more in motion."*
 
@@ -333,11 +354,12 @@ A 1:1 (2160×2160 at 2×) services poster lives at `posts/DDC-Services-Poster.pn
 6. **No stats strip** in Leadership (removed by user)
 7. **No scroll parallax** on project titles (removed by user)
 8. **Theme transition flicker** — global `color` transition removed from `*`; only `background-color` + `border-color` on `*`, and `color` on `body` only
-9. **Soon cards** — `motion.div` (not `motion.a`), `opacity-60 cursor-default select-none`, no `data-hover`
+9. **Soon cards** — `motion.div` (not `motion.a`), `opacity-75 cursor-default select-none` (was `opacity-60` — raised for AA contrast), no `data-hover`; each sits on a `<GlitchField>` bg. Their title `<h3>` must NOT carry `transition-colors` (only live cards need it, for the hover-to-electric effect) — otherwise the title colour visibly lags on theme switch while the rest of the card snaps
 10. **Services not in `NAV_LINKS`** — it's a route, not an anchor; adding it breaks the smooth-scroll feel and clutters the nav; surface via in-page links instead
 11. **Dark mode Services button** — `dark:bg-ink dark:text-ivory` (NOT `dark:bg-ivory` — ivory is navy in dark mode, ink is white)
 12. **Lenis anchors** — `SmoothScroll.jsx` uses ONE delegated `click` listener on `document` (`e.target.closest('a[href^="#"]')`), NOT a `querySelectorAll` snapshot. Keep it delegated — a snapshot misses links rendered after mount (ServicesNav, mobile overlays), causing native jumps that make `whileInView` animations misfire
 13. **Marquee is JS-driven** — `Marquee.jsx` runs its own rAF loop for grab-to-drag + momentum. Do NOT revert it to a CSS `@keyframes marquee` / `.marquee-track` animation (that removes the drag interaction). The transform is set inline every frame; don't add a competing CSS `animation` or `transition: transform` to the track
+14. **GlitchField is a `<canvas>`** — never render its glyphs as DOM text. DOM text would (a) be read aloud as gibberish by screen readers and (b) fail the colour-contrast audit at the intended faint opacity. Keep it `aria-hidden`, canvas-drawn, and keep the `IntersectionObserver` + `visibilitychange` gating so the two fields don't animate off-screen
 
 ---
 
