@@ -75,9 +75,16 @@ export default function ServicesNav() {
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
+    // Hide the page content behind the overlay from assistive tech (browse-mode
+    // readers navigate by landmark/heading and can otherwise reach it despite
+    // the focus trap). The header (close button) stays interactive.
+    const mainEl = document.querySelector("main");
+    mainEl?.setAttribute("inert", "");
+
     return () => {
       document.removeEventListener("keydown", onKeyDown);
       document.body.style.overflow = prevOverflow;
+      mainEl?.removeAttribute("inert");
       buttonRef.current?.focus();
     };
   }, [open]);

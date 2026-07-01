@@ -83,23 +83,21 @@ export default function Timeline() {
 
           <ol className="flex flex-col gap-12 md:gap-16">
             {entries.map((e, i) => (
-              <Reveal key={i} delay={i * 0.07}>
-                <li className="relative pl-12 md:pl-20">
-                  <span
-                    className={`absolute left-[11px] md:left-[-5px] top-3 w-2.5 h-2.5 rounded-full ${
-                      e.accent ? "bg-electric" : "bg-ink"
-                    }`}
-                  />
-                  <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink-soft mb-2">
-                    {e.year} &mdash; {e.place}
-                  </div>
-                  <h3 className="font-display text-3xl md:text-5xl leading-tight text-ink">
-                    {e.title}
-                  </h3>
-                  <p className="mt-3 max-w-xl text-base md:text-lg text-ink-soft">
-                    {e.detail}
-                  </p>
-                </li>
+              <Reveal as="li" key={i} delay={i * 0.07} className="relative pl-12 md:pl-20">
+                <span
+                  className={`absolute left-[11px] md:left-[-5px] top-3 w-2.5 h-2.5 rounded-full ${
+                    e.accent ? "bg-electric" : "bg-ink"
+                  }`}
+                />
+                <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink-soft mb-2">
+                  {e.year} &mdash; {e.place}
+                </div>
+                <h3 className="font-display text-3xl md:text-5xl leading-tight text-ink">
+                  {e.title}
+                </h3>
+                <p className="mt-3 max-w-xl text-base md:text-lg text-ink-soft">
+                  {e.detail}
+                </p>
               </Reveal>
             ))}
           </ol>

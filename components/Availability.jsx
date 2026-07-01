@@ -7,7 +7,7 @@ export default function Availability({ className = "" }) {
     <span
       className={`items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-ink ${className}`}
     >
-      <span className="w-1.5 h-1.5 rounded-full bg-electric animate-pulse" />
+      <span aria-hidden className="w-1.5 h-1.5 rounded-full bg-electric animate-pulse" />
       {AVAILABILITY}
     </span>
   );
