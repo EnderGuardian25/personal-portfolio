@@ -114,8 +114,11 @@ html, body {
 /* Custom cursor — hide native arrow on true pointer devices so the
    custom dot+ring is the only cursor. Touch/stylus devices keep the
    default cursor untouched. Scoped to html.js-cursor so a JS failure
-   (Cursor.jsx never mounts) leaves the native cursor visible. */
-@media (hover: hover) and (pointer: fine) {
+   (Cursor.jsx never mounts) leaves the native cursor visible. The
+   prefers-reduced-motion: no-preference gate keeps the native cursor for
+   users who ask for reduced motion (Cursor.jsx also skips mounting for
+   them, and for forced-colors users — this is defence in depth). */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
   html.js-cursor,
   html.js-cursor body,
   html.js-cursor a,
@@ -123,6 +126,18 @@ html, body {
   html.js-cursor [data-hover],
   html.js-cursor [role="button"] {
     cursor: none !important;
+  }
+}
+
+/* Windows High Contrast / forced-colors — always restore the native cursor. */
+@media (forced-colors: active) {
+  html.js-cursor,
+  html.js-cursor body,
+  html.js-cursor a,
+  html.js-cursor button,
+  html.js-cursor [data-hover],
+  html.js-cursor [role="button"] {
+    cursor: auto !important;
   }
 }
 

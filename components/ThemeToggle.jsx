@@ -1,8 +1,13 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 
 const EASE = [0.22, 1, 0.36, 1];
+
+// Run before the browser paints on the client (avoids a one-frame icon flash
+// where dark-mode visitors briefly see the sun), but fall back to useEffect on
+// the server to avoid the SSR useLayoutEffect warning.
+const useIsoLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 export default function ThemeToggle() {
   // `mounted` guards against hydration mismatch: server + first client render
@@ -10,7 +15,7 @@ export default function ThemeToggle() {
   const [mounted, setMounted] = useState(false);
   const [dark, setDark] = useState(false);
 
-  useEffect(() => {
+  useIsoLayoutEffect(() => {
     setMounted(true);
     setDark(document.documentElement.classList.contains("dark"));
   }, []);
