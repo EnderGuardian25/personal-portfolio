@@ -1,5 +1,5 @@
 # DDC Portfolio — Session Handoff
-> Generated: 2026-06-06 | Updated: 2026-06-15 | Branch: `main`
+> Generated: 2026-06-06 | Updated: 2026-07-01 | Branch: `main`
 
 ---
 
@@ -8,7 +8,7 @@
 - **Owner:** Damian De Cruz — Creative Technologist, BSc (Hons) Computer Science, IIT Sri Lanka (University of Westminster)
 - **Repo:** https://github.com/EnderGuardian25/personal-portfolio (`main` branch)
 - **Local path:** `D:\personal-portfolio`
-- **Last commit:** `dad5300` — fix(pre-deploy): audit fixes — SEO, copy, cursor, cleanup
+- **Last commit:** `2026-07-01` — perf: pause glitch canvas off-screen/hidden; earlier this session: a11y fixes (Lighthouse a11y **100**) + animated glitch decrypt field behind upcoming projects
 
 ---
 
@@ -26,8 +26,7 @@
 
 ---
 
-## What's in main (shipped from v2)
-All of the following were added on the `v2` branch and are absent from production:
+## What's in main
 
 ### Dark Mode
 - Sun/moon `ThemeToggle` in nav — writes to `localStorage`, toggles `.dark` on `<html>`
@@ -44,26 +43,33 @@ All of the following were added on the `v2` branch and are absent from productio
 - `app/icon.svg` + `app/icon.png` (512×512) + `app/apple-icon.png` (180×180) — DDC favicon
 - `app/robots.js` + `app/sitemap.js` — auto-wired by Next.js App Router; sitemap includes `/services`
 - JSON-LD `Person` + `Service` structured data in `app/layout.jsx`
-- OG image converted: `public/og.jpg` (45KB JPEG, was 753KB PNG)
+- `FAQPage` JSON-LD in `app/services/page.jsx` — 7 Q&As, eligible for Google rich results
+- OG image converted: `public/og.jpg` (45KB JPEG, was 753KB PNG); unused `og.png` (771KB) deleted
 - `alternates: { canonical: "/" }` in metadata
 - `next.config.mjs`: removed `unoptimized: true`, added `formats: ['image/avif','image/webp']`
 - Google Search Console: DNS TXT record verified via Squarespace DNS panel
+- **Google Analytics 4** (`G-PC1HZKKSEC`) — added via `next/script strategy="afterInteractive"` in `app/layout.jsx`; covers all pages from root layout
 
 ### Services Page (`/services`)
-- Standalone route with its own metadata, canonical, OG, Twitter, and `OfferCatalog` JSON-LD
-- 6 sections: Intro (unnumbered, like the homepage hero) · `§ 01 — What I do` · `§ 02 — How it works` · `§ 03 — Recent work` · `§ 04 — FAQ` · `§ 05 — Start a project` (numbered with the same `§ 0N — Label` scheme as the homepage)
-- 4 services with LKR/USD pricing and turnarounds:
-  - Web design & development — from LKR 18,000 / $150, 48–72 hrs
-  - Business website — from LKR 40,000 / $500, 3–5 days
-  - Portfolio & booking — from LKR 65,000 / $800, 5–7 days
-  - Redesign & refresh — from LKR 25,000 / $200, 2–3 days
+- Standalone route with its own metadata, canonical, OG, Twitter, `OfferCatalog` JSON-LD, and `FAQPage` JSON-LD
+- 6 sections: Intro (unnumbered) · `§ 01 — What I do` · `§ 02 — How it works` · `§ 03 — Recent work` · `§ 04 — FAQ` · `§ 05 — Start a project`
+- **7 services** with LKR/USD pricing and turnarounds:
+  - § 01 Web design & development — from LKR 18,000 / $150, ~2–3 days
+  - § 02 Business & portfolio sites — from LKR 40,000 / $500, ~1 week
+  - § 03 Booking & scheduling sites — from LKR 65,000 / $800, 1–2 weeks
+  - § 04 Redesigns & speed fixes — from LKR 25,000 / $200, 1–3 days
+  - § 05 SEO & AI visibility audit — from LKR 50,000 / $299, 2–4 days
+  - § 06 SEO & GEO implementation — from LKR 65,000 / $400, 1–2 weeks *(final price quoted from audit scope)*
+  - § 07 Ongoing SEO & GEO retainer — from LKR 48,000 / $225/mo, monthly
+- **SEO/GEO service flow:** audit (§05) → implementation (§06, quoted after audit) → retainer (§07, optional ongoing)
+- FAQ section has 7 entries including deposit/cancellation policy
+- `mailto:` links include `?subject=Website%20enquiry` pre-fill in both `Services.jsx` and `Contact.jsx`
 - CTA buttons: WhatsApp (electric fill) + email (outline) — constants from `lib/site.js`
-- Uses its own `ServicesNav` (logo **DDC / Services '26**, section links Pricing · Process · Work · FAQ) — see Navigation above
-- **Hero corner block mirrors the homepage hero**: `(002) Services / Hire` label (fades on scroll via `useScroll`/`metaOpacity`) with an electric **Portfolio →** button below it, desktop only (`hidden md:flex`)
-- Hero left-column label reads **Damian De Cruz** (not "Services" — avoids triple-repeating the word on landing)
-- Recent Work section has a **See the full portfolio →** link (→ `/`) plus a **"My Portfolio"** project card (→ `/`)
-- "Start a project" CTA section: label in left column, no redundant "Or reach me at" line (email CTA covers it)
-- Page itself is **not** in the homepage navbar — surfaced via in-page links from About + the homepage hero corner button instead
+- Uses its own `ServicesNav` (logo **DDC / Services '26**, section links Pricing · Process · Work · FAQ)
+- **Hero corner block mirrors the homepage hero**: `(002) Services / Hire` label (fades on scroll) with **Portfolio →** button, desktop only
+- Hero left-column label reads **Damian De Cruz**
+- Recent Work (`§ 03`): **See the full portfolio →** link + **4 project cards in a 2×2 grid** (`sm:grid-cols-2`, hairline `gap-px bg-rule` dividers) — This Portfolio (`/`) · Ranmal Flora · Spades Solutions · Aloys Travels. `work[]` array lives at the top of `Services.jsx`
+- Not in the homepage navbar — surfaced via hero corner button (desktop) and nav hamburger overlay (mobile)
 
 ### Navigation
 - **Two separate, mirrored navbars** — the homepage uses `Nav.jsx`; `/services` uses its own `ServicesNav.jsx`. Both carry: section links · theme toggle · `Available · 2026` badge (desktop right + mobile overlay) · and a cross-link to the *other* page in the mobile overlay.
@@ -76,6 +82,16 @@ All of the following were added on the `v2` branch and are absent from productio
 - Calls `lenis.scrollTo(target, { offset: -80 })` so smooth scroll runs and `whileInView` animations fire correctly
 - Delegation (not a one-time `querySelectorAll` snapshot) means it catches links rendered *after* mount too — the `ServicesNav` links and both navs' conditionally-rendered mobile-menu overlays now smooth-scroll on every page
 - Without this, native anchor jumps bypass Lenis and `whileInView` triggers all at once
+
+### Interactive Marquee (`Marquee.jsx`)
+- The italic ribbon between homepage sections ("Creative Technologist ✦ Code ✦ …") — **JS-driven `requestAnimationFrame` loop**, NOT a CSS keyframe (the old `@keyframes marquee` / `.marquee-track` rule was removed from `globals.css`)
+- **Auto-scrolls** leftward at the same speed as before (`baseline = -single / LOOP_SECONDS`, `LOOP_SECONDS = 38`; `single = track.scrollWidth / 2` since two copies are rendered)
+- **Grab-to-drag:** pointerdown grabs it, pointermove moves the offset 1:1 with the cursor, a smoothed throw velocity is captured
+- **Momentum + settle:** on release the flick keeps gliding, then an exponential blend (`SETTLE_TAU = 0.9`) decelerates it back into the normal leftward rotation. Two tuning knobs live at the top of the file: `LOOP_SECONDS` (speed) + `SETTLE_TAU` (settle laziness)
+- **Pause on grab only** — auto-scroll keeps running on hover; it only stops while actively held
+- Offset wraps modulo `single` for a seamless loop in both directions; `dt` is clamped (0.05s) so tab-switches don't cause jumps
+- `touch-pan-y` lets horizontal drag grab the ribbon while vertical page scroll still works on mobile; `data-hover` expands the custom cursor ring; `cursor: grab` → `grabbing`
+- **Reduced motion:** `baseline = 0` (no perpetual spin) and the loop idle-suspends; drag still works and settles to a stop. `Marquee.jsx` is no longer referenced in the `prefers-reduced-motion` CSS block
 
 ### Hero
 - Kicker: `"Creative Technologist · Freelance Web Designer"`
@@ -111,10 +127,28 @@ All of the following were added on the `v2` branch and are absent from productio
 
 ### Accessibility & UX
 - Mobile menu: `aria-expanded`, `role="dialog"`, `aria-modal`, focus trap, Escape-to-close, body scroll lock, focus restoration
+- **Mobile menu now also sets `<main>` `inert`** while open (Nav + ServicesNav) so browse-mode screen readers can't reach content behind the overlay
 - `MotionProvider.jsx` wraps entire app with `<MotionConfig reducedMotion="user">`
-- `cursor: none` scoped to `@media (hover: hover) and (pointer: fine)`
+- `cursor: none` gated behind `html.js-cursor` class — `Cursor.jsx` adds it on mount, removes on unmount; JS failure leaves native cursor visible. **Also skipped entirely for `prefers-reduced-motion` and `forced-colors: active` users** (JS bail in `Cursor.jsx` + CSS media guards in `globals.css`) so they keep the native cursor
 - `:focus-visible` ring using `rgb(var(--c-electric))`
 - `@media (prefers-reduced-motion: reduce)` block in globals.css
+
+### Accessibility Pass — Lighthouse a11y 100 (2026-07-01)
+Verified **100 / 100 / 100 / 100** (Accessibility · Best Practices · SEO · Agentic) on a production build in dark mode, via chrome-devtools Lighthouse.
+- **Timeline list semantics:** `<ol>` children had been wrapped in a `<div>` (invalid list). `Reveal.jsx` gained an `as` prop so the reveal wrapper renders as the real `<li>` — valid `<ol>`/`<li>` nesting with the animation intact
+- **Heading order:** About's `§ 01 — About` label changed from `<div>` to `<h2>` (keeps the `.section-label` class → no visual change) so headings descend sequentially
+- **Decorative elements hidden:** Hero scroll-cue and the `Availability` pulse dot marked `aria-hidden`
+- **Résumé download:** `aria-label="Download CV — PDF"` so the file type is announced
+- **ThemeToggle:** switched to an isomorphic `useLayoutEffect` so the correct sun/moon icon is set before paint — no icon flash for dark-mode visitors
+- **Contrast:** the two "soon" project cards were `opacity-60`, dragging their text under 4.5:1 in dark mode → lifted to `opacity-75` and the "soon" badge muted from `electric` to `ink-soft`
+
+### Upcoming-Projects Glitch Field (2026-07-01)
+- `GlitchField.jsx` — a decorative, continuously-scrambling field of monospace glyphs rendered behind each "soon" project card (Danella De Cruz, Coursework Archive), matching the reference in `docs/Glitch Text.png` (untracked, local-only)
+- **Canvas-rendered, not DOM text — on purpose:** carries no accessible text (screen readers ignore it) and no DOM glyphs for the contrast audit to flag at its intentionally-faint opacity. Drawn in the real **JetBrains Mono** stack read from the wrapper's computed `font-family` (Canvas can't parse `var(--font-mono)`); redraws once `document.fonts.ready` resolves
+- Radial center-fade mask keeps the overlaid title/blurb readable; `aria-hidden`; glyph colour re-read on theme flip via a `MutationObserver` on `<html>` so it never lags the theme
+- **Reduced motion:** paints a single static frame, no loop
+- **Perf:** the rAF loop is gated by an `IntersectionObserver` (only animates while on screen, 100px rootMargin) **and** a `visibilitychange` listener (pauses on hidden tabs) — off-screen fields don't churn the main thread during scroll
+- A live-title "decrypt" animation was prototyped and **removed** (too janky) — only the "soon" cards animate
 
 ---
 
@@ -164,10 +198,13 @@ components/
   Services.jsx          — full /services page content (6 sections, pricing, hero corner Portfolio button, WhatsApp + email CTAs)
   Leadership.jsx        — prefect/interact roles
   Skills.jsx            — tech skills
-  Projects.jsx          — selected work (live = motion.a, soon = motion.div dimmed)
+  Projects.jsx          — selected work (live = motion.a, soon = motion.div dimmed to 75% + GlitchField bg)
+  GlitchField.jsx       — canvas glitch/decrypt field behind "soon" cards (aria-hidden, JetBrains Mono, IntersectionObserver-gated)
+  Reveal.jsx            — scroll-reveal wrapper; `as` prop renders it as a semantic tag (e.g. <li>) instead of a div
   Timeline.jsx          — chronological milestones
   Resume.jsx            — CV download (id="resume")
   Lens.jsx              — phone photography gallery
+  Marquee.jsx           — interactive ribbon: JS rAF auto-scroll + grab-to-drag with momentum/settle
   Contact.jsx           — email + socials (data from lib/site.js)
   Footer.jsx            — v:02 / Always evolving
 
@@ -182,6 +219,9 @@ public/
 
 assets/
   photography-originals/ — raw phone JPEGs (gitignored)
+
+posts/                    — local social media exports (gitignored — lives on this machine only)
+  DDC-Services-Poster.png — 2160×2160 light-theme services poster, rendered from /poster route (now deleted)
 
 scripts/
   optimize-photos.mjs   — sharp resize: assets/photography-originals/ → public/photography/
@@ -235,19 +275,22 @@ ecosystem.config.js     — PM2 config (name: damiandc-website, port: 3000)
 | # | Title | Status | Notes |
 |---|---|---|---|
 | 01 | This Portfolio | Live | href: #top — "You're here ↑" |
-| 02 | Personal Dashboard | Live | no link yet |
+| 02 | Personal Dashboard | Live | https://enderguardian25.github.io/personal-dashboard/ |
 | 03 | Ranmal Flora | Live | https://enderguardian25.github.io/ranmal-flora/ |
-| 04 | Danella De Cruz | Soon | Client project — portfolio & booking site for vocal artist |
-| 05 | Coursework Archive | Soon | dim + `cursor-default`, no hover |
+| 04 | Spades Solutions | Live | Client project — https://enderguardian25.github.io/spades-solutions/index.html |
+| 05 | Aloys Travels | Live | Client project — https://aloys-travels.pages.dev/ |
+| 06 | Danella De Cruz | Soon | Client project — portfolio & booking site for vocal artist |
+| 07 | Coursework Archive | Soon | dim + `cursor-default`, no hover |
 
-Blurb: *"Three projects out in the world. Two more in motion."*
+> Order rule: live projects sit above `soon` ones — Danella De Cruz is still in progress, so it follows the live client work.
+> `soon` cards (06, 07) render on an animated `GlitchField` canvas backdrop at `opacity-75` — see *Upcoming-Projects Glitch Field* under "What's in main".
+
+Blurb: *"Five projects out in the world. Two more in motion."*
 
 Ranmal Flora description: *"Website for Sri Lanka's foremost tissue culture laboratory — producing 1.2 million pathogen-free plantlets annually and scaling to 6 million."* (tissue culture lab — NOT a local florist)
 
 ### Timeline (newest → oldest)
 - 2026 — This Portfolio *(accent color)*
-- 2026 — Danella De Cruz *(Client project · Portfolio & Booking)*
-- 2026 — Ranmal Flora
 - 2026 — Personal Dashboard
 - 2025–2026 — Completed first year (IIT · University of Westminster)
 - Sep 2025 — Began BSc (Hons) Computer Science (IIT · University of Westminster)
@@ -293,6 +336,15 @@ Ranmal Flora description: *"Website for Sri Lanka's foremost tissue culture labo
 
 ---
 
+## Social Poster
+
+A 1:1 (2160×2160 at 2×) services poster lives at `posts/DDC-Services-Poster.png` on this machine — gitignored, local only.
+
+> **Full pipeline:** see [`docs/POSTER-PIPELINE.md`](docs/POSTER-PIPELINE.md) — durable reference for building/regenerating any social post (temp Next.js route → headless Chrome screenshot, light-theme guards, teardown).
+> **Key lesson:** never hand-build in SVG (librsvg renders fonts wrong). Always render the real page in a browser.
+
+---
+
 ## Critical Design Rules — DO NOT RE-BREAK
 1. **Italic name clipping** — `overflow-hidden` on LINE-LEVEL divs (`pb-[0.04em]`), never on word spans
 2. **OG image** — static `public/og.jpg` only. No dynamic `/opengraph-image` route — causes 502 on nginx+PM2
@@ -302,17 +354,19 @@ Ranmal Flora description: *"Website for Sri Lanka's foremost tissue culture labo
 6. **No stats strip** in Leadership (removed by user)
 7. **No scroll parallax** on project titles (removed by user)
 8. **Theme transition flicker** — global `color` transition removed from `*`; only `background-color` + `border-color` on `*`, and `color` on `body` only
-9. **Soon cards** — `motion.div` (not `motion.a`), `opacity-60 cursor-default select-none`, no `data-hover`
+9. **Soon cards** — `motion.div` (not `motion.a`), `opacity-75 cursor-default select-none` (was `opacity-60` — raised for AA contrast), no `data-hover`; each sits on a `<GlitchField>` bg. Their title `<h3>` must NOT carry `transition-colors` (only live cards need it, for the hover-to-electric effect) — otherwise the title colour visibly lags on theme switch while the rest of the card snaps
 10. **Services not in `NAV_LINKS`** — it's a route, not an anchor; adding it breaks the smooth-scroll feel and clutters the nav; surface via in-page links instead
 11. **Dark mode Services button** — `dark:bg-ink dark:text-ivory` (NOT `dark:bg-ivory` — ivory is navy in dark mode, ink is white)
 12. **Lenis anchors** — `SmoothScroll.jsx` uses ONE delegated `click` listener on `document` (`e.target.closest('a[href^="#"]')`), NOT a `querySelectorAll` snapshot. Keep it delegated — a snapshot misses links rendered after mount (ServicesNav, mobile overlays), causing native jumps that make `whileInView` animations misfire
+13. **Marquee is JS-driven** — `Marquee.jsx` runs its own rAF loop for grab-to-drag + momentum. Do NOT revert it to a CSS `@keyframes marquee` / `.marquee-track` animation (that removes the drag interaction). The transform is set inline every frame; don't add a competing CSS `animation` or `transition: transform` to the track
+14. **GlitchField is a `<canvas>`** — never render its glyphs as DOM text. DOM text would (a) be read aloud as gibberish by screen readers and (b) fail the colour-contrast audit at the intended faint opacity. Keep it `aria-hidden`, canvas-drawn, and keep the `IntersectionObserver` + `visibilitychange` gating so the two fields don't animate off-screen
 
 ---
 
 ## Running Locally
 ```powershell
 cd D:\personal-portfolio
-git checkout v2          # ensure you're on the right branch
+git checkout main
 npm.cmd run dev
 # http://localhost:3000 (or 3001 if 3000 is in use)
 ```
@@ -341,13 +395,16 @@ npm.cmd run dev
 ---
 
 ## Pending / Next Ideas
+- [ ] **Deploy** — SSH into VPS → `~/deploy.sh` (main is ready)
+- [ ] Verify live: dark mode, `/services`, `/sitemap.xml`, `/robots.txt`, OG image
+- [ ] Submit sitemap + request indexing of `/` and `/services` in GSC
+- [ ] Verify GA4 data flowing in Google Analytics dashboard (~24–48 hrs after deploy)
 - [ ] Personal Dashboard — add live link when ready
 - [ ] Danella De Cruz — update project card with live link when site is deployed
+- [ ] Spades Solutions — update project card with live link when site is deployed
+- [ ] Aloys Travels — update project card with live link when site is deployed
 - [ ] Coursework Archive — reveal when ready
-- [ ] Verify OG image live at `https://damiandc.com/og.jpg` after deploy
-- [ ] Check opengraph.xyz with `https://damiandc.com` after deploy
-- [ ] Submit sitemap + request indexing in GSC after deploy
-- [ ] "Introductory rate" framing on services pricing (optional — research recommended for first few clients)
-- [ ] Analytics (Plausible or similar)
+- [ ] Add a testimonial / client outcome to `/services` (biggest remaining trust gap)
+- [ ] Homepage: add WhatsApp CTA above the fold on mobile (Services button is desktop-only)
 - [ ] Lighthouse audit after deploy
-- [ ] D: drive (KINGSTON NVMe) — check Event Viewer → System for disk/nvme/Ntfs errors; consider reseating M.2 drive (intermittent PCIe bus dropouts caused file corruption during this session)
+- [ ] D: drive (KINGSTON NVMe) — check Event Viewer → System for disk/nvme/Ntfs errors; consider reseating M.2 drive (intermittent PCIe bus dropouts caused file corruption in a prior session)

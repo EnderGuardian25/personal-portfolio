@@ -6,6 +6,14 @@ export default function Cursor() {
   const ring = useRef(null);
 
   useEffect(() => {
+    // Respect accessibility preferences: users who ask for reduced motion or
+    // are in a forced-colors / high-contrast mode keep their native cursor.
+    // Bail before adding .js-cursor so the cursor:none CSS never applies.
+    const noCursor =
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      window.matchMedia("(forced-colors: active)").matches;
+    if (noCursor) return;
+
     document.documentElement.classList.add("js-cursor");
     let mx = 0, my = 0, rx = 0, ry = 0;
     const move = (e) => { mx = e.clientX; my = e.clientY; };

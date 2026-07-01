@@ -28,6 +28,7 @@ export default function Resume() {
               href="/damiandc-resume.pdf"
               download
               data-hover
+              aria-label="Download CV — PDF"
               className="group inline-flex items-center gap-3 px-6 py-4 border border-ink rounded-full hover:bg-ink hover:text-ivory transition-colors duration-500"
             >
               <span className="font-mono text-[11px] uppercase tracking-[0.2em]">

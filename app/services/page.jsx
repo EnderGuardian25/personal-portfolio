@@ -134,6 +134,27 @@ const servicesJsonLd = {
         price: "25000",
         description: "Visual refreshes and performance / Core Web Vitals optimisation.",
       },
+      {
+        "@type": "Offer",
+        itemOffered: { "@type": "Service", name: "SEO & AI visibility audit" },
+        priceCurrency: "LKR",
+        price: "50000",
+        description: "On-page, technical, and GEO audit — how the site ranks on Google and surfaces in AI answers, with a priority roadmap.",
+      },
+      {
+        "@type": "Offer",
+        itemOffered: { "@type": "Service", name: "SEO & GEO implementation" },
+        priceCurrency: "LKR",
+        price: "65000",
+        description: "Implementation of audit recommendations — technical fixes, schema markup, and AI snippet optimisation.",
+      },
+      {
+        "@type": "Offer",
+        itemOffered: { "@type": "Service", name: "Ongoing SEO & GEO retainer" },
+        priceCurrency: "LKR",
+        price: "48000",
+        description: "Monthly SEO health checks, GEO monitoring, content updates, and a performance report.",
+      },
     ],
   },
 };
