@@ -225,7 +225,7 @@ components/
   Lens.jsx              — phone photography gallery
   Marquee.jsx           — interactive ribbon: JS rAF auto-scroll + grab-to-drag with momentum/settle
   Contact.jsx           — email + socials (data from lib/site.js)
-  Footer.jsx            — v:02 / Always evolving
+  Footer.jsx            — v:03 / Always evolving
 
   SplitLines.jsx        — masked line reveals for headings (fonts.ready + offsetTop grouping; sr-only a11y text)
   IntroStamp.jsx        — every-reload decrypt intro overlay (z-65, pointer-events-none, reduced-motion skipped)
@@ -357,7 +357,7 @@ Ranmal Flora description: *"Website for Sri Lanka's foremost tissue culture labo
 - Left column accent: vertical "hello." (`writingMode: vertical-rl`, `rotate(180deg)`, `fontSize: 7rem`)
 
 ### Footer
-- `v:02 / Always evolving` — `text-right` at **all** screen sizes
+- `v:03 / Always evolving` — `text-right` at **all** screen sizes
 - Copyright: `© {YEAR} — Damian De Cruz` (year from `YEAR` in `lib/site.js`)
 
 ---
