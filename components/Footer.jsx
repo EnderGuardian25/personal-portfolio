@@ -13,7 +13,7 @@ export default function Footer() {
           Made by hand, in Colombo.
         </Reveal>
         <Reveal y={16} margin="0px" delay={0.16} className="col-span-12 md:col-span-4 text-right font-mono text-[11px] uppercase tracking-[0.2em] text-ink-soft">
-          v:02 / Always evolving
+          v:03 / Always evolving
         </Reveal>
       </div>
     </footer>
