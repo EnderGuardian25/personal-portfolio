@@ -1,7 +1,6 @@
 "use client";
 import Reveal from "./Reveal";
 import SplitLines from "./SplitLines";
-import Magnetic from "./Magnetic";
 
 export default function Resume() {
   return (
@@ -24,22 +23,20 @@ export default function Resume() {
 
         <div className="col-span-12 md:col-span-3 md:text-right">
           <Reveal delay={0.2}>
-            <Magnetic>
-              <a
-                href="/damiandc-resume.pdf"
-                download
-                data-hover
-                aria-label="Download CV — PDF"
-                className="group inline-flex items-center gap-3 px-6 py-4 border border-ink rounded-full hover:bg-ink hover:text-ivory transition-colors duration-500"
-              >
-                <span className="font-mono text-[11px] uppercase tracking-[0.2em]">
-                  Download CV
-                </span>
-                <span className="inline-block transition-transform duration-500 group-hover:translate-y-0.5">
-                  ↓
-                </span>
-              </a>
-            </Magnetic>
+            <a
+              href="/damiandc-resume.pdf"
+              download
+              data-hover
+              aria-label="Download CV — PDF"
+              className="group inline-flex items-center gap-3 px-6 py-4 border border-ink rounded-full hover:bg-ink hover:text-ivory transition-colors duration-500"
+            >
+              <span className="font-mono text-[11px] uppercase tracking-[0.2em]">
+                Download CV
+              </span>
+              <span className="inline-block transition-transform duration-500 group-hover:translate-y-0.5">
+                ↓
+              </span>
+            </a>
             <div className="mt-3 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-faint">
               PDF · v1 · 2026
             </div>

@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import Reveal from "./Reveal";
 import SplitLines from "./SplitLines";
 import Parallax from "./Parallax";
-import Magnetic from "./Magnetic";
 import { SOCIALS, EMAIL } from "@/lib/site";
 import { EASE } from "@/lib/motion";
 
@@ -56,18 +55,16 @@ export default function Contact() {
           </Reveal>
 
           <Reveal delay={0.15}>
-            <Magnetic strength={0.2} className="mt-8 inline-block">
-              <a
-                href={`mailto:${EMAIL}?subject=Website%20enquiry`}
-                data-hover
-                className="group inline-flex items-center gap-3 link-line font-display text-2xl md:text-4xl italic text-ink"
-              >
-                {EMAIL}
-                <span className="font-sans not-italic text-base transition-transform duration-500 group-hover:translate-x-1.5">
-                  →
-                </span>
-              </a>
-            </Magnetic>
+            <a
+              href={`mailto:${EMAIL}?subject=Website%20enquiry`}
+              data-hover
+              className="group mt-8 inline-flex items-center gap-3 link-line font-display text-2xl md:text-4xl italic text-ink"
+            >
+              {EMAIL}
+              <span className="font-sans not-italic text-base transition-transform duration-500 group-hover:translate-x-1.5">
+                →
+              </span>
+            </a>
           </Reveal>
 
           <div className="mt-14 md:mt-20 grid grid-cols-1 md:grid-cols-2 gap-px bg-rule border-y border-rule">
