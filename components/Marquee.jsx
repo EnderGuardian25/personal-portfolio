@@ -21,6 +21,13 @@ const LOOP_SECONDS = 38;
 // How quickly a flick decays / the ribbon eases back to its baseline speed.
 // Larger = slower, more languid settle.
 const SETTLE_TAU = 0.9;
+// Page-scroll reaction: fast scrolling accelerates the ribbon along its travel
+// direction and shears it slightly; both settle as scroll velocity decays.
+const SCROLL_TAU = 0.15;      // smoothing for the measured scroll velocity
+const BOOST_FACTOR = 0.25;    // ribbon px/s gained per page px/s scrolled
+const MAX_BOOST = 400;        // px/s cap on the scroll boost
+const SKEW_FACTOR = 0.003;    // degrees of skew per px/s of scroll velocity
+const MAX_SKEW = 5;           // degrees cap
 
 export default function Marquee() {
   const trackRef = useRef(null);
@@ -42,6 +49,13 @@ export default function Marquee() {
     let dragging = false;
     let lastPointerX = 0;
     let lastMoveT = 0;
+
+    // Scroll-velocity reaction state. Reading window.scrollY inside the
+    // existing rAF loop needs no listeners and works identically whether
+    // Lenis or native scrolling is writing the scroll position.
+    let lastSy = 0;
+    let scrollVel = 0;          // smoothed page px/s
+    let skew = 0;               // current skewX in degrees
 
     const measure = () => {
       single = track.scrollWidth / 2; // two identical copies are rendered
@@ -68,6 +82,25 @@ export default function Marquee() {
       const dt = Math.min((now - lastFrame) / 1000 || 0, 0.05); // clamp tab-switch jumps
       lastFrame = now;
 
+      // Measure page-scroll velocity and fold it into a boost + shear. The
+      // boost is ADDITIVE to the offset — it never touches `velocity`, so
+      // drag/flick momentum stays untouched. Gated off under reduced motion.
+      if (!reduce && dt > 0) {
+        const sy = window.scrollY;
+        const rawVel = (sy - lastSy) / dt;
+        lastSy = sy;
+        scrollVel += (rawVel - scrollVel) * (1 - Math.exp(-dt / SCROLL_TAU));
+        skew = Math.max(-MAX_SKEW, Math.min(MAX_SKEW, scrollVel * SKEW_FACTOR));
+        if (!dragging) {
+          // Any scroll direction speeds the ribbon along its travel direction
+          // (signed by baseline) so it never awkwardly reverses.
+          const boost =
+            Math.min(Math.abs(scrollVel) * BOOST_FACTOR, MAX_BOOST) *
+            Math.sign(baseline || -1);
+          offset += boost * dt;
+        }
+      }
+
       if (!dragging) {
         // Exponential blend of velocity toward baseline: decays a flick and,
         // for a stopped ribbon, ramps it back up to the normal rotation.
@@ -77,7 +110,7 @@ export default function Marquee() {
         wrap();
       }
 
-      track.style.transform = `translate3d(${offset}px,0,0)`;
+      track.style.transform = `translate3d(${offset}px,0,0) skewX(${skew.toFixed(2)}deg)`;
 
       // Idle-suspend only matters when there's nothing to animate toward
       // (reduced motion: baseline 0). Otherwise keep the loop alive.
@@ -93,6 +126,7 @@ export default function Marquee() {
       if (running) return;
       running = true;
       lastFrame = performance.now();
+      lastSy = window.scrollY; // no velocity spike after an idle suspend
       raf = requestAnimationFrame(frame);
     };
 
@@ -114,7 +148,7 @@ export default function Marquee() {
       const dt = (now - lastMoveT) / 1000;
       offset += dx;
       wrap();
-      track.style.transform = `translate3d(${offset}px,0,0)`;
+      track.style.transform = `translate3d(${offset}px,0,0) skewX(${skew.toFixed(2)}deg)`;
       // Smooth the throw velocity so a jittery last frame doesn't dominate.
       if (dt > 0) {
         const inst = dx / dt;

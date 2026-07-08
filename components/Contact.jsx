@@ -1,7 +1,11 @@
 "use client";
 import { motion } from "framer-motion";
 import Reveal from "./Reveal";
+import SplitLines from "./SplitLines";
+import Parallax from "./Parallax";
+import Magnetic from "./Magnetic";
 import { SOCIALS, EMAIL } from "@/lib/site";
+import { EASE } from "@/lib/motion";
 
 export default function Contact() {
   return (
@@ -13,34 +17,34 @@ export default function Contact() {
 
         {/* Left column — label at top, "hello." vertical beside the socials grid */}
         <div className="col-span-12 md:col-span-3 flex flex-col">
-          <div className="section-label">§ 08 — Contact</div>
+          <div className="section-label md:sticky md:top-32">§ 08 — Contact</div>
 
           <div className="hidden md:flex flex-1 items-center justify-start mt-8 overflow-hidden">
-            <motion.div
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
-              aria-hidden
-              className="pointer-events-none select-none font-display italic leading-none text-electric/15"
-              style={{
-                writingMode: "vertical-rl",
-                transform: "rotate(180deg)",
-                fontSize: "7rem",
-              }}
-            >
-              hello.
-            </motion.div>
+            <Parallax distance={30}>
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1.4, ease: EASE }}
+                aria-hidden
+                className="pointer-events-none select-none font-display italic leading-none text-electric/15"
+                style={{
+                  writingMode: "vertical-rl",
+                  transform: "rotate(180deg)",
+                  fontSize: "7rem",
+                }}
+              >
+                hello.
+              </motion.div>
+            </Parallax>
           </div>
         </div>
 
         {/* Right column — all content */}
         <div className="col-span-12 md:col-span-9 md:col-start-4">
-          <Reveal>
-            <h2 className="font-display text-6xl md:text-[9rem] leading-[0.88] tracking-ultra text-ink">
-              Let&rsquo;s <span className="italic text-electric">talk</span>.
-            </h2>
-          </Reveal>
+          <SplitLines as="h2" className="font-display text-6xl md:text-[9rem] leading-[0.88] tracking-ultra text-ink">
+            Let&rsquo;s <span className="italic text-electric">talk</span>.
+          </SplitLines>
 
           <Reveal delay={0.1}>
             <p className="mt-8 md:mt-10 max-w-xl text-lg md:text-xl text-ink-soft leading-relaxed">
@@ -52,16 +56,18 @@ export default function Contact() {
           </Reveal>
 
           <Reveal delay={0.15}>
-            <a
-              href={`mailto:${EMAIL}?subject=Website%20enquiry`}
-              data-hover
-              className="group mt-8 inline-flex items-center gap-3 link-line font-display text-2xl md:text-4xl italic text-ink"
-            >
-              {EMAIL}
-              <span className="font-sans not-italic text-base transition-transform duration-500 group-hover:translate-x-1.5">
-                →
-              </span>
-            </a>
+            <Magnetic strength={0.2} className="mt-8 inline-block">
+              <a
+                href={`mailto:${EMAIL}?subject=Website%20enquiry`}
+                data-hover
+                className="group inline-flex items-center gap-3 link-line font-display text-2xl md:text-4xl italic text-ink"
+              >
+                {EMAIL}
+                <span className="font-sans not-italic text-base transition-transform duration-500 group-hover:translate-x-1.5">
+                  →
+                </span>
+              </a>
+            </Magnetic>
           </Reveal>
 
           <div className="mt-14 md:mt-20 grid grid-cols-1 md:grid-cols-2 gap-px bg-rule border-y border-rule">

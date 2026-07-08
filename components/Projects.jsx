@@ -1,7 +1,9 @@
 "use client";
 import { motion } from "framer-motion";
 import Reveal from "./Reveal";
+import SplitLines from "./SplitLines";
 import GlitchField from "./GlitchField";
+import { EASE } from "@/lib/motion";
 
 const projects = [
   {
@@ -82,20 +84,40 @@ function Card({ p, i }) {
 
   // Live cards are links; "soon" cards render as a non-interactive, dimmed div.
   const Wrapper = isSoon ? motion.div : motion.a;
+  // Both card types share a staggered scroll entrance; the stagger is capped
+  // so below-the-fold cards (which trigger on their own scroll entry) don't
+  // inherit long queued delays. Soon cards must LAND at 0.75 — the inline
+  // opacity framer writes would otherwise override the opacity-75 class and
+  // un-dim them.
+  const entrance = {
+    initial: { opacity: 0, y: 24 },
+    whileInView: { opacity: isSoon ? 0.75 : 1, y: 0 },
+    viewport: { once: true, margin: "-60px" },
+    transition: { duration: 0.9, ease: EASE, delay: Math.min(i, 2) * 0.08 },
+  };
   const wrapperProps = isSoon
-    ? { className: "relative overflow-hidden block border-t border-rule py-10 md:py-14 first:border-t-0 opacity-75 cursor-default select-none" }
+    ? { ...entrance, className: "relative overflow-hidden block border-t border-rule py-10 md:py-14 first:border-t-0 opacity-75 cursor-default select-none" }
     : {
+        ...entrance,
         href: p.href,
         target: isExternal ? "_blank" : undefined,
         rel: isExternal ? "noopener noreferrer" : undefined,
         "data-hover": true,
-        className: "group block border-t border-rule py-10 md:py-14 first:border-t-0",
+        className: "group relative overflow-hidden block border-t border-rule py-10 md:py-14 first:border-t-0",
       };
 
   return (
     <Wrapper {...wrapperProps}>
       {isSoon && (
         <GlitchField className="absolute inset-0 text-ink-soft" />
+      )}
+      {!isSoon && (
+        // Hover fill: mist sweeps up from the bottom edge. Transform-only —
+        // scale, not background transition — so the theme-flicker rule is safe.
+        <span
+          aria-hidden
+          className="absolute inset-0 bg-mist origin-bottom scale-y-0 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-y-100"
+        />
       )}
       <div className="relative z-10 grid grid-cols-12 gap-6 items-start">
         <div className="col-span-12 md:col-span-1">
@@ -148,11 +170,28 @@ function Card({ p, i }) {
             </span>
           </div>
           {!isSoon && (
-            <div className="mt-4 inline-flex items-center gap-1 font-mono text-[11px] uppercase tracking-[0.2em] text-ink group-hover:text-electric transition">
+            <div className="mt-4 inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.2em] text-ink group-hover:text-electric transition">
               {isExternal ? "Visit" : "You're here"}&nbsp;
-              <span className="inline-block transition-transform duration-500 group-hover:translate-x-1.5">
-                {isExternal ? "↗" : "↑"}
-              </span>
+              {/* Arrow redraws itself on hover: stroke-dashoffset 1 → 0 over the
+                  path, plus a small nudge so motion still reads in forced-colors. */}
+              <svg
+                aria-hidden="true"
+                width="14"
+                height="14"
+                viewBox="0 0 14 14"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="inline-block transition-transform duration-500 group-hover:translate-x-0.5"
+              >
+                <path
+                  d={isExternal ? "M3 11 L11 3 M4.5 3 H11 V9.5" : "M7 12 V2 M3 6 L7 2 L11 6"}
+                  pathLength="1"
+                  className="[stroke-dasharray:1] [stroke-dashoffset:1] group-hover:[stroke-dashoffset:0] [@media(hover:none)]:[stroke-dashoffset:0] transition-[stroke-dashoffset] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                />
+              </svg>
             </div>
           )}
         </div>
@@ -164,29 +203,30 @@ function Card({ p, i }) {
 export default function Projects() {
   return (
     <section id="work" className="relative px-6 md:px-10 py-32 md:py-44 border-t border-rule">
-      <div className="grid grid-cols-12 gap-6 mb-16 md:mb-24">
+      <div className="grid grid-cols-12 gap-6">
         <div className="col-span-12 md:col-span-3">
-          <div className="section-label">§ 04 — Selected Work</div>
+          <div className="md:sticky md:top-32">
+            <div className="section-label">§ 04 — Selected Work</div>
+          </div>
         </div>
+
         <div className="col-span-12 md:col-span-9 md:col-start-4">
-          <Reveal>
-            <h2 className="font-display text-5xl md:text-7xl leading-[0.95] tracking-tight text-ink">
-              A small but <span className="italic text-electric">growing</span> shelf.
-            </h2>
-          </Reveal>
+          <SplitLines as="h2" className="font-display text-5xl md:text-7xl leading-[0.95] tracking-tight text-ink">
+            A small but <span className="italic text-electric">growing</span> shelf.
+          </SplitLines>
           <Reveal delay={0.1}>
             <p className="mt-6 max-w-xl text-base md:text-lg text-ink-soft">
               Five projects out in the world. Two more in motion. This shelf will keep growing
               year over year — bookmark it.
             </p>
           </Reveal>
-        </div>
-      </div>
 
-      <div>
-        {projects.map((p, i) => (
-          <Card key={p.n} p={p} i={i} />
-        ))}
+          <div className="mt-16 md:mt-24">
+            {projects.map((p, i) => (
+              <Card key={p.n} p={p} i={i} />
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );

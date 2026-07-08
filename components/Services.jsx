@@ -2,7 +2,10 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import Reveal from "./Reveal";
+import SplitLines from "./SplitLines";
+import Magnetic from "./Magnetic";
 import { EMAIL, WHATSAPP_LINK } from "@/lib/site";
+import { EASE } from "@/lib/motion";
 
 const services = [
   {
@@ -118,24 +121,28 @@ const faqs = [
 function CTAButtons() {
   return (
     <div className="flex flex-wrap gap-4">
-      <a
-        href={WHATSAPP_LINK}
-        target="_blank"
-        rel="noopener noreferrer"
-        data-hover
-        className="group inline-flex items-center gap-3 bg-electric px-7 py-4 font-mono text-[11px] uppercase tracking-[0.2em] text-ivory hover:bg-electric/90 transition-colors duration-300"
-      >
-        Message on WhatsApp
-        <span className="transition-transform duration-300 group-hover:translate-x-1">↗</span>
-      </a>
-      <a
-        href={`mailto:${EMAIL}?subject=Website%20enquiry`}
-        data-hover
-        className="group inline-flex items-center gap-3 border border-ink px-7 py-4 font-mono text-[11px] uppercase tracking-[0.2em] text-ink hover:bg-ink hover:text-ivory transition-colors duration-300"
-      >
-        Email me
-        <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-      </a>
+      <Magnetic>
+        <a
+          href={WHATSAPP_LINK}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-hover
+          className="group inline-flex items-center gap-3 bg-electric px-7 py-4 font-mono text-[11px] uppercase tracking-[0.2em] text-ivory hover:bg-electric/90 dark:bg-ink dark:text-ivory dark:hover:bg-ink/90 transition-colors duration-300"
+        >
+          Message on WhatsApp
+          <span className="transition-transform duration-300 group-hover:translate-x-1">↗</span>
+        </a>
+      </Magnetic>
+      <Magnetic>
+        <a
+          href={`mailto:${EMAIL}?subject=Website%20enquiry`}
+          data-hover
+          className="group inline-flex items-center gap-3 border border-ink px-7 py-4 font-mono text-[11px] uppercase tracking-[0.2em] text-ink hover:bg-ink hover:text-ivory transition-colors duration-300"
+        >
+          Email me
+          <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+        </a>
+      </Magnetic>
     </div>
   );
 }
@@ -163,17 +170,19 @@ export default function Services() {
             </motion.div>
           </motion.div>
 
-          <motion.a
-            href="/"
-            data-hover
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="group inline-flex items-center gap-2 bg-electric text-ivory hover:bg-electric/90 dark:bg-ink dark:text-ivory dark:hover:bg-ink/90 px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.2em] transition-colors duration-300"
-          >
-            Portfolio
-            <span className="transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
-          </motion.a>
+          <Magnetic>
+            <motion.a
+              href="/"
+              data-hover
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7, duration: 0.6, ease: EASE }}
+              className="group inline-flex items-center gap-2 bg-electric text-ivory hover:bg-electric/90 dark:bg-ink dark:text-ivory dark:hover:bg-ink/90 px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.2em] transition-colors duration-300"
+            >
+              Portfolio
+              <span className="transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
+            </motion.a>
+          </Magnetic>
         </div>
 
         <div className="grid grid-cols-12 gap-6 relative">
@@ -191,11 +200,9 @@ export default function Services() {
                 Freelance · Colombo, Sri Lanka
               </div>
             </Reveal>
-            <Reveal delay={0.1}>
-              <h1 className="font-display text-5xl md:text-8xl leading-[0.92] tracking-tight text-ink">
-                Clean, fast websites — <span className="italic text-electric">built in days</span>.
-              </h1>
-            </Reveal>
+            <SplitLines as="h1" delay={0.1} className="font-display text-5xl md:text-8xl leading-[0.92] tracking-tight text-ink">
+              Clean, fast websites — <span className="italic text-electric">built in days</span>.
+            </SplitLines>
             <Reveal delay={0.2}>
               <p className="mt-8 max-w-xl text-lg md:text-xl leading-relaxed text-ink-soft">
                 I&rsquo;m Damian — a creative technologist and freelance web designer in Colombo. I design and
@@ -216,14 +223,14 @@ export default function Services() {
       <section id="what-i-do" className="relative px-6 md:px-10 py-24 md:py-36 border-t border-rule">
         <div className="grid grid-cols-12 gap-6 mb-12 md:mb-16">
           <div className="col-span-12 md:col-span-3">
-            <div className="section-label">§ 01 — What I do</div>
+            <div className="md:sticky md:top-32">
+              <div className="section-label">§ 01 — What I do</div>
+            </div>
           </div>
           <div className="col-span-12 md:col-span-9 md:col-start-4">
-            <Reveal>
-              <h2 className="font-display text-4xl md:text-6xl leading-tight tracking-tight text-ink">
-                Seven ways I can <span className="italic text-electric">help</span>.
-              </h2>
-            </Reveal>
+            <SplitLines as="h2" className="font-display text-4xl md:text-6xl leading-tight tracking-tight text-ink">
+              Seven ways I can <span className="italic text-electric">help</span>.
+            </SplitLines>
           </div>
         </div>
 
@@ -273,14 +280,14 @@ export default function Services() {
       <section id="process" className="relative px-6 md:px-10 py-24 md:py-36 border-t border-rule bg-paper">
         <div className="grid grid-cols-12 gap-6 mb-12 md:mb-16">
           <div className="col-span-12 md:col-span-3">
-            <div className="section-label">§ 02 — How it works</div>
+            <div className="md:sticky md:top-32">
+              <div className="section-label">§ 02 — How it works</div>
+            </div>
           </div>
           <div className="col-span-12 md:col-span-9 md:col-start-4">
-            <Reveal>
-              <h2 className="font-display text-4xl md:text-6xl leading-tight tracking-tight text-ink">
-                From idea to live in <span className="italic text-electric">four steps</span>.
-              </h2>
-            </Reveal>
+            <SplitLines as="h2" className="font-display text-4xl md:text-6xl leading-tight tracking-tight text-ink">
+              From idea to live in <span className="italic text-electric">four steps</span>.
+            </SplitLines>
           </div>
         </div>
 
@@ -305,14 +312,14 @@ export default function Services() {
       <section id="recent" className="relative px-6 md:px-10 py-24 md:py-36 border-t border-rule">
         <div className="grid grid-cols-12 gap-6 mb-12 md:mb-16">
           <div className="col-span-12 md:col-span-3">
-            <div className="section-label">§ 03 — Recent work</div>
+            <div className="md:sticky md:top-32">
+              <div className="section-label">§ 03 — Recent work</div>
+            </div>
           </div>
           <div className="col-span-12 md:col-span-9 md:col-start-4">
-            <Reveal>
-              <h2 className="font-display text-4xl md:text-6xl leading-tight tracking-tight text-ink">
-                A few things I&rsquo;ve <span className="italic text-electric">shipped</span>.
-              </h2>
-            </Reveal>
+            <SplitLines as="h2" className="font-display text-4xl md:text-6xl leading-tight tracking-tight text-ink">
+              A few things I&rsquo;ve <span className="italic text-electric">shipped</span>.
+            </SplitLines>
             <Reveal delay={0.1}>
               <a
                 href="/"
@@ -330,24 +337,45 @@ export default function Services() {
           {work.map((w, i) => {
             const external = w.href.startsWith("http");
             return (
-              <Reveal key={w.title} delay={i * 0.06}>
+              <Reveal key={w.title} delay={i * 0.06} className="h-full">
                 <a
                   href={w.href}
                   target={external ? "_blank" : undefined}
                   rel={external ? "noopener noreferrer" : undefined}
                   data-hover
-                  className="group flex flex-col h-full bg-ivory px-7 py-9 hover:bg-mist transition-colors duration-500"
+                  className="group relative overflow-hidden flex flex-col h-full bg-ivory px-7 py-9"
                 >
-                  <div className="section-label mb-3">{w.tag}</div>
-                  <h3 className="font-display text-2xl md:text-3xl text-ink group-hover:text-electric transition-colors duration-500">
+                  {/* Hover fill: mist sweeps up from the bottom edge (same
+                      treatment as the homepage project cards). */}
+                  <span
+                    aria-hidden
+                    className="absolute inset-0 bg-mist origin-bottom scale-y-0 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-y-100"
+                  />
+                  <div className="relative section-label mb-3">{w.tag}</div>
+                  <h3 className="relative font-display text-2xl md:text-3xl text-ink group-hover:text-electric transition-colors duration-500">
                     {w.title}
                   </h3>
-                  <p className="mt-3 text-sm md:text-base text-ink-soft leading-relaxed flex-1">{w.note}</p>
-                  <span className="mt-5 inline-flex items-center gap-1 font-mono text-[11px] uppercase tracking-[0.2em] text-ink group-hover:text-electric transition">
+                  <p className="relative mt-3 text-sm md:text-base text-ink-soft leading-relaxed flex-1">{w.note}</p>
+                  <span className="relative mt-5 inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.2em] text-ink group-hover:text-electric transition">
                     {external ? "Visit" : "View"}
-                    <span className="transition-transform duration-500 group-hover:translate-x-1.5">
-                      {external ? "↗" : "→"}
-                    </span>
+                    <svg
+                      aria-hidden="true"
+                      width="14"
+                      height="14"
+                      viewBox="0 0 14 14"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="inline-block transition-transform duration-500 group-hover:translate-x-0.5"
+                    >
+                      <path
+                        d={external ? "M3 11 L11 3 M4.5 3 H11 V9.5" : "M2 7 H12 M8 3 L12 7 L8 11"}
+                        pathLength="1"
+                        className="[stroke-dasharray:1] [stroke-dashoffset:1] group-hover:[stroke-dashoffset:0] [@media(hover:none)]:[stroke-dashoffset:0] transition-[stroke-dashoffset] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                      />
+                    </svg>
                   </span>
                 </a>
               </Reveal>
@@ -360,14 +388,14 @@ export default function Services() {
       <section id="faq" className="relative px-6 md:px-10 py-24 md:py-36 border-t border-rule bg-paper">
         <div className="grid grid-cols-12 gap-6 mb-12 md:mb-16">
           <div className="col-span-12 md:col-span-3">
-            <div className="section-label">§ 04 — FAQ</div>
+            <div className="md:sticky md:top-32">
+              <div className="section-label">§ 04 — FAQ</div>
+            </div>
           </div>
           <div className="col-span-12 md:col-span-9 md:col-start-4">
-            <Reveal>
-              <h2 className="font-display text-4xl md:text-6xl leading-tight tracking-tight text-ink">
-                Good questions, <span className="italic text-electric">answered</span>.
-              </h2>
-            </Reveal>
+            <SplitLines as="h2" className="font-display text-4xl md:text-6xl leading-tight tracking-tight text-ink">
+              Good questions, <span className="italic text-electric">answered</span>.
+            </SplitLines>
           </div>
         </div>
 
@@ -400,11 +428,9 @@ export default function Services() {
             </Reveal>
           </div>
           <div className="col-span-12 md:col-span-9 md:col-start-4">
-            <Reveal delay={0.1}>
-              <h2 className="font-display text-5xl md:text-8xl leading-[0.9] tracking-tight text-ink">
-                Let&rsquo;s build <span className="italic text-electric">your</span> site.
-              </h2>
-            </Reveal>
+            <SplitLines as="h2" delay={0.1} className="font-display text-5xl md:text-8xl leading-[0.9] tracking-tight text-ink">
+              Let&rsquo;s build <span className="italic text-electric">your</span> site.
+            </SplitLines>
             <Reveal delay={0.2}>
               <p className="mt-8 max-w-xl text-lg md:text-xl text-ink-soft leading-relaxed">
                 Tell me what you have in mind and I&rsquo;ll come back with a scope, a fixed starting price, and
