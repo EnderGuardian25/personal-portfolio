@@ -3,7 +3,6 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import Reveal from "./Reveal";
 import SplitLines from "./SplitLines";
-import Magnetic from "./Magnetic";
 import { EMAIL, WHATSAPP_LINK } from "@/lib/site";
 import { EASE } from "@/lib/motion";
 
@@ -121,28 +120,24 @@ const faqs = [
 function CTAButtons() {
   return (
     <div className="flex flex-wrap gap-4">
-      <Magnetic>
-        <a
-          href={WHATSAPP_LINK}
-          target="_blank"
-          rel="noopener noreferrer"
-          data-hover
-          className="group inline-flex items-center gap-3 bg-electric px-7 py-4 font-mono text-[11px] uppercase tracking-[0.2em] text-ivory hover:bg-electric/90 dark:bg-ink dark:text-ivory dark:hover:bg-ink/90 transition-colors duration-300"
-        >
-          Message on WhatsApp
-          <span className="transition-transform duration-300 group-hover:translate-x-1">↗</span>
-        </a>
-      </Magnetic>
-      <Magnetic>
-        <a
-          href={`mailto:${EMAIL}?subject=Website%20enquiry`}
-          data-hover
-          className="group inline-flex items-center gap-3 border border-ink px-7 py-4 font-mono text-[11px] uppercase tracking-[0.2em] text-ink hover:bg-ink hover:text-ivory transition-colors duration-300"
-        >
-          Email me
-          <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-        </a>
-      </Magnetic>
+      <a
+        href={WHATSAPP_LINK}
+        target="_blank"
+        rel="noopener noreferrer"
+        data-hover
+        className="group inline-flex items-center gap-3 bg-electric px-7 py-4 font-mono text-[11px] uppercase tracking-[0.2em] text-ivory hover:bg-electric/90 dark:bg-ink dark:text-ivory dark:hover:bg-ink/90 transition-colors duration-300"
+      >
+        Message on WhatsApp
+        <span className="transition-transform duration-300 group-hover:translate-x-1">↗</span>
+      </a>
+      <a
+        href={`mailto:${EMAIL}?subject=Website%20enquiry`}
+        data-hover
+        className="group inline-flex items-center gap-3 border border-ink px-7 py-4 font-mono text-[11px] uppercase tracking-[0.2em] text-ink hover:bg-ink hover:text-ivory transition-colors duration-300"
+      >
+        Email me
+        <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+      </a>
     </div>
   );
 }
@@ -170,19 +165,17 @@ export default function Services() {
             </motion.div>
           </motion.div>
 
-          <Magnetic>
-            <motion.a
-              href="/"
-              data-hover
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7, duration: 0.6, ease: EASE }}
-              className="group inline-flex items-center gap-2 bg-electric text-ivory hover:bg-electric/90 dark:bg-ink dark:text-ivory dark:hover:bg-ink/90 px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.2em] transition-colors duration-300"
-            >
-              Portfolio
-              <span className="transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
-            </motion.a>
-          </Magnetic>
+          <motion.a
+            href="/"
+            data-hover
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7, duration: 0.6, ease: EASE }}
+            className="group inline-flex items-center gap-2 bg-electric text-ivory hover:bg-electric/90 dark:bg-ink dark:text-ivory dark:hover:bg-ink/90 px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.2em] transition-colors duration-300"
+          >
+            Portfolio
+            <span className="transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
+          </motion.a>
         </div>
 
         <div className="grid grid-cols-12 gap-6 relative">
