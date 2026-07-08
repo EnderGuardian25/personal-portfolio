@@ -1,5 +1,6 @@
 "use client";
 import Reveal from "./Reveal";
+import SplitLines from "./SplitLines";
 
 const roles = [
   {
@@ -37,11 +38,9 @@ export default function Leadership() {
           <div className="section-label">§ 02 — Beyond the Code</div>
         </div>
         <div className="col-span-12 md:col-span-9 md:col-start-4">
-          <Reveal>
-            <h2 className="font-display text-5xl md:text-7xl leading-[0.95] tracking-tight text-ink">
-              Leading people, not just <span className="italic text-electric">pixels</span>.
-            </h2>
-          </Reveal>
+          <SplitLines as="h2" className="font-display text-5xl md:text-7xl leading-[0.95] tracking-tight text-ink">
+            Leading people, not just <span className="italic text-electric">pixels</span>.
+          </SplitLines>
           <Reveal delay={0.1}>
             <p className="mt-6 max-w-xl text-base md:text-lg text-ink-soft">
               Before the code, there was the council room. Years of student leadership and Rotary

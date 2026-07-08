@@ -1,8 +1,8 @@
 "use client";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-
-const easeOut = [0.22, 1, 0.36, 1];
+import { EASE, INTRO_OFFSET, shouldPlayIntro } from "@/lib/motion";
+import Magnetic from "./Magnetic";
 
 function Word({ children, delay = 0 }) {
   // No overflow-hidden here — clipping is handled at the line-div level so
@@ -11,7 +11,7 @@ function Word({ children, delay = 0 }) {
     <motion.span
       initial={{ y: "110%" }}
       animate={{ y: 0 }}
-      transition={{ duration: 1.1, ease: easeOut, delay }}
+      transition={{ duration: 1, ease: EASE, delay }}
       className="inline-block"
     >
       {children}
@@ -21,6 +21,11 @@ function Word({ children, delay = 0 }) {
 
 export default function Hero() {
   const ref = useRef(null);
+  // On a first visit the whole entrance chains after the intro stamp; on
+  // repeat visits t0 is 0 and the sequence starts immediately. The memoized
+  // shouldPlayIntro() guarantees this always matches IntroStamp's decision.
+  const t0 = shouldPlayIntro() ? INTRO_OFFSET : 0;
+  const at = (s) => t0 + s;
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], [0, -100]);
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
@@ -38,31 +43,33 @@ export default function Hero() {
         style={{ opacity: metaOpacity }}
         className="absolute top-28 left-6 md:left-10 section-label"
       >
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.6, duration: 0.8 }}>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: at(1.15), duration: 0.8 }}>
           <div>N 6.9271° / E 79.8612°</div>
           <div className="mt-1 text-ink-faint">Colombo · Sri Lanka</div>
         </motion.div>
       </motion.div>
       <div className="absolute top-28 right-6 md:right-10 flex flex-col items-end gap-4 z-10">
         <motion.div style={{ opacity: metaOpacity }} className="section-label text-right">
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.6, duration: 0.8 }}>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: at(1.15), duration: 0.8 }}>
             <div>(001)</div>
             <div className="mt-1 text-ink-faint">Index / Landing</div>
           </motion.div>
         </motion.div>
 
         {/* Prominent Services CTA — stays visible while at the top, scrolls away with the hero */}
-        <motion.a
-          href="/services"
-          data-hover
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.9, duration: 0.6, ease: easeOut }}
-          className="hidden md:inline-flex items-center gap-2 bg-electric text-ivory hover:bg-electric/90 dark:bg-ink dark:text-ivory dark:hover:bg-ink/90 px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.2em] transition-colors duration-300 group"
-        >
-          Services
-          <span className="transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
-        </motion.a>
+        <Magnetic className="hidden md:inline-block">
+          <motion.a
+            href="/services"
+            data-hover
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: at(1.3), duration: 0.6, ease: EASE }}
+            className="inline-flex items-center gap-2 bg-electric text-ivory hover:bg-electric/90 dark:bg-ink dark:text-ivory dark:hover:bg-ink/90 px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.2em] transition-colors duration-300 group"
+          >
+            Services
+            <span className="transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
+          </motion.a>
+        </Magnetic>
       </div>
 
       <motion.div style={{ y, opacity }} className="relative px-6 md:px-10">
@@ -70,21 +77,22 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.8, ease: easeOut }}
+          transition={{ delay: at(0.1), duration: 0.6, ease: EASE }}
           className="mb-4 md:mb-6 font-mono text-[11px] uppercase tracking-[0.22em] text-ink-soft"
         >
           Creative Technologist · Freelance Web Designer
         </motion.div>
 
         <h1 className="font-display tracking-tightest leading-[0.82] text-ink text-[17vw] md:text-[13.5vw] uppercase">
+          {/* Each line rises as one unit from behind its line-level mask. */}
           <div className="overflow-hidden pb-[0.04em] flex flex-wrap items-end gap-x-[0.04em]">
-            <Word delay={0.4}>Damian</Word>
+            <Word delay={at(0.25)}>Damian</Word>
           </div>
           <div className="overflow-hidden pb-[0.04em] flex flex-wrap items-end gap-x-[0.04em] -mt-2 md:-mt-4">
-            <Word delay={0.55}>
+            <Word delay={at(0.4)}>
               <span className="italic font-display text-electric">de&nbsp;</span>
             </Word>
-            <Word delay={0.7}>Cruz.</Word>
+            <Word delay={at(0.4)}>Cruz.</Word>
           </div>
         </h1>
 
@@ -92,7 +100,7 @@ export default function Hero() {
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.2, duration: 1, ease: easeOut }}
+            transition={{ delay: at(0.8), duration: 1, ease: EASE }}
             className="col-span-12 md:col-span-5 text-lg md:text-xl leading-snug text-ink-soft max-w-md"
           >
             Reading <span className="italic font-display text-ink">BSc (Hons) Computer Science</span>{" "}
@@ -101,14 +109,14 @@ export default function Hero() {
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5, duration: 0.9 }}
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: at(0.95), duration: 0.9 }}
             className="hidden md:block col-span-3"
           />
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.4, duration: 1, ease: easeOut }}
+            transition={{ delay: at(0.95), duration: 1, ease: EASE }}
             className="col-span-12 md:col-span-4 flex flex-col gap-2 md:items-end"
           >
             <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-soft">
@@ -124,7 +132,7 @@ export default function Hero() {
       {/* scroll indicator — purely decorative, hidden from assistive tech */}
       <motion.div
         aria-hidden
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2, duration: 1 }}
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: at(1.7), duration: 1 }}
         className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
       >
         <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-ink-soft">scroll</span>

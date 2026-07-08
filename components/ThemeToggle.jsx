@@ -1,8 +1,7 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useLayoutEffect, useState } from "react";
-
-const EASE = [0.22, 1, 0.36, 1];
+import { EASE } from "@/lib/motion";
 
 // Run before the browser paints on the client (avoids a one-frame icon flash
 // where dark-mode visitors briefly see the sun), but fall back to useEffect on

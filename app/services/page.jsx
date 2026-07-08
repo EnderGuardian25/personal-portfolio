@@ -2,6 +2,7 @@ import ServicesNav from "@/components/ServicesNav";
 import Footer from "@/components/Footer";
 import Services from "@/components/Services";
 import ClientEnhancements from "@/components/ClientEnhancements";
+import ScrollProgress from "@/components/ScrollProgress";
 
 export const metadata = {
   title: "Web Design Services in Colombo | Damian De Cruz",
@@ -171,6 +172,7 @@ export default function ServicesPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
       <ClientEnhancements />
+      <ScrollProgress />
       <ServicesNav />
       <main className="relative">
         <Services />
