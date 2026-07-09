@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import ThemeToggle from "./ThemeToggle";
 import Availability from "./Availability";
 import { NAV_LINKS, SHORT_YEAR } from "@/lib/site";
+import { EASE } from "@/lib/motion";
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
@@ -76,7 +77,7 @@ export default function Nav() {
       <motion.header
         initial={{ y: -40, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
+        transition={{ duration: 1, ease: EASE, delay: 0.2 }}
         className="fixed top-0 left-0 right-0 z-50 mix-blend-multiply dark:mix-blend-screen"
       >
         <div className="px-6 md:px-10 py-6 flex items-center justify-between">
@@ -114,7 +115,7 @@ export default function Nav() {
             >
               <motion.span
                 animate={open ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
-                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.3, ease: EASE }}
                 className="block h-px w-full bg-ink origin-center"
               />
               <motion.span
@@ -124,7 +125,7 @@ export default function Nav() {
               />
               <motion.span
                 animate={open ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }}
-                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.3, ease: EASE }}
                 className="block h-px w-full bg-ink origin-center"
               />
             </button>
@@ -144,7 +145,7 @@ export default function Nav() {
             initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -16 }}
-            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.35, ease: EASE }}
             className="fixed inset-0 z-40 bg-ivory/95 backdrop-blur-sm flex flex-col items-start justify-center px-8 md:hidden"
           >
             <nav className="flex flex-col gap-8">
@@ -154,7 +155,7 @@ export default function Nav() {
                   href={resolveHref(l.href)}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.07, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                  transition={{ delay: i * 0.07, duration: 0.4, ease: EASE }}
                   onClick={() => setOpen(false)}
                   className="font-display text-5xl italic text-ink hover:text-electric transition-colors duration-300"
                 >

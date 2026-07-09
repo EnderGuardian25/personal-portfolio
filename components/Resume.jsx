@@ -1,5 +1,6 @@
 "use client";
 import Reveal from "./Reveal";
+import SplitLines from "./SplitLines";
 
 export default function Resume() {
   return (
@@ -10,11 +11,9 @@ export default function Resume() {
         </div>
 
         <div className="col-span-12 md:col-span-6">
-          <Reveal>
-            <h2 className="font-display text-5xl md:text-7xl leading-[0.95] tracking-tight text-ink">
-              Want the <span className="italic text-electric">long form</span>?
-            </h2>
-          </Reveal>
+          <SplitLines as="h2" className="font-display text-5xl md:text-7xl leading-[0.95] tracking-tight text-ink">
+            Want the <span className="italic text-electric">long form</span>?
+          </SplitLines>
           <Reveal delay={0.1}>
             <p className="mt-6 max-w-md text-base md:text-lg text-ink-soft">
               Education, coursework, and current pursuits — packaged as a single page.

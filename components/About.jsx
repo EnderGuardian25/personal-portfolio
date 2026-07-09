@@ -1,5 +1,6 @@
 "use client";
 import Reveal from "./Reveal";
+import SplitLines from "./SplitLines";
 
 export default function About() {
   return (
@@ -17,14 +18,12 @@ export default function About() {
         </div>
 
         <div className="col-span-12 md:col-span-9 md:col-start-4">
-          <Reveal delay={0.1}>
-            <p className="font-display text-3xl md:text-5xl leading-[1.15] tracking-tight text-ink">
-              I&rsquo;m Damian — a{" "}
-              <span className="italic text-electric">creative technologist</span> and freelance
-              web designer in Colombo, reading <span className="italic">BSc (Hons) Computer Science</span>{" "}
-              at the <span className="italic">Informatics Institute of Technology</span>.
-            </p>
-          </Reveal>
+          <SplitLines as="p" delay={0.1} stagger={0.07} className="font-display text-3xl md:text-5xl leading-[1.15] tracking-tight text-ink">
+            I&rsquo;m Damian — a{" "}
+            <span className="italic text-electric">creative technologist</span> and freelance
+            web designer in Colombo, reading <span className="italic">BSc (Hons) Computer Science</span>{" "}
+            at the <span className="italic">Informatics Institute of Technology</span>.
+          </SplitLines>
 
           <div className="mt-12 md:mt-20 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
             <Reveal delay={0.15}>

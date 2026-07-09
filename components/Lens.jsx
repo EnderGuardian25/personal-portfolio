@@ -2,6 +2,9 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Reveal from "./Reveal";
+import SplitLines from "./SplitLines";
+import Parallax from "./Parallax";
+import { EASE } from "@/lib/motion";
 
 // Drop JPEGs into /public/photography/ and fill in src + caption.
 // Leave src as null to render a placeholder card.
@@ -41,7 +44,7 @@ function Card({ p, i }) {
     <Reveal delay={i * 0.08}>
       <motion.div
         whileHover={{ y: -4 }}
-        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.5, ease: EASE }}
         className="group relative overflow-hidden border border-rule bg-ivory"
       >
         <div className="relative aspect-[4/5] overflow-hidden bg-mist">
@@ -97,11 +100,9 @@ export default function Lens() {
           <div className="section-label">§ 07 — Lens</div>
         </div>
         <div className="col-span-12 md:col-span-9 md:col-start-4">
-          <Reveal>
-            <h2 className="font-display text-5xl md:text-7xl leading-[0.95] tracking-tight text-ink">
-              Off-duty, <span className="italic text-electric">through glass</span>.
-            </h2>
-          </Reveal>
+          <SplitLines as="h2" className="font-display text-5xl md:text-7xl leading-[0.95] tracking-tight text-ink">
+            Off-duty, <span className="italic text-electric">through glass</span>.
+          </SplitLines>
           <Reveal delay={0.1}>
             <p className="mt-6 max-w-xl text-base md:text-lg text-ink-soft">
               Frames shot on a Nothing Phone (3a) Pro — light, geometry, and the
@@ -114,7 +115,11 @@ export default function Lens() {
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
         {photos.map((p, i) => (
-          <Card key={p.n} p={p} i={i} />
+          // Alternating drift distances give the photo row a gentle stagger
+          // of depth as it scrolls past.
+          <Parallax key={p.n} distance={12 + (i % 2) * 10}>
+            <Card p={p} i={i} />
+          </Parallax>
         ))}
       </div>
 

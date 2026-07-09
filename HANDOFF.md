@@ -1,5 +1,5 @@
 # DDC Portfolio — Session Handoff
-> Generated: 2026-06-06 | Updated: 2026-07-01 | Branch: `main`
+> Generated: 2026-06-06 | Updated: 2026-07-08 | Branch: `v3` (motion upgrade; main holds the pre-motion site)
 
 ---
 
@@ -8,7 +8,7 @@
 - **Owner:** Damian De Cruz — Creative Technologist, BSc (Hons) Computer Science, IIT Sri Lanka (University of Westminster)
 - **Repo:** https://github.com/EnderGuardian25/personal-portfolio (`main` branch)
 - **Local path:** `D:\personal-portfolio`
-- **Last commit:** `2026-07-01` — perf: pause glitch canvas off-screen/hidden; earlier this session: a11y fixes (Lighthouse a11y **100**) + animated glitch decrypt field behind upcoming projects
+- **Last commit:** `2026-07-08` — feat: refined-editorial motion system on `v3` (branch renamed from `v2`, old remote deleted). Both pages re-verified Lighthouse **100/100/100/100** (a11y · BP · SEO · Agentic), desktop + mobile, dark mode
 
 ---
 
@@ -142,6 +142,25 @@ Verified **100 / 100 / 100 / 100** (Accessibility · Best Practices · SEO · Ag
 - **ThemeToggle:** switched to an isomorphic `useLayoutEffect` so the correct sun/moon icon is set before paint — no icon flash for dark-mode visitors
 - **Contrast:** the two "soon" project cards were `opacity-60`, dragging their text under 4.5:1 in dark mode → lifted to `opacity-75` and the "soon" badge muted from `electric` to `ink-soft`
 
+### Motion System — v3 (2026-07-08)
+A site-wide "refined editorial" motion pass. All shared values live in **`lib/motion.js`** (`EASE`, `DUR`, `VIEWPORT`, `SPRING` configs, intro singleton) — import from there, never re-hardcode `[0.22,1,0.36,1]`.
+
+**New components:**
+- **`SplitLines.jsx`** — masked line reveals for headings. SSR renders plain text (SEO, no CLS); client-side it tokenizes React children (nested styled `<span>`s supported), waits for `document.fonts.ready`, groups words into real lines by `offsetTop`, then each line rises `y:120%→0` behind an `overflow-hidden` mask. **Masks carry `pb-[0.14em] -mb-[0.14em]`** — italic serif descenders (g/y/j) need far more allowance than the hero's all-caps `0.04em`; don't shrink it or descenders get clipped. A11y: split innards are `aria-hidden`, an `sr-only` span carries the coherent string (**NOT `aria-label`** — invalid on `<p>`, cost an a11y point once). Debounced resize re-splits without replaying. Reduced motion / unsupported children → plain fade fallback. Used on every section h2 (both pages), services h1, and About's intro line.
+- **`IntroStamp.jsx`** — decrypt intro on **every page load** (user preference; originally session-gated): name + coordinates resolve from glitch chars (~0.65s) on an ivory `z-[65]` curtain, clip-path wipes up by ~1.3s. `pointer-events-none`, `aria-hidden`, skipped under reduced motion via `shouldPlayIntro()` in `lib/motion.js` — Hero reads the same memoized decision and shifts its delays by `INTRO_OFFSET` (1.0s). Homepage only.
+- **`ScrollProgress.jsx`** — 2px electric `scaleX` bar, fixed top, **`z-[55]`** (stack: top-fade 40 → nav 50 → progress 55 → grain 60 → cursor 70). Mounted on both pages. Kept under reduced motion (it's information), spring removed.
+- **`Parallax.jsx`** — scroll drift wrapper. **Text/headings must NOT use it** (user: drift on letters reads as lag when scrolling up — removed twice). Only on: Lens photo cards (alternating 12/22px) and Contact's `hello.` watermark (30px).
+
+**Modified behavior:**
+- **Hero** — name lines rise as units (line-2 words share one delay); whole entrance compressed to one sequence ending ~1.7s (`at(s) = t0 + s`, `t0 = INTRO_OFFSET` when the intro plays).
+- **Projects cards** — staggered `whileInView` entrance (delay capped at `i≤2`; **soon cards animate to `opacity: 0.75`**, not 1 — framer's inline opacity overrides the class). Live-card hover: mist fill sweep (`scale-y` from bottom, transform-only), title→electric, SVG arrow draw-in (`stroke-dashoffset 1→0`, pre-drawn on `hover:none` devices). **No title slide** (removed by user), **no heading parallax** (removed by user). Cards live inside the right grid column so the `§ 04` label can be sticky.
+- **Timeline** — electric line draws via `scaleY` (`useScroll` offset `["start 0.7","end 0.55"]` + `SPRING.draw`); dots flip `bg-ink`→`bg-electric` as the tip passes their measured thresholds (`useMotionValueEvent`, discrete state). The old hardcoded `accent` dot prop is ignored. Reduced motion: fully drawn, all lit.
+- **Sticky labels** — `md:sticky md:top-32` on section labels: Projects, Timeline, Contact (homepage) + all five `/services` sections. About already had it.
+- **Marquee** — reads `window.scrollY` delta inside its existing rAF loop (no new listeners; works with or without Lenis): scroll velocity adds an offset boost (≤400px/s, signed by travel direction — never touches drag `velocity`) and a `skewX` shear (≤5°) that settles as you stop. Both gated by the `reduce` flag.
+- **Footer** — three cells now `Reveal y={16} margin="0px"` (Reveal gained a `margin` prop — footer elements can never scroll 80px past the fold, default viewport margin would keep them invisible).
+- **Services page** — full system: SplitLines h1/h2s, sticky labels, ScrollProgress, work cards with sweep + drawn arrow. WhatsApp CTA gained `dark:bg-ink dark:text-ivory` (electric bg + navy text was 4.46:1 in dark — pre-existing contrast fail).
+- **Magnetic CTAs — built then REMOVED** (user: cursor-pull "reduces the professional effect"). `Magnetic.jsx` was deleted; buttons keep their colour-fill + arrow-nudge hovers only. Don't reintroduce magnetic/cursor-follow effects on buttons.
+
 ### Upcoming-Projects Glitch Field (2026-07-01)
 - `GlitchField.jsx` — a decorative, continuously-scrambling field of monospace glyphs rendered behind each "soon" project card (Danella De Cruz, Coursework Archive), matching the reference in `docs/Glitch Text.png` (untracked, local-only)
 - **Canvas-rendered, not DOM text — on purpose:** carries no accessible text (screen readers ignore it) and no DOM glyphs for the contrast audit to flag at its intentionally-faint opacity. Drawn in the real **JetBrains Mono** stack read from the wrapper's computed `font-family` (Canvas can't parse `var(--font-mono)`); redraws once `document.fonts.ready` resolves
@@ -206,11 +225,18 @@ components/
   Lens.jsx              — phone photography gallery
   Marquee.jsx           — interactive ribbon: JS rAF auto-scroll + grab-to-drag with momentum/settle
   Contact.jsx           — email + socials (data from lib/site.js)
-  Footer.jsx            — v:02 / Always evolving
+  Footer.jsx            — v:03 / Always evolving
+
+  SplitLines.jsx        — masked line reveals for headings (fonts.ready + offsetTop grouping; sr-only a11y text)
+  IntroStamp.jsx        — every-reload decrypt intro overlay (z-65, pointer-events-none, reduced-motion skipped)
+  ScrollProgress.jsx    — 2px electric top progress bar (z-55, both pages)
+  Parallax.jsx          — scroll drift for NON-TEXT accents only (Lens photos, hello. watermark)
 
 lib/
   site.js               — YEAR, SHORT_YEAR, EMAIL, WHATSAPP, WHATSAPP_LINK, WHATSAPP_MESSAGE,
                           NAV_LINKS, SOCIALS (single source of truth — update here, not in components)
+  motion.js             — EASE, DUR, VIEWPORT, SPRING configs + shouldPlayIntro()/INTRO_OFFSET
+                          (single source for motion values — import, never re-hardcode the ease)
 
 public/
   og.jpg                — 1200×630 OG image (45KB JPEG)
@@ -331,7 +357,7 @@ Ranmal Flora description: *"Website for Sri Lanka's foremost tissue culture labo
 - Left column accent: vertical "hello." (`writingMode: vertical-rl`, `rotate(180deg)`, `fontSize: 7rem`)
 
 ### Footer
-- `v:02 / Always evolving` — `text-right` at **all** screen sizes
+- `v:03 / Always evolving` — `text-right` at **all** screen sizes
 - Copyright: `© {YEAR} — Damian De Cruz` (year from `YEAR` in `lib/site.js`)
 
 ---
@@ -360,6 +386,11 @@ A 1:1 (2160×2160 at 2×) services poster lives at `posts/DDC-Services-Poster.pn
 12. **Lenis anchors** — `SmoothScroll.jsx` uses ONE delegated `click` listener on `document` (`e.target.closest('a[href^="#"]')`), NOT a `querySelectorAll` snapshot. Keep it delegated — a snapshot misses links rendered after mount (ServicesNav, mobile overlays), causing native jumps that make `whileInView` animations misfire
 13. **Marquee is JS-driven** — `Marquee.jsx` runs its own rAF loop for grab-to-drag + momentum. Do NOT revert it to a CSS `@keyframes marquee` / `.marquee-track` animation (that removes the drag interaction). The transform is set inline every frame; don't add a competing CSS `animation` or `transition: transform` to the track
 14. **GlitchField is a `<canvas>`** — never render its glyphs as DOM text. DOM text would (a) be read aloud as gibberish by screen readers and (b) fail the colour-contrast audit at the intended faint opacity. Keep it `aria-hidden`, canvas-drawn, and keep the `IntersectionObserver` + `visibilitychange` gating so the two fields don't animate off-screen
+15. **No parallax/drift on TEXT, no magnetic buttons** — user removed heading parallax twice ("letters lag when scrolling up") and the magnetic CTA pull ("reduces the professional effect"; `Magnetic.jsx` deleted). `Parallax.jsx` is only for non-text accents (Lens photos, `hello.` watermark). Card titles also must not slide on hover (removed) — colour change + card sweep only. Button hovers = colour fill + arrow nudge, nothing positional
+16. **SplitLines mask allowance is `pb-[0.14em] -mb-[0.14em]`** — shrinking it clips italic descenders (the *growing* g). Its screen-reader text is an `sr-only` span, NOT `aria-label` (invalid on `<p>`, fails Lighthouse `aria-prohibited-attr`)
+17. **Soon-card entrances animate to `opacity: 0.75`** — framer writes inline opacity; animating to 1 would override the `opacity-75` class and un-dim them
+18. **Motion constants come from `lib/motion.js`** — `EASE`, `VIEWPORT`, `SPRING`, `INTRO_OFFSET`, `shouldPlayIntro()`. Hero and IntroStamp must share the same memoized `shouldPlayIntro()` decision; don't give either its own check
+19. **IntroStamp plays every reload** (user preference — not session-gated). Keep it `pointer-events-none` + `aria-hidden` + reduced-motion-skipped so it can never trap clicks or tank a11y
 
 ---
 
@@ -395,7 +426,8 @@ npm.cmd run dev
 ---
 
 ## Pending / Next Ideas
-- [ ] **Deploy** — SSH into VPS → `~/deploy.sh` (main is ready)
+- [ ] **Merge `v3` → `main`** once the motion pass is signed off, then deploy
+- [ ] **Deploy** — SSH into VPS → `~/deploy.sh` (deploys main)
 - [ ] Verify live: dark mode, `/services`, `/sitemap.xml`, `/robots.txt`, OG image
 - [ ] Submit sitemap + request indexing of `/` and `/services` in GSC
 - [ ] Verify GA4 data flowing in Google Analytics dashboard (~24–48 hrs after deploy)

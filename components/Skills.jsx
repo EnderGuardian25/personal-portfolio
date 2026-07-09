@@ -1,5 +1,6 @@
 "use client";
 import Reveal from "./Reveal";
+import SplitLines from "./SplitLines";
 
 const groups = [
   {
@@ -28,11 +29,9 @@ export default function Skills() {
           <div className="section-label">§ 03 — Stack</div>
         </div>
         <div className="col-span-12 md:col-span-9 md:col-start-4">
-          <Reveal>
-            <h2 className="font-display text-5xl md:text-7xl leading-[0.95] tracking-tight text-ink">
-              Tools of the <span className="italic text-electric">trade</span>.
-            </h2>
-          </Reveal>
+          <SplitLines as="h2" className="font-display text-5xl md:text-7xl leading-[0.95] tracking-tight text-ink">
+            Tools of the <span className="italic text-electric">trade</span>.
+          </SplitLines>
         </div>
       </div>
 
