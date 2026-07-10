@@ -43,8 +43,11 @@ export default function ImageTrail({ reducedMotion }) {
     let nextImg = 0;
     let last = null;
     let raf = null;
+    let cur = null; // live pointer position while hovering, null when it leaves
+    let lastSpawn = 0;
 
     const spawn = (x, y, vx, vy) => {
+      lastSpawn = performance.now();
       stamps.push({
         img: images[nextImg++ % images.length],
         x,
@@ -62,6 +65,7 @@ export default function ImageTrail({ reducedMotion }) {
       const r = wrap.getBoundingClientRect();
       const x = e.clientX - r.left;
       const y = e.clientY - r.top;
+      cur = { x, y };
       if (last) {
         const dx = x - last.x;
         const dy = y - last.y;
@@ -70,10 +74,19 @@ export default function ImageTrail({ reducedMotion }) {
           last = { x, y };
         }
       } else {
+        // First contact drops a stamp immediately — hover must show
+        // something even before (or without) any travel.
         last = { x, y };
+        spawn(x, y, 0, 0);
       }
+      start();
+    };
+    const onLeave = () => {
+      cur = null;
+      last = null;
     };
     wrap.addEventListener("pointermove", onMove);
+    wrap.addEventListener("pointerleave", onLeave);
 
     const tick = () => {
       const now = performance.now();
@@ -102,6 +115,12 @@ export default function ImageTrail({ reducedMotion }) {
         ctx.restore();
       }
 
+      // A resting cursor keeps shedding softly, so hover stays alive
+      // without movement.
+      if (cur && now - lastSpawn > 640) {
+        spawn(cur.x, cur.y, (Math.random() - 0.5) * 6, (Math.random() - 0.5) * 6);
+      }
+
       if (stamps.length) {
         raf = requestAnimationFrame(tick);
       } else {
@@ -114,6 +133,7 @@ export default function ImageTrail({ reducedMotion }) {
 
     return () => {
       wrap.removeEventListener("pointermove", onMove);
+      wrap.removeEventListener("pointerleave", onLeave);
       ro.disconnect();
       if (raf != null) cancelAnimationFrame(raf);
     };

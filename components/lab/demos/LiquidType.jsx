@@ -108,9 +108,11 @@ export default function LiquidType({ reducedMotion }) {
 
       const rip = new Float32Array(RIPPLES * 4);
       let ri = 0;
+      let lastSpawn = -1e9;
       const spawn = (x, y, strength, birth) => {
         rip.set([x, y, birth, strength], ri * 4);
         ri = (ri + 1) % RIPPLES;
+        lastSpawn = birth;
       };
 
       const program = new Program(gl, {
@@ -128,10 +130,15 @@ export default function LiquidType({ reducedMotion }) {
 
       let aspect = 1;
       let last = null;
+      let hover = null; // pointer position while it rests over the surface
+      const onLeave = () => {
+        hover = null;
+      };
       const onMove = (e) => {
         const r = host.getBoundingClientRect();
         const x = ((e.clientX - r.left) / r.width) * aspect;
         const y = 1 - (e.clientY - r.top) / r.height;
+        hover = { x, y };
         if (last && Math.hypot(x - last.x, y - last.y) < 0.055) return;
         const s = last ? Math.min(1.15, 0.3 + Math.hypot(x - last.x, y - last.y) * 4) : 0.7;
         last = { x, y };
@@ -148,6 +155,7 @@ export default function LiquidType({ reducedMotion }) {
       };
       host.addEventListener("pointermove", onMove);
       host.addEventListener("pointerdown", onDown);
+      host.addEventListener("pointerleave", onLeave);
 
       let frozen = false;
       let intro = true;
@@ -174,6 +182,9 @@ export default function LiquidType({ reducedMotion }) {
             spawn(0.58 * aspect, 0.44, 0.95, now + 0.22);
             spawn(0.78 * aspect, 0.58, 0.8, now + 0.44);
           }
+          // A resting pointer keeps gently stirring — hover must read even
+          // when the mouse doesn't move.
+          if (hover && now - lastSpawn > 0.9) spawn(hover.x, hover.y, 0.38, now);
           program.uniforms.uStill.value = 0;
           program.uniforms.uTime.value = now;
           renderer.render({ scene: mesh });
@@ -181,6 +192,7 @@ export default function LiquidType({ reducedMotion }) {
         destroy() {
           host.removeEventListener("pointermove", onMove);
           host.removeEventListener("pointerdown", onDown);
+          host.removeEventListener("pointerleave", onLeave);
         },
       };
     },

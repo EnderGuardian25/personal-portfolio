@@ -26,10 +26,13 @@ export default function LabStage({ demo, standalone = false }) {
       className="group relative flex flex-col overflow-hidden border border-lab-line bg-lab-panel"
     >
       <div
+        // overflow-hidden also zeroes the flex item's automatic min-height —
+        // without it a demo with tall intrinsic content (e.g. an internal
+        // scroller full of rows) defeats the aspect ratio and stretches the card.
         className={
           standalone
-            ? "relative h-[calc(100dvh-6rem)] min-h-[420px]"
-            : "relative aspect-[4/3] sm:aspect-[16/10]"
+            ? "relative h-[calc(100dvh-6rem)] min-h-[420px] overflow-hidden"
+            : "relative aspect-[4/3] overflow-hidden sm:aspect-[16/10]"
         }
         // Demos size their type in cqw so they scale to the card OR the
         // fullscreen stage, never the viewport.

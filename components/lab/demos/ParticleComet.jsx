@@ -64,6 +64,7 @@ export default function ParticleComet({ reducedMotion }) {
     const parts = [];
     const head = { x: W / 2, y: H / 2, vx: 0, vy: 0 };
     let pointer = null;
+    let hovering = false;
     let lastMove = -1e9;
 
     const emit = (x, y, vx, vy, spread, speed, life) => {
@@ -84,14 +85,19 @@ export default function ParticleComet({ reducedMotion }) {
     const onMove = (e) => {
       const r = wrap.getBoundingClientRect();
       pointer = { x: e.clientX - r.left, y: e.clientY - r.top };
+      hovering = true;
       lastMove = performance.now();
     };
     const onDown = (e) => {
       onMove(e);
       for (let i = 0; i < 90; i++) emit(pointer.x, pointer.y, 0, 0, 8, 8, 900);
     };
+    const onLeave = () => {
+      hovering = false;
+    };
     wrap.addEventListener("pointermove", onMove);
     wrap.addEventListener("pointerdown", onDown);
+    wrap.addEventListener("pointerleave", onLeave);
 
     const t0 = performance.now();
     let prev = t0;
@@ -101,8 +107,10 @@ export default function ParticleComet({ reducedMotion }) {
       prev = now;
       const t = (now - t0) / 1000;
 
-      // Head: chase the pointer, or fly the lissajous when idle.
-      const idle = !pointer || now - lastMove > HOLD;
+      // Head: chase the pointer, or fly the lissajous when idle. A hovering
+      // pointer is never idle — the comet holds station under a resting
+      // cursor; the HOLD grace only applies after the pointer leaves (touch).
+      const idle = !pointer || (!hovering && now - lastMove > HOLD);
       const tx = idle ? W / 2 + W * 0.3 * Math.sin(t * 0.9) : pointer.x;
       const ty = idle ? H / 2 + H * 0.24 * Math.sin(t * 1.4 + 1) : pointer.y;
       const k = 1 - Math.pow(idle ? 0.94 : 0.8, dt); // exponential chase
@@ -139,6 +147,7 @@ export default function ParticleComet({ reducedMotion }) {
       cancelAnimationFrame(raf);
       wrap.removeEventListener("pointermove", onMove);
       wrap.removeEventListener("pointerdown", onDown);
+      wrap.removeEventListener("pointerleave", onLeave);
       ro.disconnect();
     };
   }, [reducedMotion]);

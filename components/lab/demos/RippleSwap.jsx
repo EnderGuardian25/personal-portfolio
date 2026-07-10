@@ -9,12 +9,16 @@ import { useEffect, useRef } from "react";
 // frame, so the line heals back to sentence A. All per-frame work is direct
 // class/style mutation via refs — the Marquee.jsx pattern — zero React state.
 
+// The two sentences share identical word boundaries (spaces at the same
+// indices) so no cell ever pairs a space with a letter — mismatched cells
+// read as stray gaps mid-sentence.
 const A = "The details are the design.";
-const B = "The surface hides a system.";
+const B = "The surface has its system.";
 
 const RIPPLE_SPEED = 640; // px/s wavefront
 const RING_WIDTH = 42; // px ripple thickness
 const STREAK_RADIUS = 54; // px direct-path glow
+const MAX_REACH = 230; // px — the ring dies out past this, it shouldn't cross the stage
 const POINT_LIFE = 900; // ms a path point keeps emitting
 const DECAY = 0.93; // per-frame energy retention
 
@@ -80,10 +84,13 @@ export default function RippleSwap({ reducedMotion }) {
           const fade = 1 - age / POINT_LIFE;
           // Direct streak under the swept path.
           const streak = Math.exp((-d * d) / (2 * STREAK_RADIUS * STREAK_RADIUS)) * fade;
-          // Expanding ripple ring: cells farther away light up later.
+          // Expanding ripple ring: cells farther away light up later, and the
+          // ring loses power with distance so it settles before the stage edge.
           const front = (age / 1000) * RIPPLE_SPEED;
           const off = d - front;
-          const ring = Math.exp((-off * off) / (2 * RING_WIDTH * RING_WIDTH)) * fade * 0.9;
+          const reach = Math.max(0, 1 - d / MAX_REACH);
+          const ring =
+            Math.exp((-off * off) / (2 * RING_WIDTH * RING_WIDTH)) * fade * 0.9 * reach;
           const v = Math.max(streak, ring);
           if (v > target) target = v;
         }
@@ -155,25 +162,32 @@ export default function RippleSwap({ reducedMotion }) {
       </div>
 
       <style jsx>{`
+        /* The cell takes glyph-a's natural width, so the resting sentence
+           keeps its true letter spacing; glyph-b overlays centered on top —
+           a max-width grid cell padded narrow glyphs into visible gaps. */
         .cell {
-          display: inline-grid;
+          position: relative;
+          display: inline-block;
           perspective: 400px;
         }
         .cell > span {
-          grid-area: 1 / 1;
           backface-visibility: hidden;
           transition:
             transform 0.32s cubic-bezier(0.3, 0.9, 0.3, 1),
             opacity 0.26s ease;
         }
         .glyph-a {
+          display: inline-block;
           color: rgb(232 232 230);
           transform: rotateX(0deg);
           opacity: 1;
         }
         .glyph-b {
+          position: absolute;
+          left: 50%;
+          top: 0;
           color: rgb(59 130 246);
-          transform: rotateX(88deg);
+          transform: translateX(-50%) rotateX(88deg);
           opacity: 0;
         }
         .cell.on .glyph-a {
@@ -181,14 +195,17 @@ export default function RippleSwap({ reducedMotion }) {
           opacity: 0;
         }
         .cell.on .glyph-b {
-          transform: rotateX(0deg);
+          transform: translateX(-50%) rotateX(0deg);
           opacity: 1;
         }
         /* Reduced motion: plain crossfade of the whole line on hover. */
-        .reduced .glyph-a,
-        .reduced .glyph-b {
+        .reduced .glyph-a {
           transition: opacity 0.2s ease;
           transform: none;
+        }
+        .reduced .glyph-b {
+          transition: opacity 0.2s ease;
+          transform: translateX(-50%);
         }
         .reduced:hover .glyph-a {
           opacity: 0;

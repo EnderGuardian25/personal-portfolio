@@ -143,9 +143,14 @@ export default function XrayHero({ reducedMotion }) {
       const lastMouse = new Vec2();
       let lastTime = null;
       let interacted = false;
+      let hovering = false;
 
+      const onPointerLeave = () => {
+        hovering = false;
+      };
       const onPointerMove = (e) => {
         interacted = true;
+        hovering = true;
         const rect = host.getBoundingClientRect();
         const x = (e.clientX - rect.left) / rect.width;
         const y = 1 - (e.clientY - rect.top) / rect.height;
@@ -164,6 +169,7 @@ export default function XrayHero({ reducedMotion }) {
         velocity.needsUpdate = true;
       };
       host.addEventListener("pointermove", onPointerMove);
+      host.addEventListener("pointerleave", onPointerLeave);
 
       // Fonts can land after the first draw — repaint the hidden layer then.
       const repaintBack = () => {
@@ -206,8 +212,15 @@ export default function XrayHero({ reducedMotion }) {
           }
 
           if (!velocity.needsUpdate) {
-            mouse.set(-1, -1);
-            velocity.set(0, 0);
+            if (hovering) {
+              // Stationary hover: keep a soft aperture open under the cursor.
+              // Flowmap splat strength scales with |velocity|, so a stopped
+              // pointer stamps nothing — feed it a faint wobble instead.
+              velocity.set(Math.cos(t * 2.3) * 0.15, Math.sin(t * 3.1) * 0.15);
+            } else {
+              mouse.set(-1, -1);
+              velocity.set(0, 0);
+            }
           }
           velocity.needsUpdate = false;
           flowmap.mouse.copy(mouse);
@@ -217,6 +230,7 @@ export default function XrayHero({ reducedMotion }) {
         },
         destroy() {
           host.removeEventListener("pointermove", onPointerMove);
+          host.removeEventListener("pointerleave", onPointerLeave);
         },
       };
     },

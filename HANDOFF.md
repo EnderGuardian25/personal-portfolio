@@ -8,7 +8,7 @@
 - **Owner:** Damian De Cruz — Creative Technologist, BSc (Hons) Computer Science, IIT Sri Lanka (University of Westminster)
 - **Repo:** https://github.com/EnderGuardian25/personal-portfolio (`main` branch)
 - **Local path:** `D:\personal-portfolio`
-- **Last commit:** `2026-07-10` — feat: `/lab` wave 2 — 34 new demos (50 total across 7 categories: +Scroll Effects, +Transitions & Loaders, +Grids & Layout) plus fixes to DistortionSlider (wipe direction), MagneticDock (blob anchoring), MomentumGallery (parallax bleed clamp). Earlier same day: `/lab` gallery launch (route-group split, 16 demos, ogl + gsap) on top of the merged `v3` motion system. The `v3` branch has been deleted (local + origin) — fully merged
+- **Last commit:** `2026-07-10` — fix(lab): visual-review round on wave 2 — LabStage `overflow-hidden` (tall demo content was defeating the card aspect ratio), ParticleNameHero opaque clear + white name (additive blend left near-zero canvas alpha → machine-dependent washout), RippleSwap aligned word boundaries + natural cell widths + 230px ripple cap, and the stationary-hover rule applied to XrayHero / LiquidType / ImageTrail / ParticleComet. Earlier same day: `/lab` wave 2 (34 new demos, 50 total across 7 categories) and the gallery launch; `v3` branch deleted (fully merged)
 - **Motion system:** the `v3` "refined-editorial motion" work (SplitLines, IntroStamp, Parallax, ScrollProgress, `lib/motion.js`, v:03 stamps) is now in `main` — see the *Motion System — v3* section below. Both pages verified Lighthouse **100/100/100/100** (a11y · BP · SEO · Agentic), desktop + mobile, dark mode
 
 ---
@@ -69,6 +69,9 @@ That's it — the demo appears in the `/lab` grid (filterable by category) and g
 
 Three wave-1 demos deliberately evolve existing portfolio components for the dark lab: `kinetic-slab-hero` ← `Hero.jsx` word-mask technique, `velocity-marquee` ← `Marquee.jsx` drag physics, `scramble-hover` ← `GlitchField.jsx` charset. `hover-lens` references `Lens.jsx`'s hover-lift pattern.
 
+### Hover rule (user, 2026-07-10 — REQUIRED for any new hover demo)
+A hovering pointer must produce the effect **even while stationary** — movement-only effects read as broken. Position-driven demos get this for free; anything driven by pointer *velocity* or move-events needs an idle path: XrayHero feeds the flowmap a faint wobble velocity while hovering (a stopped pointer stamps nothing), LiquidType re-stirs a soft ripple every ~0.9s at the resting pointer, ImageTrail sheds a gentle stamp every ~640ms (plus one on first contact), ParticleComet's autopilot only resumes after pointer*leave*, never mid-hover. Track hover with `pointermove` + `pointerleave` (pointerleave fires after touch end too).
+
 ### Scroll-driven demo pattern (wave 2 — REQUIRED for any new scroll demo)
 The page is NOT the scroller, so **ScrollTrigger is banned** in lab demos. Instead: the demo root is an internal scroller (`h-full w-full overflow-y-auto`) containing an explicit tall wrapper (e.g. `height: 340%`) whose first child is the sticky scene (`position: sticky; top: 0`, height = `100% / 3.4`). Progress = `scrollTop / (scrollHeight − clientHeight)`, read in a **passive scroll listener**, applied via refs in **rAF** (exponentially smoothed). Never set `overscroll-behavior` (default chaining must let the index page scroll past the card). Show a `Scroll ↓` mono hint; `reducedMotion` renders a static ~60%-progress state with no listeners. **Unit gotcha:** the stage is an `inline-size`-only container — `cqw` works, but `cqh` silently resolves against the *viewport*; never use it.
 
@@ -87,7 +90,7 @@ The page is NOT the scroller, so **ScrollTrigger is banned** in lab demos. Inste
 ### Verified (wave 2, 2026-07-10)
 - All 50 `/lab/[slug]` routes return 200 and statically generate (`next build` — 61 pages total, lint + types green)
 - All 50 demo files: `"use client"` + default export + `reducedMotion` handling; zero ScrollTrigger / `overscroll-behavior` usage
-- Wave-2 demos were code-reviewed per-batch (contract, cleanup, a11y) but **not yet visually eyeballed in a browser** — do that before/after deploy, starting with the signature pieces (`particle-name-hero`, `pin-morph-scroll`, `infinite-drag-canvas`)
+- Damian's first visual pass (2026-07-10) caught 4 issues, all fixed + browser-verified: the LabStage aspect-ratio blowout, the ParticleNameHero alpha washout, RippleSwap cell-width gaps/over-reach, and movement-only hover in 4 demos (see the Hover rule above). Rest of the 34 wave-2 demos still deserve an eyeball before deploy
 
 ### Growing the library
 The original ~10-per-category goal (40 total) is met and exceeded at 50 across 7 categories — the registry pattern above scales without any other structural change. Add demos incrementally; no need to touch `LabStage`, `hooks.js`, `useOgl.js`, or the routes. Known accepted trade-off: `infinite-drag-canvas` sets `touch-action: none` (page scroll doesn't pass through that one card on touch — required for free 2D dragging).
@@ -519,7 +522,7 @@ npm.cmd run dev
 ---
 
 ## Pending / Next Ideas
-- [ ] **Visually review the 34 wave-2 lab demos** in a browser (dev server or post-deploy) — signature pieces first
+- [ ] **Finish visually reviewing the wave-2 lab demos** — first pass done 2026-07-10 (4 issues found + fixed); the remaining demos deserve an eyeball
 - [ ] **Deploy** — SSH into VPS → `~/deploy.sh` (deploys main)
 - [ ] Verify live: dark mode, `/services`, `/sitemap.xml`, `/robots.txt`, OG image
 - [ ] Submit sitemap + request indexing of `/` and `/services` in GSC

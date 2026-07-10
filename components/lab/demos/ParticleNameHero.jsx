@@ -39,8 +39,8 @@ const fragment = /* glsl */ `
   void main() {
     float d = length(gl_PointCoord - 0.5);
     float a = smoothstep(0.5, 0.12, d);
-    vec3 col = mix(vec3(0.91, 0.91, 0.9), vec3(0.23, 0.51, 0.96), vHeat);
-    gl_FragColor = vec4(col, a * (0.5 + vHeat * 0.5));
+    vec3 col = mix(vec3(1.0), vec3(0.23, 0.51, 0.96), vHeat);
+    gl_FragColor = vec4(col, a * (0.75 + vHeat * 0.25));
   }
 `;
 
@@ -104,6 +104,10 @@ export default function ParticleNameHero({ reducedMotion }) {
         depthTest: false,
       });
       program.setBlendFunc(gl.SRC_ALPHA, gl.ONE); // additive → particles glow
+      // Clear to opaque stage color. With the default transparent clear the
+      // additive blend leaves near-zero canvas alpha, and page compositing
+      // multiplies the particles down to (machine-dependent) invisibility.
+      gl.clearColor(7 / 255, 7 / 255, 10 / 255, 1);
       const points = new Mesh(gl, { mode: gl.POINTS, geometry, program });
 
       let scattered = false;
