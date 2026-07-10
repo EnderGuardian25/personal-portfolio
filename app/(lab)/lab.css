@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  Lab identity — dark studio. Near-black canvas, muted chrome; the demos are
+  the only source of color. Channel-based tokens mirror the portfolio's
+  rgb(var()/alpha) pattern so Tailwind opacity modifiers work, but the lab is
+  dark-only: no .dark class, no theme machinery.
+*/
+:root {
+  color-scheme: dark;
+  --lab-bg: 8 8 10; /* page canvas */
+  --lab-panel: 15 15 18; /* card surface */
+  --lab-line: 38 38 44; /* hairline borders */
+  --lab-text: 232 232 230; /* primary text */
+  --lab-dim: 132 132 140; /* muted chrome / labels */
+}
+
+.lab-body {
+  background: rgb(var(--lab-bg));
+  color: rgb(var(--lab-text));
+  min-height: 100vh;
+}
+
+::selection {
+  background: rgb(var(--lab-text));
+  color: rgb(var(--lab-bg));
+}
+
+:focus-visible {
+  outline: 1px solid rgb(var(--lab-dim));
+  outline-offset: 3px;
+}
+
+/* Demo skeleton shown while a next/dynamic chunk loads. */
+.lab-demo-skeleton {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    100deg,
+    rgb(var(--lab-panel)) 40%,
+    rgb(var(--lab-line) / 0.5) 50%,
+    rgb(var(--lab-panel)) 60%
+  );
+  background-size: 200% 100%;
+  animation: lab-shimmer 1.4s linear infinite;
+}
+@keyframes lab-shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* CSS-driven motion collapses for reduced-motion users; imperative (rAF/GSAP/
+   WebGL) demos handle it themselves via usePrefersReducedMotion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

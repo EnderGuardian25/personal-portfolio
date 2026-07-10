@@ -1,5 +1,5 @@
 # DDC Portfolio — Session Handoff
-> Generated: 2026-06-06 | Updated: 2026-07-08 | Branch: `v3` (motion upgrade; main holds the pre-motion site)
+> Generated: 2026-06-06 | Updated: 2026-07-10 | Branch: `main`
 
 ---
 
@@ -8,21 +8,74 @@
 - **Owner:** Damian De Cruz — Creative Technologist, BSc (Hons) Computer Science, IIT Sri Lanka (University of Westminster)
 - **Repo:** https://github.com/EnderGuardian25/personal-portfolio (`main` branch)
 - **Local path:** `D:\personal-portfolio`
-- **Last commit:** `2026-07-08` — feat: refined-editorial motion system on `v3` (branch renamed from `v2`, old remote deleted). Both pages re-verified Lighthouse **100/100/100/100** (a11y · BP · SEO · Agentic), desktop + mobile, dark mode
+- **Last commit:** `2026-07-10` — feat: `/lab` unlisted UI/animation reference gallery (route-group split, 16 demos, ogl + gsap) rebased on top of the `v3` refined-editorial motion system (merged into `main`). Earlier: perf pause on glitch canvas off-screen/hidden, a11y **100**, glitch decrypt field
+- **Motion system:** the `v3` "refined-editorial motion" work (SplitLines, IntroStamp, Parallax, ScrollProgress, `lib/motion.js`, v:03 stamps) is now in `main` — see the *Motion System — v3* section below. Both pages verified Lighthouse **100/100/100/100** (a11y · BP · SEO · Agentic), desktop + mobile, dark mode
 
 ---
 
 ## Stack
 | Layer | Choice |
 |---|---|
-| Framework | Next.js 14.2.33 (App Router) |
+| Framework | Next.js 14.2.33 (App Router, **two root layouts** via route groups — see `/lab` below) |
 | Styling | Tailwind CSS 3.4.7 + CSS-variable-backed tokens |
-| Animation | Framer Motion 11 (`MotionConfig reducedMotion="user"`) |
-| Smooth scroll | Lenis (skipped on `prefers-reduced-motion`) |
-| Fonts | Instrument Serif (display/italic), Manrope (sans), JetBrains Mono (mono) |
+| Animation | Framer Motion 11 (`MotionConfig reducedMotion="user"`); `/lab` also uses **GSAP** + **ogl** (WebGL) |
+| Smooth scroll | Lenis (skipped on `prefers-reduced-motion`) — portfolio only, not `/lab` |
+| Fonts | Portfolio: Instrument Serif (display/italic), Manrope (sans), JetBrains Mono (mono). `/lab`: Syne (display, variable wght), IBM Plex Mono (mono) |
 | Hosting | Hetzner VPS, Ubuntu 22.04 |
 | Process manager | PM2 (`damiandc-website`), port 3000 |
 | Reverse proxy | nginx |
+
+---
+
+## `/lab` — Unlisted UI/Animation Reference Gallery (2026-07-10)
+
+A personal library of live, reusable UI patterns (hero sections, text animations, image carousels, cursor/hover effects) — for reuse in future client builds and for showing clients directly ("which of these do you like?").
+
+### Why two root layouts
+The lab deliberately does **not** inherit the portfolio's theme — no ivory palette, no grain, no theme toggle, no GA, no JSON-LD. Next.js App Router route groups make this possible: `app/(site)/` and `app/(lab)/` are two independent root layouts sharing one `app/` tree. URLs are unaffected (`/`, `/services`, `/lab` all resolve normally); navigating between the two groups is a full page load, which is irrelevant since nothing links from the lab back to the portfolio.
+
+- `app/(site)/` — the original `layout.jsx`, `page.jsx`, `services/`, `globals.css` (moved via `git mv`, unedited)
+- `app/(lab)/layout.jsx` + `app/(lab)/lab.css` — dark-studio identity: near-black canvas (`--lab-bg`), muted chrome (`--lab-dim`), Syne + IBM Plex Mono, `metadata.robots: { index: false, follow: false }`
+- **Sharp edge:** Next 14 rejects a root `app/not-found.jsx` when there's no single root layout (multiple root layouts = no shared one to attach it to). The fix: `app/(site)/not-found.jsx` (renders inside the portfolio theme) + `app/(site)/[...notFound]/page.jsx` (a catch-all that calls `notFound()` so any unmatched URL funnels into that boundary). Don't try to add a top-level `app/not-found.jsx` again — it breaks the build with "doesn't have a root layout."
+
+### Unlisted mechanics
+- **Not** in `app/sitemap.js`, **not** in any nav (`lib/site.js` `NAV_LINKS` untouched)
+- `noindex, nofollow, nocache` via the `(lab)` layout's `metadata.robots` — deliberately **no** `disallow` entry in `robots.txt` (a disallow line would publicly advertise the path to anyone reading robots.txt; meta-noindex alone keeps it reachable only by direct link)
+
+### Registry pattern (how to add demo #17)
+1. One entry in `lib/lab.js` `DEMOS[]` — `{ slug, title, category, tags, description, webgl?, span? }` (pure data, used by `generateStaticParams`/metadata/index grid)
+2. One component in `components/lab/demos/YourDemo.jsx` — receives the standard contract `{ active, reducedMotion, standalone }` from `LabStage`
+3. One line in `components/lab/registry.jsx` — `"your-slug": demo(() => import("./demos/YourDemo"))` (the `next/dynamic` + `ssr:false` client boundary)
+
+That's it — the demo appears in the `/lab` grid (filterable by category) and gets its own fullscreen route at `/lab/your-slug` with prev/next navigation, automatically.
+
+### Perf model (why demos don't burn WebGL contexts)
+`components/lab/hooks.js` `useActive()` gates every demo on IntersectionObserver + `document.hidden` — but unlike `GlitchField.jsx` (which just pauses its rAF loop), `LabStage.jsx` **unmounts** the demo entirely when inactive, swapping in a static `Poster.jsx` placeholder. Browsers cap concurrent WebGL contexts (~8–16/page); with 4 of the 16 demos using ogl, unmounting (not just pausing) is what keeps a scroll through the whole gallery safe. `components/lab/useOgl.js` explicitly calls `WEBGL_lose_context` on cleanup rather than waiting for GC.
+
+### The two signature demos
+- **`xray-hero`** (`components/lab/demos/XrayHero.jsx`) — ogl's built-in `Flowmap` class (a ping-pong FBO pair holding a decaying pointer-trail texture, `dissipation: 0.982`) masks between a front photo and a hidden text layer rendered to an off-screen 2D canvas. The trail's RG velocity channels also warp the front image's UVs at the reveal edge for the streak look. Touch users get an auto-play intro sweep since there's no hover.
+- **`ripple-swap`** (`components/lab/demos/RippleSwap.jsx`) — pure DOM/rAF, no WebGL. Two sentences share paired character cells (`.glyph-a` / `.glyph-b` stacked via CSS grid); each cell's `energy` value is driven by a gaussian of distance to recent pointer-path points, PLUS an expanding ripple ring (`delay = distance / rippleSpeed`) so farther cells light up later — that's what makes the swap propagate instead of popping. Energy decays every frame so it heals back to sentence A. Direct style/class mutation via refs (same pattern as `Marquee.jsx`), not React state per frame. Cell text uses literal NBSP (` `) for space characters — plain spaces are whitespace-only text nodes and collapse inside `inline-grid` cells; don't "clean up" those into ASCII spaces.
+
+### Demo roster (16, 4 per category)
+| Category | Demos |
+|---|---|
+| Hero | `xray-hero` ★, `kinetic-slab-hero` (GSAP quickTo lean), `gradient-field-hero` (ogl fbm noise), `split-panel-hero` (Framer choreography) |
+| Text | `ripple-swap` ★, `scramble-hover` (GlitchField-style charset resolve), `variable-weight-wave` (Syne variable wght follows cursor), `velocity-marquee` (Marquee.jsx physics ported + velocity skew) |
+| Carousel | `distortion-slider` (ogl noise displacement + GSAP), `momentum-gallery` (Framer drag + parallax-in-frame), `clip-reveal-carousel` (GSAP clip-path wipes, arrow keys), `depth-stack` (Framer 3D fan + promote-on-click) |
+| Cursor & Hover | `image-trail` (2D canvas stamp trail), `magnetic-dock` (Framer magnetic buttons + blob), `hover-lens` (magnify + invert lens), `spotlight-grid` (radial mask spotlight) |
+
+Three demos deliberately evolve existing portfolio components for the dark lab: `kinetic-slab-hero` ← `Hero.jsx` word-mask technique, `velocity-marquee` ← `Marquee.jsx` drag physics, `scramble-hover` ← `GlitchField.jsx` charset. `hover-lens` references `Lens.jsx`'s hover-lift pattern.
+
+### Verified (this session)
+- `/` and `/services` regression-checked pixel-identical after the route-group move (ivory theme, fonts, grain, theme toggle, Lenis, GA, JSON-LD all intact)
+- `/sitemap.xml` still lists only `/` and `/services`; `/robots.txt` unaffected; custom 404 works for bogus URLs
+- All 16 `/lab/[slug]` routes return 200 and statically generate (`next build` confirms SSG)
+- `next build` First Load JS: portfolio routes unchanged; gsap/ogl chunks only appear under `/lab` routes (verified no bundle leak)
+- Both signature effects (x-ray reveal + heal, ripple-swap propagation) confirmed live via chrome-devtools pointer simulation
+- Mobile viewport (390×844): no horizontal overflow, grid collapses to 1 column, filter chips wrap
+
+### Growing the library
+Long-term goal is ~10 demos per category (40 total) — the registry pattern above scales without any other structural change. Add demos incrementally; no need to touch `LabStage`, `hooks.js`, `useOgl.js`, or the routes.
 
 ---
 
@@ -193,16 +246,41 @@ All tokens are CSS-variable-backed (`rgb(var(--c-*) / <alpha-value>)`) so `/opac
 
 ```
 app/
-  layout.jsx            — metadata, Person + Service JSON-LD, fonts, no-flash theme script, MotionProvider
-  page.jsx              — assembles all homepage sections, ClientEnhancements
-  globals.css           — :root + .dark token blocks, .top-fade, .grain, .link-line, etc.
-  icon.svg / icon.png   — DDC favicon (navy square, Georgia serif, ivory rules)
+  not-found.jsx does NOT exist at this level — see (site)/not-found.jsx below (route-group sharp edge)
+
+  (site)/                — portfolio root layout group (ivory theme)
+    layout.jsx            — metadata, Person + Service JSON-LD, fonts, no-flash theme script, MotionProvider
+    page.jsx              — assembles all homepage sections, ClientEnhancements
+    globals.css           — :root + .dark token blocks, .top-fade, .grain, .link-line, etc.
+    not-found.jsx          — 404 UI, rendered inside the portfolio theme
+    [...notFound]/page.jsx — catch-all that calls notFound() so unmatched URLs reach the boundary above
+    services/
+      page.jsx            — /services metadata, OfferCatalog JSON-LD, renders ServicesNav + Services + Footer
+
+  (lab)/                  — /lab root layout group (dark studio theme, unlisted)
+    layout.jsx            — Syne + IBM Plex Mono, metadata.robots noindex, MotionProvider
+    lab.css               — --lab-* tokens, color-scheme: dark, reduced-motion kill block
+    lab/
+      page.jsx            — gallery index (header + LabGrid)
+      [slug]/page.jsx      — fullscreen demo route, generateStaticParams from lib/lab.js, prev/next nav
+
+  icon.svg / icon.png   — DDC favicon (navy square, Georgia serif, ivory rules) — shared, resolved at app root
   apple-icon.png        — 180×180 Apple touch icon
   robots.js             — allows all, references sitemap
-  sitemap.js            — homepage + /services entries
+  sitemap.js            — homepage + /services entries only (lab intentionally absent)
 
-  services/
-    page.jsx            — /services metadata, OfferCatalog JSON-LD, renders ServicesNav + Services + Footer
+lib/
+  lab.js                — CATEGORIES + DEMOS[] registry (pure data: slug, title, category, tags, description)
+
+components/
+  lab/
+    registry.jsx         — slug → next/dynamic(ssr:false) component map (the client boundary)
+    LabStage.jsx          — demo shell: mounts/unmounts on IntersectionObserver+visibility, Replay, Full link
+    LabGrid.jsx           — filterable index grid
+    Poster.jsx            — static CSS placeholder shown while a demo is unmounted
+    hooks.js              — useActive, usePrefersReducedMotion, useLatest
+    useOgl.js             — shared ogl renderer bootstrap + dispose (WEBGL_lose_context on unmount)
+    demos/*.jsx           — the 16 demo components (see /lab section above for the full roster)
 
 components/
   Nav.jsx               — homepage fixed header; ThemeToggle; desktop nav + a11y mobile menu (NAV_LINKS)
