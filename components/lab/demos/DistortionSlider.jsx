@@ -62,9 +62,11 @@ const fragment = /* glsl */ `
     vec2 dir = vec2(n - 0.5, noise(vUv * 5.0) - 0.5);
     vec2 uvA = cover(vUv, uPlaneRes, uResA) + dir * amt * p;
     vec2 uvB = cover(vUv, uPlaneRes, uResB) - dir * amt * (1.0 - p);
-    // Noise-shaped wipe instead of a flat crossfade.
+    // Noise-shaped wipe instead of a flat crossfade. m: 0 at rest (p=1, show
+    // current tA), 1 at transition end (p=0, show incoming tB) — on complete,
+    // current++ re-syncs tA to the image already on screen, so no snap.
     float m = smoothstep(p * 1.4 - 0.4, p * 1.4, n);
-    vec3 col = mix(texture2D(tB, uvB).rgb, texture2D(tA, uvA).rgb, m);
+    vec3 col = mix(texture2D(tA, uvA).rgb, texture2D(tB, uvB).rgb, m);
     gl_FragColor = vec4(col, 1.0);
   }
 `;

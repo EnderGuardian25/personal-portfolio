@@ -31,4 +31,45 @@ export const DEMO_COMPONENTS = {
   "magnetic-dock": demo(() => import("./demos/MagneticDock")),
   "hover-lens": demo(() => import("./demos/HoverLens")),
   "spotlight-grid": demo(() => import("./demos/SpotlightGrid")),
+  // Hero · wave 2
+  "particle-name-hero": demo(() => import("./demos/ParticleNameHero")),
+  "blueprint-hero": demo(() => import("./demos/BlueprintHero")),
+  "slice-hero": demo(() => import("./demos/SliceHero")),
+  // Text · wave 2
+  "liquid-type": demo(() => import("./demos/LiquidType")),
+  "path-text": demo(() => import("./demos/PathText")),
+  "odometer-roll": demo(() => import("./demos/OdometerRoll")),
+  // Carousel · wave 2
+  "panorama-strip": demo(() => import("./demos/PanoramaStrip")),
+  "filmstrip-scrub": demo(() => import("./demos/FilmstripScrub")),
+  "accordion-gallery": demo(() => import("./demos/AccordionGallery")),
+  // Cursor & hover · wave 2
+  "particle-comet": demo(() => import("./demos/ParticleComet")),
+  "char-repel": demo(() => import("./demos/CharRepel")),
+  "tilt-glare-cards": demo(() => import("./demos/TiltGlareCards")),
+  // Scroll effects
+  "pin-morph-scroll": demo(() => import("./demos/PinMorphScroll")),
+  "horizontal-journey": demo(() => import("./demos/HorizontalJourney")),
+  "parallax-scene": demo(() => import("./demos/ParallaxScene")),
+  "velocity-skew": demo(() => import("./demos/VelocitySkew")),
+  "text-scrub-reveal": demo(() => import("./demos/TextScrubReveal")),
+  "sticky-stack": demo(() => import("./demos/StickyStack")),
+  "mask-wipe-scroll": demo(() => import("./demos/MaskWipeScroll")),
+  "line-draw-scroll": demo(() => import("./demos/LineDrawScroll")),
+  // Transitions & loaders
+  "curtain-transition": demo(() => import("./demos/CurtainTransition")),
+  "counter-preloader": demo(() => import("./demos/CounterPreloader")),
+  "morph-loader": demo(() => import("./demos/MorphLoader")),
+  "pixel-dissolve": demo(() => import("./demos/PixelDissolve")),
+  "iris-transition": demo(() => import("./demos/IrisTransition")),
+  "glitch-transition": demo(() => import("./demos/GlitchTransition")),
+  "logo-sting": demo(() => import("./demos/LogoSting")),
+  // Grids & layout
+  "infinite-drag-canvas": demo(() => import("./demos/InfiniteDragCanvas")),
+  "expand-grid": demo(() => import("./demos/ExpandGrid")),
+  "masonry-flow": demo(() => import("./demos/MasonryFlow")),
+  "hover-index-list": demo(() => import("./demos/HoverIndexList")),
+  "mosaic-ripple": demo(() => import("./demos/MosaicRipple")),
+  "bento-cascade": demo(() => import("./demos/BentoCascade")),
+  "counter-columns": demo(() => import("./demos/CounterColumns")),
 };

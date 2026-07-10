@@ -69,10 +69,14 @@ export default function MagneticDock({ reducedMotion }) {
       className="relative flex h-full w-full items-center justify-center overflow-hidden bg-[#07070a]"
     >
       {/* Cursor blob — swells behind the hovered button. */}
+      {/* Anchored at the container origin (left-0 top-0) so the x/y motion
+          values — cursor coords relative to the container — land the blob
+          under the pointer; -m-4 self-centers the 32px blob. translateX/Y
+          props would alias-collide with x/y in framer, hence margins. */}
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute z-0 h-8 w-8 rounded-full bg-[#3b82f6]/60 blur-md"
-        style={{ x: bx, y: by, scale, translateX: "-50%", translateY: "-50%" }}
+        className="pointer-events-none absolute left-0 top-0 z-0 -ml-4 -mt-4 h-8 w-8 rounded-full bg-[#3b82f6]/60 blur-md"
+        style={{ x: bx, y: by, scale }}
       />
       <nav className="z-10 flex flex-wrap items-center justify-center gap-4 px-6">
         {ITEMS.map((label) => (

@@ -15,9 +15,12 @@ const IMAGES = [
   "/lab/photo-2.webp",
 ];
 
-function Card({ src, x, i }) {
+function Card({ src, x, i, factor }) {
   // Inner image drifts against the row's motion for parallax-within-frame.
-  const inner = useTransform(x, (v) => v * -0.08);
+  // factor is scaled to the drag range so the drift never exceeds the 32px
+  // bleed (-inset-x-8) — a fixed 0.08 leaves blank strips in narrow viewports
+  // where the drag range is long (grid cards, mobile).
+  const inner = useTransform(x, (v) => v * -factor);
   return (
     <div className="relative h-56 w-44 shrink-0 overflow-hidden sm:h-72 sm:w-56">
       <motion.div style={{ x: inner }} className="absolute -inset-x-8 inset-y-0">
@@ -73,7 +76,15 @@ export default function MomentumGallery({ reducedMotion }) {
           className="flex cursor-grab gap-4 active:cursor-grabbing"
         >
           {IMAGES.map((src, i) => (
-            <Card key={i} src={src} x={x} i={i} />
+            <Card
+              key={i}
+              src={src}
+              x={x}
+              i={i}
+              // 30px of the 32px bleed — the 2px headroom absorbs dragElastic
+              // overshoot past the constraints.
+              factor={bound > 0 ? Math.min(0.08, 30 / bound) : 0.08}
+            />
           ))}
         </motion.div>
         <p className="mt-4 font-lab-mono text-[10px] uppercase tracking-[0.3em] text-lab-dim">

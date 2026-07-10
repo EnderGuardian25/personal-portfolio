@@ -47,6 +47,10 @@ Hosted on a **Hetzner VPS** (Ubuntu 22.04) behind **nginx**, run by **PM2** (`da
 
 > `sharp` is a production dependency, so the deploy must run a full `npm install` (not `--production`) — `deploy.sh` already does.
 
+## Lab
+
+**`/lab`** is an unlisted (noindex, not in nav/sitemap) reference gallery of 50 live animation/UI demos across 7 categories — hero sections, text animations, carousels, cursor/hover, scroll effects, transitions/loaders, and grids/layout. It runs as a second root layout (`app/(lab)/`, dark-studio theme, Syne + IBM Plex Mono, GSAP + ogl) fully isolated from the portfolio's theme and bundles. To add a demo: one component in `components/lab/demos/`, one data entry in `lib/lab.js`, one import line in `components/lab/registry.jsx`.
+
 ## Reference
 
 See **[`HANDOFF.md`](HANDOFF.md)** for the full session handoff: architecture, design tokens, per-file notes, content reference, and the "critical design rules — do not re-break" list.

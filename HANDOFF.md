@@ -8,7 +8,7 @@
 - **Owner:** Damian De Cruz — Creative Technologist, BSc (Hons) Computer Science, IIT Sri Lanka (University of Westminster)
 - **Repo:** https://github.com/EnderGuardian25/personal-portfolio (`main` branch)
 - **Local path:** `D:\personal-portfolio`
-- **Last commit:** `2026-07-10` — feat: `/lab` unlisted UI/animation reference gallery (route-group split, 16 demos, ogl + gsap) rebased on top of the `v3` refined-editorial motion system (merged into `main`). Earlier: perf pause on glitch canvas off-screen/hidden, a11y **100**, glitch decrypt field
+- **Last commit:** `2026-07-10` — feat: `/lab` wave 2 — 34 new demos (50 total across 7 categories: +Scroll Effects, +Transitions & Loaders, +Grids & Layout) plus fixes to DistortionSlider (wipe direction), MagneticDock (blob anchoring), MomentumGallery (parallax bleed clamp). Earlier same day: `/lab` gallery launch (route-group split, 16 demos, ogl + gsap) on top of the merged `v3` motion system. The `v3` branch has been deleted (local + origin) — fully merged
 - **Motion system:** the `v3` "refined-editorial motion" work (SplitLines, IntroStamp, Parallax, ScrollProgress, `lib/motion.js`, v:03 stamps) is now in `main` — see the *Motion System — v3* section below. Both pages verified Lighthouse **100/100/100/100** (a11y · BP · SEO · Agentic), desktop + mobile, dark mode
 
 ---
@@ -29,7 +29,7 @@
 
 ## `/lab` — Unlisted UI/Animation Reference Gallery (2026-07-10)
 
-A personal library of live, reusable UI patterns (hero sections, text animations, image carousels, cursor/hover effects) — for reuse in future client builds and for showing clients directly ("which of these do you like?").
+A personal library of live, reusable UI patterns (hero sections, text animations, image carousels, cursor/hover effects, scroll effects, transitions/loaders, grids/layout) — for reuse in future client builds and for showing clients directly ("which of these do you like?").
 
 ### Why two root layouts
 The lab deliberately does **not** inherit the portfolio's theme — no ivory palette, no grain, no theme toggle, no GA, no JSON-LD. Next.js App Router route groups make this possible: `app/(site)/` and `app/(lab)/` are two independent root layouts sharing one `app/` tree. URLs are unaffected (`/`, `/services`, `/lab` all resolve normally); navigating between the two groups is a full page load, which is irrelevant since nothing links from the lab back to the portfolio.
@@ -42,7 +42,7 @@ The lab deliberately does **not** inherit the portfolio's theme — no ivory pal
 - **Not** in `app/sitemap.js`, **not** in any nav (`lib/site.js` `NAV_LINKS` untouched)
 - `noindex, nofollow, nocache` via the `(lab)` layout's `metadata.robots` — deliberately **no** `disallow` entry in `robots.txt` (a disallow line would publicly advertise the path to anyone reading robots.txt; meta-noindex alone keeps it reachable only by direct link)
 
-### Registry pattern (how to add demo #17)
+### Registry pattern (how to add demo #51)
 1. One entry in `lib/lab.js` `DEMOS[]` — `{ slug, title, category, tags, description, webgl?, span? }` (pure data, used by `generateStaticParams`/metadata/index grid)
 2. One component in `components/lab/demos/YourDemo.jsx` — receives the standard contract `{ active, reducedMotion, standalone }` from `LabStage`
 3. One line in `components/lab/registry.jsx` — `"your-slug": demo(() => import("./demos/YourDemo"))` (the `next/dynamic` + `ssr:false` client boundary)
@@ -50,32 +50,47 @@ The lab deliberately does **not** inherit the portfolio's theme — no ivory pal
 That's it — the demo appears in the `/lab` grid (filterable by category) and gets its own fullscreen route at `/lab/your-slug` with prev/next navigation, automatically.
 
 ### Perf model (why demos don't burn WebGL contexts)
-`components/lab/hooks.js` `useActive()` gates every demo on IntersectionObserver + `document.hidden` — but unlike `GlitchField.jsx` (which just pauses its rAF loop), `LabStage.jsx` **unmounts** the demo entirely when inactive, swapping in a static `Poster.jsx` placeholder. Browsers cap concurrent WebGL contexts (~8–16/page); with 4 of the 16 demos using ogl, unmounting (not just pausing) is what keeps a scroll through the whole gallery safe. `components/lab/useOgl.js` explicitly calls `WEBGL_lose_context` on cleanup rather than waiting for GC.
+`components/lab/hooks.js` `useActive()` gates every demo on IntersectionObserver + `document.hidden` — but unlike `GlitchField.jsx` (which just pauses its rAF loop), `LabStage.jsx` **unmounts** the demo entirely when inactive, swapping in a static `Poster.jsx` placeholder. Browsers cap concurrent WebGL contexts (~8–16/page); with 6 of the 50 demos using ogl, unmounting (not just pausing) is what keeps a scroll through the whole gallery safe. `components/lab/useOgl.js` explicitly calls `WEBGL_lose_context` on cleanup rather than waiting for GC.
 
-### The two signature demos
+### Signature demos
 - **`xray-hero`** (`components/lab/demos/XrayHero.jsx`) — ogl's built-in `Flowmap` class (a ping-pong FBO pair holding a decaying pointer-trail texture, `dissipation: 0.982`) masks between a front photo and a hidden text layer rendered to an off-screen 2D canvas. The trail's RG velocity channels also warp the front image's UVs at the reveal edge for the streak look. Touch users get an auto-play intro sweep since there's no hover.
 - **`ripple-swap`** (`components/lab/demos/RippleSwap.jsx`) — pure DOM/rAF, no WebGL. Two sentences share paired character cells (`.glyph-a` / `.glyph-b` stacked via CSS grid); each cell's `energy` value is driven by a gaussian of distance to recent pointer-path points, PLUS an expanding ripple ring (`delay = distance / rippleSpeed`) so farther cells light up later — that's what makes the swap propagate instead of popping. Energy decays every frame so it heals back to sentence A. Direct style/class mutation via refs (same pattern as `Marquee.jsx`), not React state per frame. Cell text uses literal NBSP (` `) for space characters — plain spaces are whitespace-only text nodes and collapse inside `inline-grid` cells; don't "clean up" those into ASCII spaces.
 
-### Demo roster (16, 4 per category)
+### Demo roster (50 across 7 categories — wave 2 added 2026-07-10)
 | Category | Demos |
 |---|---|
-| Hero | `xray-hero` ★, `kinetic-slab-hero` (GSAP quickTo lean), `gradient-field-hero` (ogl fbm noise), `split-panel-hero` (Framer choreography) |
-| Text | `ripple-swap` ★, `scramble-hover` (GlitchField-style charset resolve), `variable-weight-wave` (Syne variable wght follows cursor), `velocity-marquee` (Marquee.jsx physics ported + velocity skew) |
-| Carousel | `distortion-slider` (ogl noise displacement + GSAP), `momentum-gallery` (Framer drag + parallax-in-frame), `clip-reveal-carousel` (GSAP clip-path wipes, arrow keys), `depth-stack` (Framer 3D fan + promote-on-click) |
-| Cursor & Hover | `image-trail` (2D canvas stamp trail), `magnetic-dock` (Framer magnetic buttons + blob), `hover-lens` (magnify + invert lens), `spotlight-grid` (radial mask spotlight) |
+| Hero (7) | `xray-hero` ★, `kinetic-slab-hero`, `gradient-field-hero` (ogl), `split-panel-hero` + w2: `particle-name-hero` ★ (6k GPU particles form "DAMIAN", pointer scatter + spring home), `blueprint-hero` (GSAP self-drafting plan), `slice-hero` (sheared type strips + pointer-velocity lean) |
+| Text (7) | `ripple-swap` ★, `scramble-hover`, `variable-weight-wave`, `velocity-marquee` + w2: `liquid-type` (ogl refraction ripples over type), `path-text` (textPath rail, pointer bends + drives speed), `odometer-roll` (per-char slot-machine roll) |
+| Carousel (7) | `distortion-slider` (ogl), `momentum-gallery`, `clip-reveal-carousel`, `depth-stack` + w2: `panorama-strip` (ogl curved-lens drag strip), `filmstrip-scrub` (pointer scrub + magnetic snap), `accordion-gallery` (breathing slats, click-to-lock) |
+| Cursor & Hover (7) | `image-trail`, `magnetic-dock`, `hover-lens`, `spotlight-grid` + w2: `particle-comet` (curl-noise canvas tail + burst), `char-repel` (inverse-square letter flee), `tilt-glare-cards` (3D tilt + holographic sheen) |
+| Scroll Effects (8) | `pin-morph-scroll` ★ (pinned photo grows to full bleed, caption splits), `horizontal-journey`, `parallax-scene`, `velocity-skew`, `text-scrub-reveal`, `sticky-stack`, `mask-wipe-scroll`, `line-draw-scroll` |
+| Transitions & Loaders (7) | `curtain-transition`, `counter-preloader` (split-face 0→100), `morph-loader` (never-repeating blob), `pixel-dissolve`, `iris-transition` (opens from click point), `glitch-transition` (seeded deterministic chaos), `logo-sting` (stroke-drawn monogram → FLIP to header) |
+| Grids & Layout (7) | `infinite-drag-canvas` ★ (endless 2D throwable plane, modulo wrap), `expand-grid` (layoutId FLIP detail), `masonry-flow` (filter re-choreography), `hover-index-list`, `mosaic-ripple` (summed damped waves), `bento-cascade`, `counter-columns` |
 
-Three demos deliberately evolve existing portfolio components for the dark lab: `kinetic-slab-hero` ← `Hero.jsx` word-mask technique, `velocity-marquee` ← `Marquee.jsx` drag physics, `scramble-hover` ← `GlitchField.jsx` charset. `hover-lens` references `Lens.jsx`'s hover-lift pattern.
+Three wave-1 demos deliberately evolve existing portfolio components for the dark lab: `kinetic-slab-hero` ← `Hero.jsx` word-mask technique, `velocity-marquee` ← `Marquee.jsx` drag physics, `scramble-hover` ← `GlitchField.jsx` charset. `hover-lens` references `Lens.jsx`'s hover-lift pattern.
 
-### Verified (this session)
+### Scroll-driven demo pattern (wave 2 — REQUIRED for any new scroll demo)
+The page is NOT the scroller, so **ScrollTrigger is banned** in lab demos. Instead: the demo root is an internal scroller (`h-full w-full overflow-y-auto`) containing an explicit tall wrapper (e.g. `height: 340%`) whose first child is the sticky scene (`position: sticky; top: 0`, height = `100% / 3.4`). Progress = `scrollTop / (scrollHeight − clientHeight)`, read in a **passive scroll listener**, applied via refs in **rAF** (exponentially smoothed). Never set `overscroll-behavior` (default chaining must let the index page scroll past the card). Show a `Scroll ↓` mono hint; `reducedMotion` renders a static ~60%-progress state with no listeners. **Unit gotcha:** the stage is an `inline-size`-only container — `cqw` works, but `cqh` silently resolves against the *viewport*; never use it.
+
+### Wave-2 fixes to wave-1 demos (same commit)
+- `DistortionSlider.jsx` — the noise-wipe `mix()` order was inverted: at rest it showed the incoming texture, causing a snap when `current++` re-synced `tA`. Now `m` maps 0→current (`tA`), 1→incoming (`tB`).
+- `MagneticDock.jsx` — the cursor blob used `translateX/Y: "-50%"` alongside framer `x`/`y` motion values, which alias-collide; replaced with `left-0 top-0 -ml-4 -mt-4` self-centering.
+- `MomentumGallery.jsx` — the fixed `-0.08` inner-parallax factor could exceed the 32px image bleed on narrow viewports, exposing blank strips; the factor is now clamped to the drag range (`min(0.08, 30 / bound)`).
+
+### Verified (gallery launch, 2026-07-10)
 - `/` and `/services` regression-checked pixel-identical after the route-group move (ivory theme, fonts, grain, theme toggle, Lenis, GA, JSON-LD all intact)
 - `/sitemap.xml` still lists only `/` and `/services`; `/robots.txt` unaffected; custom 404 works for bogus URLs
-- All 16 `/lab/[slug]` routes return 200 and statically generate (`next build` confirms SSG)
 - `next build` First Load JS: portfolio routes unchanged; gsap/ogl chunks only appear under `/lab` routes (verified no bundle leak)
-- Both signature effects (x-ray reveal + heal, ripple-swap propagation) confirmed live via chrome-devtools pointer simulation
+- Both wave-1 signature effects (x-ray reveal + heal, ripple-swap propagation) confirmed live via chrome-devtools pointer simulation
 - Mobile viewport (390×844): no horizontal overflow, grid collapses to 1 column, filter chips wrap
 
+### Verified (wave 2, 2026-07-10)
+- All 50 `/lab/[slug]` routes return 200 and statically generate (`next build` — 61 pages total, lint + types green)
+- All 50 demo files: `"use client"` + default export + `reducedMotion` handling; zero ScrollTrigger / `overscroll-behavior` usage
+- Wave-2 demos were code-reviewed per-batch (contract, cleanup, a11y) but **not yet visually eyeballed in a browser** — do that before/after deploy, starting with the signature pieces (`particle-name-hero`, `pin-morph-scroll`, `infinite-drag-canvas`)
+
 ### Growing the library
-Long-term goal is ~10 demos per category (40 total) — the registry pattern above scales without any other structural change. Add demos incrementally; no need to touch `LabStage`, `hooks.js`, `useOgl.js`, or the routes.
+The original ~10-per-category goal (40 total) is met and exceeded at 50 across 7 categories — the registry pattern above scales without any other structural change. Add demos incrementally; no need to touch `LabStage`, `hooks.js`, `useOgl.js`, or the routes. Known accepted trade-off: `infinite-drag-canvas` sets `touch-action: none` (page scroll doesn't pass through that one card on touch — required for free 2D dragging).
 
 ---
 
@@ -280,7 +295,7 @@ components/
     Poster.jsx            — static CSS placeholder shown while a demo is unmounted
     hooks.js              — useActive, usePrefersReducedMotion, useLatest
     useOgl.js             — shared ogl renderer bootstrap + dispose (WEBGL_lose_context on unmount)
-    demos/*.jsx           — the 16 demo components (see /lab section above for the full roster)
+    demos/*.jsx           — the 50 demo components (see /lab section above for the full roster + scroll pattern rules)
 
 components/
   Nav.jsx               — homepage fixed header; ThemeToggle; desktop nav + a11y mobile menu (NAV_LINKS)
@@ -504,7 +519,7 @@ npm.cmd run dev
 ---
 
 ## Pending / Next Ideas
-- [ ] **Merge `v3` → `main`** once the motion pass is signed off, then deploy
+- [ ] **Visually review the 34 wave-2 lab demos** in a browser (dev server or post-deploy) — signature pieces first
 - [ ] **Deploy** — SSH into VPS → `~/deploy.sh` (deploys main)
 - [ ] Verify live: dark mode, `/services`, `/sitemap.xml`, `/robots.txt`, OG image
 - [ ] Submit sitemap + request indexing of `/` and `/services` in GSC
