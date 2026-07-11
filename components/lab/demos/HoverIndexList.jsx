@@ -20,6 +20,7 @@ export default function HoverIndexList({ reducedMotion }) {
   const listRef = useRef(null);
   const previewRef = useRef(null);
   const imgRefs = useRef([]);
+  const rowRefs = useRef([]);
   const state = useRef({ x: 0, y: 0, tx: 0, ty: 0, s: 0, ts: 0 }).current;
 
   // Entrance: rows rise in on a stagger (gsap sets "from" at runtime, so the
@@ -80,11 +81,15 @@ export default function HoverIndexList({ reducedMotion }) {
   }, [reducedMotion, state]);
 
   // Direct style writes on hover — crossfade the stacked photos, show/scale
-  // the frame. No per-frame React state.
+  // the frame, and dim every other row so ONLY the active heading reads
+  // highlighted. No per-frame React state.
   const setRow = (i) => {
     state.ts = i == null ? 0 : 1;
     imgRefs.current.forEach((img, j) => {
       if (img) img.style.opacity = i === j ? "1" : "0";
+    });
+    rowRefs.current.forEach((btn, j) => {
+      if (btn) btn.style.opacity = i == null ? "" : i === j ? "1" : "0.35";
     });
     if (previewRef.current) previewRef.current.style.opacity = i == null ? "0" : "1";
   };
@@ -105,10 +110,11 @@ export default function HoverIndexList({ reducedMotion }) {
             key={row.title}
             type="button"
             aria-label={`${row.title} — ${row.meta}`}
+            ref={(n) => (rowRefs.current[i] = n)}
             onPointerEnter={() => setRow(i)}
             onFocus={() => setRow(i)}
             onBlur={() => setRow(null)}
-            className="group relative overflow-hidden border-t border-lab-line text-left last:border-b"
+            className="group relative overflow-hidden border-t border-lab-line text-left transition-opacity duration-300 last:border-b"
           >
             <span
               className="absolute inset-0 origin-bottom scale-y-0 bg-lab-text transition-transform duration-[350ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-y-100 group-focus-visible:scale-y-100"

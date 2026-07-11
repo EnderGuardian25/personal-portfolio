@@ -3,8 +3,8 @@ import { useEffect, useRef } from "react";
 
 // Particle Comet — the cursor is a comet head shedding motes into a cheap
 // curl-noise-style swirl field on a 2D canvas. Additive compositing gives each
-// particle a blue-hot core inside a warm halo; pointerdown detonates a radial
-// burst. With no pointer, the head autopilots a lissajous flight path.
+// particle a blue-hot core inside a soft blue halo; pointerdown detonates a
+// radial burst. With no pointer, the head autopilots a lissajous flight path.
 const MAX = 520; // particle cap
 const HOLD = 1500; // ms after the last pointer move before autopilot resumes
 
@@ -35,8 +35,8 @@ export default function ParticleComet({ reducedMotion }) {
     });
 
     const glow = (x, y, r, a) => {
-      ctx.fillStyle = `rgba(251,146,60,${(a * 0.14).toFixed(3)})`; // warm halo
-      ctx.beginPath(); ctx.arc(x, y, r * 3.2, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = `rgba(37,99,235,${(a * 0.07).toFixed(3)})`; // faint blue halo
+      ctx.beginPath(); ctx.arc(x, y, r * 2.2, 0, Math.PI * 2); ctx.fill();
       ctx.fillStyle = `rgba(59,130,246,${(a * 0.85).toFixed(3)})`; // blue core
       ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
       ctx.fillStyle = `rgba(219,234,254,${(a * 0.5).toFixed(3)})`; // hot pin

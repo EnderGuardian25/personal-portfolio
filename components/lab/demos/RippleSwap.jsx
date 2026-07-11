@@ -34,11 +34,28 @@ export default function RippleSwap({ reducedMotion }) {
     if (!wrap || !line) return;
 
     const cells = Array.from(line.children);
+    const glyphBs = cells.map((c) => c.lastElementChild);
     let centers = [];
     const energy = new Float32Array(cells.length);
     const on = new Uint8Array(cells.length);
     const points = []; // recent pointer path {x, y, t}
     let raf = null;
+
+    // Hidden probe: sentence B laid out at its OWN natural flow, one span per
+    // char. Centering B glyphs inside A-width cells reflowed B with A's letter
+    // widths — narrow chars swallowed by wide cells and vice versa — so the
+    // swapped sentence read as mangled. Each glyph-b is instead pinned at B's
+    // true offset (centered as a whole line), measured from this probe.
+    const bProbe = document.createElement("span");
+    bProbe.setAttribute("aria-hidden", "true");
+    bProbe.style.cssText =
+      "position:absolute;left:0;top:0;visibility:hidden;white-space:pre;pointer-events:none;";
+    for (let i = 0; i < cells.length; i++) {
+      const s = document.createElement("span");
+      s.textContent = (B[i] ?? " ") === " " ? " " : B[i];
+      bProbe.appendChild(s);
+    }
+    line.appendChild(bProbe);
 
     const measure = () => {
       // Shrink-to-fit the single line, then cache cell centers.
@@ -51,6 +68,18 @@ export default function RippleSwap({ reducedMotion }) {
         const r = c.getBoundingClientRect();
         return { x: r.left - wr.left + r.width / 2, y: r.top - wr.top + r.height / 2 };
       });
+      // Pin each glyph-b at sentence B's natural offset (B centered on the line).
+      const lr = line.getBoundingClientRect();
+      const spans = bProbe.children;
+      const firstL = spans[0].getBoundingClientRect().left;
+      const bWidth = spans[spans.length - 1].getBoundingClientRect().right - firstL;
+      const startX = (lr.width - bWidth) / 2;
+      for (let i = 0; i < cells.length; i++) {
+        const bx = startX + (spans[i].getBoundingClientRect().left - firstL);
+        const cellX = cells[i].getBoundingClientRect().left - lr.left;
+        glyphBs[i].style.setProperty("--bx", `${bx - cellX}px`);
+        glyphBs[i].style.setProperty("--btx", "0px");
+      }
     };
     measure();
     const ro = new ResizeObserver(measure);
@@ -126,6 +155,7 @@ export default function RippleSwap({ reducedMotion }) {
     return () => {
       wrap.removeEventListener("pointermove", onPointerMove);
       ro.disconnect();
+      bProbe.remove();
       if (raf != null) cancelAnimationFrame(raf);
     };
   }, [reducedMotion]);
@@ -163,8 +193,10 @@ export default function RippleSwap({ reducedMotion }) {
 
       <style jsx>{`
         /* The cell takes glyph-a's natural width, so the resting sentence
-           keeps its true letter spacing; glyph-b overlays centered on top —
-           a max-width grid cell padded narrow glyphs into visible gaps. */
+           keeps its true letter spacing. glyph-b is pinned at sentence B's own
+           measured flow offset (--bx, set from the JS probe) so the swapped
+           sentence keeps ITS true spacing too; the 50%/-50% defaults only
+           serve the no-JS / reduced-motion fallback. */
         .cell {
           position: relative;
           display: inline-block;
@@ -184,10 +216,10 @@ export default function RippleSwap({ reducedMotion }) {
         }
         .glyph-b {
           position: absolute;
-          left: 50%;
+          left: var(--bx, 50%);
           top: 0;
           color: rgb(59 130 246);
-          transform: translateX(-50%) rotateX(88deg);
+          transform: translateX(var(--btx, -50%)) rotateX(88deg);
           opacity: 0;
         }
         .cell.on .glyph-a {
@@ -195,7 +227,7 @@ export default function RippleSwap({ reducedMotion }) {
           opacity: 0;
         }
         .cell.on .glyph-b {
-          transform: translateX(-50%) rotateX(0deg);
+          transform: translateX(var(--btx, -50%)) rotateX(0deg);
           opacity: 1;
         }
         /* Reduced motion: plain crossfade of the whole line on hover. */

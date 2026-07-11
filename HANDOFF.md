@@ -1,5 +1,5 @@
 # DDC Portfolio — Session Handoff
-> Generated: 2026-06-06 | Updated: 2026-07-10 | Branch: `main`
+> Generated: 2026-06-06 | Updated: 2026-07-11 | Branch: `main`
 
 ---
 
@@ -8,7 +8,7 @@
 - **Owner:** Damian De Cruz — Creative Technologist, BSc (Hons) Computer Science, IIT Sri Lanka (University of Westminster)
 - **Repo:** https://github.com/EnderGuardian25/personal-portfolio (`main` branch)
 - **Local path:** `D:\personal-portfolio`
-- **Last commit:** `2026-07-10` — fix(lab): visual-review round on wave 2 — LabStage `overflow-hidden` (tall demo content was defeating the card aspect ratio), ParticleNameHero opaque clear + white name (additive blend left near-zero canvas alpha → machine-dependent washout), RippleSwap aligned word boundaries + natural cell widths + 230px ripple cap, and the stationary-hover rule applied to XrayHero / LiquidType / ImageTrail / ParticleComet. Earlier same day: `/lab` wave 2 (34 new demos, 50 total across 7 categories) and the gallery launch; `v3` branch deleted (fully merged)
+- **Last commit:** `2026-07-11` — fix(lab): visual-review round 2 — full 50-demo pass complete (see *Verified* under `/lab`). Headline fixes: LogoSting replay rebuilds a fresh timeline per run (invalidate().restart() re-measured the FLIP hand-off from the parked-in-slot position → garbage slide targets), RippleSwap pins sentence-B glyphs at B's own measured flow offsets via a hidden probe (centering B glyphs in A-width cells mangled B's spacing), gsap `y: 0` alongside `yPercent` in CounterPreloader/CurtainTransition (gsap parses JSX inline `translateY(N%)` from the computed matrix as a PIXEL offset that rides along with every yPercent tween), LabStage dropped its stage-level `group` class (made every demo's internal `group-hover:` fire card-wide), type-size clamps in SliceHero/ExpandGrid/XrayHero/LiquidType (Syne 800 runs wide → edge clipping), HoverIndexList dims non-active rows, XrayHero idle wobble is now a constant-magnitude circle (mismatched sin/cos frequencies made the aperture pulse), ParticleComet warm halo → faint blue. Previous 2026-07-10: first visual-review round + wave 2 launch (50 demos) — LabStage `overflow-hidden` (tall demo content was defeating the card aspect ratio), ParticleNameHero opaque clear + white name (additive blend left near-zero canvas alpha → machine-dependent washout), RippleSwap aligned word boundaries + natural cell widths + 230px ripple cap, and the stationary-hover rule applied to XrayHero / LiquidType / ImageTrail / ParticleComet. Earlier same day: `/lab` wave 2 (34 new demos, 50 total across 7 categories) and the gallery launch; `v3` branch deleted (fully merged)
 - **Motion system:** the `v3` "refined-editorial motion" work (SplitLines, IntroStamp, Parallax, ScrollProgress, `lib/motion.js`, v:03 stamps) is now in `main` — see the *Motion System — v3* section below. Both pages verified Lighthouse **100/100/100/100** (a11y · BP · SEO · Agentic), desktop + mobile, dark mode
 
 ---
@@ -90,7 +90,13 @@ The page is NOT the scroller, so **ScrollTrigger is banned** in lab demos. Inste
 ### Verified (wave 2, 2026-07-10)
 - All 50 `/lab/[slug]` routes return 200 and statically generate (`next build` — 61 pages total, lint + types green)
 - All 50 demo files: `"use client"` + default export + `reducedMotion` handling; zero ScrollTrigger / `overscroll-behavior` usage
-- Damian's first visual pass (2026-07-10) caught 4 issues, all fixed + browser-verified: the LabStage aspect-ratio blowout, the ParticleNameHero alpha washout, RippleSwap cell-width gaps/over-reach, and movement-only hover in 4 demos (see the Hover rule above). Rest of the 34 wave-2 demos still deserve an eyeball before deploy
+- Damian's first visual pass (2026-07-10) caught 4 issues, all fixed + browser-verified: the LabStage aspect-ratio blowout, the ParticleNameHero alpha washout, RippleSwap cell-width gaps/over-reach, and movement-only hover in 4 demos (see the Hover rule above)
+
+### Verified (visual-review round 2, 2026-07-11 — ALL 50 demos eyeballed)
+- Full demo-by-demo browser pass over every `/lab/[slug]` route (a power cut interrupted the session mid-pass; the follow-up session confirmed via the dev-server log that all demos had been visited, then re-verified the tail rather than repeating the pass)
+- 12 files fixed this round — see the *Last commit* line at the top for the full list
+- Post-cut verification: `/lab` index renders with zero console errors and correct filter counts; hover-index-list card confirmed per-row highlight + non-active dimming (the LabStage `group` removal — LabStage's own chrome uses plain `hover:`, and all three `group-hover:` demos carry their own local `group`); LogoSting replay verified deterministically (settled slot transform identical across run 1 and replay); particle-name-hero renders clean
+- `next build` green: lint + types pass, 61/61 static pages, lab chunks still isolated from portfolio routes
 
 ### Growing the library
 The original ~10-per-category goal (40 total) is met and exceeded at 50 across 7 categories — the registry pattern above scales without any other structural change. Add demos incrementally; no need to touch `LabStage`, `hooks.js`, `useOgl.js`, or the routes. Known accepted trade-off: `infinite-drag-canvas` sets `touch-action: none` (page scroll doesn't pass through that one card on touch — required for free 2D dragging).
@@ -522,7 +528,7 @@ npm.cmd run dev
 ---
 
 ## Pending / Next Ideas
-- [ ] **Finish visually reviewing the wave-2 lab demos** — first pass done 2026-07-10 (4 issues found + fixed); the remaining demos deserve an eyeball
+- [x] ~~Finish visually reviewing the wave-2 lab demos~~ — DONE 2026-07-11: all 50 demos eyeballed across both rounds, 12 files fixed in round 2
 - [ ] **Deploy** — SSH into VPS → `~/deploy.sh` (deploys main)
 - [ ] Verify live: dark mode, `/services`, `/sitemap.xml`, `/robots.txt`, OG image
 - [ ] Submit sitemap + request indexing of `/` and `/services` in GSC

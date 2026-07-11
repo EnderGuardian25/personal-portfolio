@@ -69,22 +69,35 @@ function drawBackLayer(canvas, w, h, dpr) {
       .getPropertyValue("--font-lab-mono")
       .trim() || "monospace";
 
-  const size = Math.min(w / 7.2, h / 3.4);
+  // Fit the block to the frame: clamp the display size so the widest line
+  // stays inside the stage, whatever its aspect ratio.
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
+  let size = Math.min(w / 7.2, h / 3.4);
   ctx.font = `800 ${size}px ${displayVar}, sans-serif`;
+  const widest = Math.max(
+    ctx.measureText("UNDER THE").width,
+    ctx.measureText("SURFACE").width
+  );
+  if (widest > w * 0.84) {
+    size *= (w * 0.84) / widest;
+    ctx.font = `800 ${size}px ${displayVar}, sans-serif`;
+  }
   ctx.fillStyle = "#3b82f6";
   ctx.fillText("UNDER THE", w / 2, h / 2 - size * 0.62);
   ctx.fillStyle = "#e8e8e6";
   ctx.fillText("SURFACE", w / 2, h / 2 + size * 0.52);
 
-  ctx.font = `500 ${Math.max(11, size * 0.11)}px ${monoVar}, monospace`;
+  const tagline = "EVERY IMAGE HIDES A SECOND STORY — KEEP LOOKING";
+  let mono = Math.max(11, size * 0.11);
+  ctx.font = `500 ${mono}px ${monoVar}, monospace`;
+  const tw = ctx.measureText(tagline).width;
+  if (tw > w * 0.9) {
+    mono = Math.max(8, mono * ((w * 0.9) / tw));
+    ctx.font = `500 ${mono}px ${monoVar}, monospace`;
+  }
   ctx.fillStyle = "rgba(232,232,230,0.55)";
-  ctx.fillText(
-    "EVERY IMAGE HIDES A SECOND STORY — KEEP LOOKING",
-    w / 2,
-    h / 2 + size * 1.35
-  );
+  ctx.fillText(tagline, w / 2, h / 2 + size * 1.35);
 }
 
 export default function XrayHero({ reducedMotion }) {
@@ -216,7 +229,10 @@ export default function XrayHero({ reducedMotion }) {
               // Stationary hover: keep a soft aperture open under the cursor.
               // Flowmap splat strength scales with |velocity|, so a stopped
               // pointer stamps nothing — feed it a faint wobble instead.
-              velocity.set(Math.cos(t * 2.3) * 0.15, Math.sin(t * 3.1) * 0.15);
+              // The wobble must be a CIRCLE (same phase, constant magnitude):
+              // mismatched frequencies make |velocity| oscillate → the
+              // aperture visibly pulses under a resting cursor.
+              velocity.set(Math.cos(t * 1.8) * 0.12, Math.sin(t * 1.8) * 0.12);
             } else {
               mouse.set(-1, -1);
               velocity.set(0, 0);

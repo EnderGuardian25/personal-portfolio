@@ -35,12 +35,13 @@ const fragment = /* glsl */ `
       vec4 r = uRipples[i];
       float age = uTime - r.z;
       if (r.w <= 0.001 || age < 0.0) continue;
-      // A tight wave packet travelling outward from the stir point, decaying.
+      // A wave packet travelling outward from the stir point, decaying.
       float band = distance(p, r.xy) - age * 0.3;
-      h += cos(band * 42.0) * exp(-band * band * 240.0) * exp(-age * 1.8) * r.w;
+      h += cos(band * 34.0) * exp(-band * band * 130.0) * exp(-age * 1.15) * r.w;
     }
     // Ambient swell so the surface never reads as a still image.
-    h += 0.5 * sin(p.x * 6.0 + uTime * 0.9) * sin(p.y * 5.0 - uTime * 0.7);
+    h += 0.9 * sin(p.x * 6.0 + uTime * 0.9) * sin(p.y * 5.0 - uTime * 0.7);
+    h += 0.45 * sin(p.x * 11.0 - uTime * 0.6) * sin(p.y * 9.0 + uTime * 1.1);
     return h;
   }
 
@@ -52,14 +53,14 @@ const fragment = /* glsl */ `
       float h0 = height(p);
       grad = vec2(height(p + vec2(e, 0.0)) - h0, height(p + vec2(0.0, e)) - h0) / e;
     }
-    vec2 uv = vUv - grad * 0.0011; // refract through the surface slope
+    vec2 uv = vUv - grad * 0.0026; // refract through the surface slope
     vec3 col = vec3(
-      texture2D(tText, uv - grad * 0.00028).r, // hair of dispersion at crests
+      texture2D(tText, uv - grad * 0.0006).r, // hair of dispersion at crests
       texture2D(tText, uv).g,
-      texture2D(tText, uv + grad * 0.00028).b
+      texture2D(tText, uv + grad * 0.0006).b
     );
     // One electric glint riding the wave crests.
-    col += vec3(0.14, 0.32, 0.96) * clamp(grad.y * 0.045, 0.0, 1.0) * 0.4;
+    col += vec3(0.14, 0.32, 0.96) * clamp(grad.y * 0.035, 0.0, 1.0) * 0.4;
     gl_FragColor = vec4(col, 1.0);
   }
 `;
@@ -96,7 +97,14 @@ export default function LiquidType({ reducedMotion }) {
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillStyle = "#e8e8e6";
-        ctx.font = `800 ${Math.min(w * 0.23, h * 0.42)}px ${family}`;
+        // Clamp so the word never bleeds past the frame (Syne 800 runs wide).
+        let size = Math.min(w * 0.23, h * 0.42);
+        ctx.font = `800 ${size}px ${family}`;
+        const tw = ctx.measureText(WORD).width;
+        if (tw > w * 0.92) {
+          size *= (w * 0.92) / tw;
+          ctx.font = `800 ${size}px ${family}`;
+        }
         ctx.fillText(WORD, w / 2, h * 0.5);
         tex.image = cnv;
         tex.needsUpdate = true;
@@ -139,7 +147,7 @@ export default function LiquidType({ reducedMotion }) {
         const x = ((e.clientX - r.left) / r.width) * aspect;
         const y = 1 - (e.clientY - r.top) / r.height;
         hover = { x, y };
-        if (last && Math.hypot(x - last.x, y - last.y) < 0.055) return;
+        if (last && Math.hypot(x - last.x, y - last.y) < 0.04) return;
         const s = last ? Math.min(1.15, 0.3 + Math.hypot(x - last.x, y - last.y) * 4) : 0.7;
         last = { x, y };
         spawn(x, y, s, performance.now() / 1000);
@@ -184,7 +192,7 @@ export default function LiquidType({ reducedMotion }) {
           }
           // A resting pointer keeps gently stirring — hover must read even
           // when the mouse doesn't move.
-          if (hover && now - lastSpawn > 0.9) spawn(hover.x, hover.y, 0.38, now);
+          if (hover && now - lastSpawn > 0.75) spawn(hover.x, hover.y, 0.45, now);
           program.uniforms.uStill.value = 0;
           program.uniforms.uTime.value = now;
           renderer.render({ scene: mesh });

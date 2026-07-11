@@ -35,8 +35,10 @@ export default function CounterPreloader({ reducedMotion }) {
 
     if (reducedMotion) {
       // Settled destination: preloader parked open, hero standing.
+      // y: 0 clears the JSX inline translateY(110%), which gsap parses from
+      // the computed matrix as a PIXEL offset that otherwise sticks forever.
       gsap.set(halves, { yPercent: (i) => (i === 0 ? -101 : 101) });
-      gsap.set(heroLines, { yPercent: 0 });
+      gsap.set(heroLines, { yPercent: 0, y: 0 });
       return;
     }
 
@@ -46,7 +48,7 @@ export default function CounterPreloader({ reducedMotion }) {
     tlRef.current = tl;
 
     tl.set(halves, { yPercent: 0 })
-      .set(heroLines, { yPercent: 110 })
+      .set(heroLines, { yPercent: 110, y: 0 }) // y: 0 — see reducedMotion note
       .set(root.querySelectorAll("[data-log]"), { autoAlpha: 0, x: -8 })
       .add(write);
 

@@ -99,7 +99,11 @@ export default function InfiniteDragCanvas({ reducedMotion }) {
       last = { x: e.clientX, y: e.clientY };
       lastT = performance.now();
       cam.vx = cam.vy = 0;
-      el.setPointerCapture(e.pointerId);
+      // A pointer can be gone by the time the handler runs (released mid-
+      // dispatch, synthetic events) — capture is a nicety, never fatal.
+      try {
+        el.setPointerCapture(e.pointerId);
+      } catch {}
     };
     const move = (e) => {
       if (!dragging || !last) return;

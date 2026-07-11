@@ -95,7 +95,9 @@ export default function SliceHero({ reducedMotion }) {
       <div
         aria-hidden
         className="relative font-lab-display font-extrabold leading-none tracking-tight"
-        style={{ fontSize: "clamp(2.2rem, 15cqw, 15rem)" }}
+        // 11cqw — WORD is 8 wide Syne-800 caps (~8.3em incl. tracking); 15cqw
+        // ran past the stage and clipped the V and Y at both edges.
+        style={{ fontSize: "clamp(2rem, 11cqw, 12rem)" }}
       >
         {/* Invisible sizer gives the block the word's intrinsic box */}
         <div className="whitespace-nowrap opacity-0">{WORD}</div>

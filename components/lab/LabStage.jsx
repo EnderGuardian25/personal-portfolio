@@ -23,7 +23,10 @@ export default function LabStage({ demo, standalone = false }) {
   return (
     <figure
       ref={ref}
-      className="group relative flex flex-col overflow-hidden border border-lab-line bg-lab-panel"
+      // NO `group` class here — the stage wraps every demo, so a stage-level
+      // group makes each demo's internal `group-hover:` fire for the whole
+      // card (all rows/cells lit at once), not just the hovered element.
+      className="relative flex flex-col overflow-hidden border border-lab-line bg-lab-panel"
     >
       <div
         // overflow-hidden also zeroes the flex item's automatic min-height —

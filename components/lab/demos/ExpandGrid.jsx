@@ -105,7 +105,9 @@ export default function ExpandGrid({ reducedMotion }) {
                 <p className="font-lab-mono text-[10px] uppercase tracking-[0.3em] text-lab-dim">{TILES[open].meta}</p>
                 <h3
                   className="mt-2 font-lab-display font-extrabold uppercase leading-none tracking-tight text-lab-text"
-                  style={{ fontSize: "min(6cqw, 52px)" }}
+                  // caps at 38px — the panel is w-56 (~204px inner); 52px Syne
+                  // 800 caps ran ~220px for "STORM"/"SHORE" and clipped
+                  style={{ fontSize: "min(6cqw, 38px)" }}
                 >
                   {TILES[open].title}
                 </h3>

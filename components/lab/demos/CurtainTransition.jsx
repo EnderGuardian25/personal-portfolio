@@ -42,7 +42,11 @@ export default function CurtainTransition({ reducedMotion }) {
     tlRef.current?.kill();
     const tl = gsap.timeline({ onComplete: () => (busyRef.current = false) });
     tlRef.current = tl;
-    tl.set(panels, { yPercent: 100 })
+    // y: 0 matters — gsap parses the JSX inline translateY(100%) from the
+    // computed matrix as a PIXEL y (stage height), which would otherwise ride
+    // along with every yPercent tween and shift the whole choreography one
+    // stage-height down (cover happens off-screen, release parks covering).
+    tl.set(panels, { y: 0, yPercent: 100 })
       .to(panels, {
         yPercent: 0,
         duration: 0.7,
