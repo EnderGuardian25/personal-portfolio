@@ -33,33 +33,73 @@ export default function LineDrawScroll({ reducedMotion }) {
     const draw = drawRef.current;
     if (!scroller || !draw) return;
 
+    // Everything is measured in SCREEN space, not viewBox units. With
+    // vector-effect: non-scaling-stroke, browsers compute the dash pattern in
+    // screen space — a dasharray of getTotalLength() (user units, ~197) over
+    // a ~3200px rendered path repeats its on/off pattern ~8 times, scattering
+    // stroke segments across the "undrawn" route. preserveAspectRatio="none"
+    // also scales x and y unevenly, so no single factor converts user length
+    // to screen length; sample the path and integrate instead.
+    const SAMPLES = 400;
     const L = draw.getTotalLength();
-    draw.style.strokeDasharray = `${L}`;
-    draw.style.strokeDashoffset = `${L}`;
-    draw.style.opacity = "1"; // hidden until dash config lands — no full-line flash
+    const pts = []; // user-space sample points (head positioning, in %)
+    const cum = new Float32Array(SAMPLES + 1); // cumulative SCREEN length
+    let S = 0; // total screen length
+    let fracs = STOPS.map(() => 0); // milestone fractions of S
 
-    // Pre-sample each milestone's fraction along the path (user space).
-    const fracs = STOPS.map((s) => {
-      let best = 0;
-      let bestD = Infinity;
-      for (let i = 0; i <= 400; i++) {
-        const pt = draw.getPointAtLength((i / 400) * L);
-        const d = Math.hypot(pt.x - s.x, pt.y - s.y);
-        if (d < bestD) {
-          bestD = d;
-          best = i / 400;
+    const measure = () => {
+      const r = draw.closest("svg").getBoundingClientRect();
+      const sx = r.width / 100;
+      const sy = r.height / 100;
+      pts.length = 0;
+      for (let i = 0; i <= SAMPLES; i++) {
+        const pt = draw.getPointAtLength((i / SAMPLES) * L);
+        pts.push(pt);
+        if (i > 0) {
+          const prev = pts[i - 1];
+          cum[i] =
+            cum[i - 1] +
+            Math.hypot((pt.x - prev.x) * sx, (pt.y - prev.y) * sy);
         }
       }
-      return best;
-    });
+      S = cum[SAMPLES];
+      // Each milestone's share of the screen length — nodes must pop exactly
+      // when the drawn tip reaches them, so they use the same space the dash
+      // reveal lives in.
+      fracs = STOPS.map((s) => {
+        let best = 0;
+        let bestD = Infinity;
+        for (let i = 0; i <= SAMPLES; i++) {
+          const d = Math.hypot(pts[i].x - s.x, pts[i].y - s.y);
+          if (d < bestD) {
+            bestD = d;
+            best = i;
+          }
+        }
+        return cum[best] / S;
+      });
+      draw.style.strokeDasharray = `${S}`;
+      draw.style.opacity = "1"; // hidden until dash config lands — no full-line flash
+    };
+    measure();
 
     const apply = (p) => {
-      draw.style.strokeDashoffset = `${(L * (1 - p)).toFixed(2)}`;
+      draw.style.strokeDashoffset = `${(S * (1 - p)).toFixed(2)}`;
       const head = headRef.current;
       if (head) {
-        const pt = draw.getPointAtLength(L * p);
-        head.style.left = `${pt.x}%`;
-        head.style.top = `${pt.y}%`;
+        // The drawn tip sits at screen length S*p — find that sample so the
+        // bead rides the tip (user-space L*p drifts off it where x/y scales
+        // differ).
+        const target = S * p;
+        let lo = 0;
+        let hi = SAMPLES;
+        while (lo < hi) {
+          const mid = (lo + hi) >> 1;
+          if (cum[mid] < target) lo = mid + 1;
+          else hi = mid;
+        }
+        head.style.left = `${pts[lo].x}%`;
+        head.style.top = `${pts[lo].y}%`;
         head.style.opacity = p > 0.002 && p < 0.995 ? "1" : "0";
       }
       for (let i = 0; i < STOPS.length; i++) {
@@ -76,7 +116,12 @@ export default function LineDrawScroll({ reducedMotion }) {
       // Static ~60% drawn — three milestones lit. No scrub.
       scroller.scrollTop = (scroller.scrollHeight - scroller.clientHeight) * 0.6;
       apply(0.6);
-      return;
+      const ro = new ResizeObserver(() => {
+        measure();
+        apply(0.6);
+      });
+      ro.observe(scroller);
+      return () => ro.disconnect();
     }
 
     let raf = null;
@@ -91,10 +136,16 @@ export default function LineDrawScroll({ reducedMotion }) {
       if (raf == null) raf = requestAnimationFrame(tick);
     };
     scroller.addEventListener("scroll", onScroll, { passive: true });
+    const ro = new ResizeObserver(() => {
+      measure();
+      apply(progress);
+    });
+    ro.observe(scroller);
     apply(0);
 
     return () => {
       scroller.removeEventListener("scroll", onScroll);
+      ro.disconnect();
       if (raf != null) cancelAnimationFrame(raf);
     };
   }, [reducedMotion]);
