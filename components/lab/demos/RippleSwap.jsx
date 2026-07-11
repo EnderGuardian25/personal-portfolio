@@ -23,7 +23,11 @@ const B = "The surface has its system.";
 const RIPPLE_SPEED = 640; // px/s wavefront
 const RING_WIDTH = 42; // px ripple thickness
 const STREAK_RADIUS = 54; // px direct-path glow
-const HOVER_RADIUS = 96; // px sustained source around the live pointer
+// The sustained hover source is an ELLIPSE — wide along the sentence, tight
+// vertically — so resting on the letters swaps a broad section, while a
+// cursor passing above or below the line stays inert.
+const HOVER_RADIUS_X = 170; // px sustained-source reach along the line
+const HOVER_RADIUS_Y = 56; // px sustained-source reach above/below the line
 const MAX_REACH = 230; // px — the ring dies out past this, it shouldn't cross the stage
 const POINT_LIFE = 900; // ms a path point keeps emitting
 const HEAL_TAU = 360; // ms energy decay time constant (continuous flips need a slower heal)
@@ -165,8 +169,9 @@ export default function RippleSwap({ reducedMotion }) {
         if (hover) {
           // Sustained source: no age, no fade — a resting pointer keeps its
           // neighborhood swapped until it moves away or leaves.
-          const d = Math.hypot(centers[i].x - hover.x, centers[i].y - hover.y);
-          const hv = Math.exp((-d * d) / (2 * HOVER_RADIUS * HOVER_RADIUS));
+          const nx = (centers[i].x - hover.x) / HOVER_RADIUS_X;
+          const ny = (centers[i].y - hover.y) / HOVER_RADIUS_Y;
+          const hv = Math.exp(-(nx * nx + ny * ny) / 2);
           if (hv > target) target = hv;
         }
         const e = Math.max(energy[i] * decay, target);

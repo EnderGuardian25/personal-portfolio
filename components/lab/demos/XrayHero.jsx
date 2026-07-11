@@ -23,8 +23,8 @@ const APERTURE_CORE = 0.58; // inner fraction of R held at full reveal
 const STILL_SPEED = 220; // px/s — pointer speed at which stillness hits 0 (trail linger only)
 const RISE_TAU = 260; // ms — aperture open time constant on enter (frame-rate independent)
 const FALL_TAU = 220; // ms — aperture close time constant on leave
-const DISS_BASE = 0.982; // trail heal rate while moving (half-life ~0.6s)
-const DISS_STILL = 0.996; // trail heal rate at rest (half-life ~2.9s)
+const DISS_BASE = 0.988; // trail heal rate while moving (half-life ~1s)
+const DISS_STILL = 0.997; // trail heal rate at rest (half-life ~3.8s)
 
 const vertex = /* glsl */ `
   attribute vec2 uv;
@@ -139,8 +139,11 @@ export default function XrayHero({ reducedMotion }) {
       });
 
       const flowmap = new Flowmap(gl, {
-        falloff: 0.28,
-        dissipation: 0.982, // < 1 → the streak slowly heals closed
+        // Stamp radius = falloff * 0.5, in the same aspect-corrected height
+        // units as the shader aperture — ×2 makes the trail the aperture's
+        // exact width, so a moving cursor draws a tube the circle fits in.
+        falloff: APERTURE_R * 2,
+        dissipation: DISS_BASE, // < 1 → the streak slowly heals closed
         alpha: 1,
       });
 
