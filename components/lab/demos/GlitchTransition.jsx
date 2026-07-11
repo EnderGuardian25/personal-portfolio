@@ -51,7 +51,7 @@ function Pair() {
           className="object-cover"
           draggable={false}
         />
-        <div className="absolute inset-x-0 bottom-0 flex justify-end bg-gradient-to-t from-black/70 to-transparent px-[7cqw] pb-[6cqw] pt-16">
+        <div className="absolute inset-x-0 bottom-0 flex justify-end bg-linear-to-t from-black/70 to-transparent px-[7cqw] pb-[6cqw] pt-16">
           <p className="font-lab-mono text-[10px] uppercase tracking-[0.3em] text-white/80">
             Sig 02 — Photo
           </p>
@@ -168,7 +168,7 @@ export default function GlitchTransition({ reducedMotion }) {
           run();
         }
       }}
-      className="relative h-full w-full cursor-pointer overflow-hidden bg-lab-bg outline-none"
+      className="relative h-full w-full cursor-pointer overflow-hidden bg-lab-bg outline-hidden"
     >
       {/* base scene pair */}
       <div className="absolute inset-0">

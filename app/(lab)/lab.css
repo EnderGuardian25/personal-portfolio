@@ -1,6 +1,50 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-ivory: rgb(var(--c-ivory));
+  --color-paper: rgb(var(--c-paper));
+  --color-ink: rgb(var(--c-ink));
+  --color-ink-soft: rgb(var(--c-ink-soft));
+  --color-ink-faint: rgb(var(--c-ink-faint));
+  --color-electric: rgb(var(--c-electric));
+  --color-sky: rgb(var(--c-sky));
+  --color-mist: rgb(var(--c-mist));
+  --color-rule: rgb(var(--c-rule));
+  --color-lab-bg: rgb(var(--lab-bg));
+  --color-lab-panel: rgb(var(--lab-panel));
+  --color-lab-line: rgb(var(--lab-line));
+  --color-lab-text: rgb(var(--lab-text));
+  --color-lab-dim: rgb(var(--lab-dim));
+
+  --font-display: var(--font-instrument-serif), serif;
+  --font-sans: var(--font-manrope), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+  --font-lab-display: var(--font-syne), sans-serif;
+  --font-lab-mono: var(--font-ibm-plex-mono), monospace;
+
+  --tracking-tightest: -0.06em;
+  --tracking-ultra: -0.08em;
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
 
 /*
   Lab identity — dark studio. Near-black canvas, muted chrome; the demos are

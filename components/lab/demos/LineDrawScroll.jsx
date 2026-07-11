@@ -207,7 +207,7 @@ export default function LineDrawScroll({ reducedMotion }) {
             style={{ left: `${s.x}%`, top: `${s.y}%` }}
           >
             <span className="dot" aria-hidden />
-            <span className="ring" aria-hidden />
+            <span className="ring-3" aria-hidden />
             <div className={`entry ${s.x > 50 ? "flip" : ""}`}>
               <span className="font-lab-mono text-[10px] uppercase tracking-[0.3em] text-lab-dim">
                 {s.n}

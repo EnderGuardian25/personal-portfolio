@@ -93,7 +93,7 @@ export default function ClipRevealCarousel({ reducedMotion }) {
       ref={rootRef}
       tabIndex={0}
       aria-label="Image carousel — use arrow keys or the buttons to change slides"
-      className="relative h-full w-full overflow-hidden outline-none"
+      className="relative h-full w-full overflow-hidden outline-hidden"
     >
       {SLIDES.map((s, i) => (
         <div
@@ -114,7 +114,7 @@ export default function ClipRevealCarousel({ reducedMotion }) {
             className="object-cover"
             draggable={false}
           />
-          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-4 pt-12">
+          <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/70 to-transparent p-4 pt-12">
             <p className="font-lab-mono text-[11px] uppercase tracking-[0.22em] text-white/85">
               {s.caption}
             </p>
@@ -149,7 +149,7 @@ export default function ClipRevealCarousel({ reducedMotion }) {
             type="button"
             aria-label={label}
             onClick={() => goTo(dir)}
-            className="border border-white/25 bg-black/30 px-3 py-1.5 font-lab-mono text-sm text-white/85 backdrop-blur-sm transition-colors hover:border-white/60 hover:text-white"
+            className="border border-white/25 bg-black/30 px-3 py-1.5 font-lab-mono text-sm text-white/85 backdrop-blur-xs transition-colors hover:border-white/60 hover:text-white"
           >
             {glyph}
           </button>

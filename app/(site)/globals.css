@@ -1,57 +1,104 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-/* ------------------------------------------------------------------ */
-/*  Theme tokens — space-separated RGB channels so Tailwind's          */
-/*  rgb(var(--c-*) / <alpha-value>) tokens support opacity modifiers.  */
-/* ------------------------------------------------------------------ */
-:root {
-  color-scheme: light;
+@custom-variant dark (&:is(.dark *));
 
-  --c-ivory: 246 246 241;   /* #F6F6F1  page background      */
-  --c-paper: 251 251 247;   /* #FBFBF7  elevated surface      */
-  --c-ink: 11 31 58;        /* #0B1F3A  primary text          */
-  --c-ink-soft: 22 49 90;   /* #16315A  secondary text        */
-  --c-ink-faint: 90 107 130;/* #5A6B82  faint micro-labels — AA-safe on ivory (~5:1), replaces low-opacity ink-soft */
-  --c-electric: 37 99 235;  /* #2563EB  accent                */
-  --c-sky: 219 234 254;     /* #DBEAFE  atmospheric glow       */
-  --c-mist: 238 244 253;    /* #EEF4FD  soft surface glow      */
-  --c-rule: 217 222 230;    /* #D9DEE6  hairline rules/borders */
+@theme {
+  --color-ivory: rgb(var(--c-ivory));
+  --color-paper: rgb(var(--c-paper));
+  --color-ink: rgb(var(--c-ink));
+  --color-ink-soft: rgb(var(--c-ink-soft));
+  --color-ink-faint: rgb(var(--c-ink-faint));
+  --color-electric: rgb(var(--c-electric));
+  --color-sky: rgb(var(--c-sky));
+  --color-mist: rgb(var(--c-mist));
+  --color-rule: rgb(var(--c-rule));
+  --color-lab-bg: rgb(var(--lab-bg));
+  --color-lab-panel: rgb(var(--lab-panel));
+  --color-lab-line: rgb(var(--lab-line));
+  --color-lab-text: rgb(var(--lab-text));
+  --color-lab-dim: rgb(var(--lab-dim));
 
-  /* legacy aliases */
-  --bg: rgb(var(--c-ivory));
-  --ink: rgb(var(--c-ink));
-  --electric: rgb(var(--c-electric));
+  --font-display: var(--font-instrument-serif), serif;
+  --font-sans: var(--font-manrope), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+  --font-lab-display: var(--font-syne), sans-serif;
+  --font-lab-mono: var(--font-ibm-plex-mono), monospace;
+
+  --tracking-tightest: -0.06em;
+  --tracking-ultra: -0.08em;
 }
 
-.dark {
-  color-scheme: dark;
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
 
-  --c-ivory: 11 31 58;      /* #0B1F3A  navy background — white inverts to navy */
-  --c-paper: 17 38 70;      /* #112646  elevated surface                       */
-  --c-ink: 246 246 241;     /* #F6F6F1  ivory text — navy inverts to white      */
-  --c-ink-soft: 162 180 208;/* #A2B4D0  muted blue-grey secondary text          */
-  --c-ink-faint: 142 161 192;/* #8EA1C0 faint micro-labels — AA-safe on navy (~6:1) */
-  --c-electric: 59 130 246; /* #3B82F6  brightened accent for navy contrast     */
-  --c-sky: 45 84 150;       /* #2D5496  luminous glow                           */
-  --c-mist: 20 44 82;       /* #142C52  deep surface glow                       */
-  --c-rule: 42 63 99;       /* #2A3F63  hairline rules on navy                  */
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
 }
 
-html, body {
-  background: var(--bg);
-  color: var(--ink);
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-}
+@layer utilities {
+  /* ------------------------------------------------------------------ */
+  /*  Theme tokens — space-separated RGB channels so Tailwind's          */
+  /*  rgb(var(--c-*) / <alpha-value>) tokens support opacity modifiers.  */
+  /* ------------------------------------------------------------------ */
+  :root {
+    color-scheme: light;
 
-/* scroll-behavior: smooth intentionally omitted — Lenis handles smooth scrolling */
+    --c-ivory: 246 246 241; /* #F6F6F1  page background      */
+    --c-paper: 251 251 247; /* #FBFBF7  elevated surface      */
+    --c-ink: 11 31 58; /* #0B1F3A  primary text          */
+    --c-ink-soft: 22 49 90; /* #16315A  secondary text        */
+    --c-ink-faint: 90 107 130; /* #5A6B82  faint micro-labels — AA-safe on ivory (~5:1), replaces low-opacity ink-soft */
+    --c-electric: 37 99 235; /* #2563EB  accent                */
+    --c-sky: 219 234 254; /* #DBEAFE  atmospheric glow       */
+    --c-mist: 238 244 253; /* #EEF4FD  soft surface glow      */
+    --c-rule: 217 222 230; /* #D9DEE6  hairline rules/borders */
 
-/* Smooth cross-fade when the theme flips.
+    /* legacy aliases */
+    --bg: rgb(var(--c-ivory));
+    --ink: rgb(var(--c-ink));
+    --electric: rgb(var(--c-electric));
+  }
+
+  .dark {
+    color-scheme: dark;
+
+    --c-ivory: 11 31 58; /* #0B1F3A  navy background — white inverts to navy */
+    --c-paper: 17 38 70; /* #112646  elevated surface                       */
+    --c-ink: 246 246 241; /* #F6F6F1  ivory text — navy inverts to white      */
+    --c-ink-soft: 162 180 208; /* #A2B4D0  muted blue-grey secondary text          */
+    --c-ink-faint: 142 161 192; /* #8EA1C0 faint micro-labels — AA-safe on navy (~6:1) */
+    --c-electric: 59 130 246; /* #3B82F6  brightened accent for navy contrast     */
+    --c-sky: 45 84 150; /* #2D5496  luminous glow                           */
+    --c-mist: 20 44 82; /* #142C52  deep surface glow                       */
+    --c-rule: 42 63 99; /* #2A3F63  hairline rules on navy                  */
+  }
+
+  html,
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* scroll-behavior: smooth intentionally omitted — Lenis handles smooth scrolling */
+
+  /* Smooth cross-fade when the theme flips.
    Only background-color and border-color on *, so Framer Motion's
    own colour/opacity transitions on text elements aren't overridden.
    body gets an explicit color transition for the base text fade. */
+}
 @layer base {
   *, *::before, *::after {
     transition: background-color 0.45s ease, border-color 0.45s ease;

@@ -203,7 +203,7 @@ export default function SplitLines({
             // 0.14em descender allowance (offset by the negative margin so the
             // block height doesn't change): italic serif descenders (g, y, j)
             // reach far deeper than the hero's all-caps 0.04em needs.
-            <span key={li} className="block overflow-hidden pb-[0.14em] -mb-[0.14em]">
+            <span key={li} className="block overflow-hidden pb-[0.14em] mb-[-0.14em]">
               <motion.span
                 className="inline-block will-change-transform"
                 initial={played ? false : { y: "120%" }}

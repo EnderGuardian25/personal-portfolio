@@ -119,7 +119,7 @@ export default function MaskWipeScroll({ reducedMotion }) {
           />
           <div
             aria-hidden
-            className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"
+            className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent"
           />
           <span className="absolute bottom-4 right-4 font-lab-mono text-[10px] uppercase tracking-[0.3em] text-lab-text/80">
             Scene B — photo 02

@@ -109,7 +109,7 @@ export default function IrisTransition({ reducedMotion }) {
       aria-label="Play iris transition from a point"
       onPointerDown={onPointerDown}
       onKeyDown={onKeyDown}
-      className="relative h-full w-full cursor-crosshair overflow-hidden bg-lab-bg outline-none"
+      className="relative h-full w-full cursor-crosshair overflow-hidden bg-lab-bg outline-hidden"
     >
       {/* scene 0 — type slab */}
       <div
@@ -144,7 +144,7 @@ export default function IrisTransition({ reducedMotion }) {
           className="object-cover"
           draggable={false}
         />
-        <div className="absolute inset-x-0 bottom-0 flex justify-end bg-gradient-to-t from-black/70 to-transparent px-[7cqw] pb-[6cqw] pt-16">
+        <div className="absolute inset-x-0 bottom-0 flex justify-end bg-linear-to-t from-black/70 to-transparent px-[7cqw] pb-[6cqw] pt-16">
           <p className="font-lab-mono text-[10px] uppercase tracking-[0.3em] text-white/80">
             Scene 02 — Photo · Cut B
           </p>
@@ -155,7 +155,7 @@ export default function IrisTransition({ reducedMotion }) {
       <div
         ref={ringRef}
         aria-hidden
-        className="pointer-events-none absolute z-[3] rounded-full border border-white/80 opacity-0"
+        className="pointer-events-none absolute z-3 rounded-full border border-white/80 opacity-0"
         style={{
           transform: "translate(-50%, -50%)",
           boxShadow:

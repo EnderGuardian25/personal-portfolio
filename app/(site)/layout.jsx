@@ -9,17 +9,17 @@ const display = Instrument_Serif({
   subsets: ["latin"],
   weight: "400",
   style: ["normal", "italic"],
-  variable: "--font-display",
+  variable: "--font-instrument-serif",
   display: "swap",
 });
 const sans = Manrope({
   subsets: ["latin"],
-  variable: "--font-sans",
+  variable: "--font-manrope",
   display: "swap",
 });
 const mono = JetBrains_Mono({
   subsets: ["latin"],
-  variable: "--font-mono",
+  variable: "--font-jetbrains-mono",
   display: "swap",
 });
 

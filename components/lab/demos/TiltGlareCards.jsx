@@ -108,7 +108,7 @@ export default function TiltGlareCards({ reducedMotion }) {
             ref={(el) => (cardRefs.current[i] = el)}
             onPointerMove={reducedMotion ? undefined : (e) => aim(i, e)}
             onPointerLeave={reducedMotion ? undefined : () => rest(i)}
-            className="relative aspect-[3/4] overflow-hidden rounded-md border border-lab-line bg-lab-panel will-change-transform"
+            className="relative aspect-3/4 overflow-hidden rounded-md border border-lab-line bg-lab-panel will-change-transform"
             style={{ boxShadow: "0 8px 24px -12px rgba(0,0,0,0.4)" }}
           >
             <Image
@@ -118,7 +118,7 @@ export default function TiltGlareCards({ reducedMotion }) {
               sizes="(max-width: 640px) 30vw, 320px"
               className="object-cover opacity-90"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
+            <div className="absolute inset-0 bg-linear-to-t from-black/70 via-transparent to-black/20" />
             <div
               ref={(el) => (glareRefs.current[i] = el)}
               aria-hidden

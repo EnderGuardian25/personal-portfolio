@@ -92,7 +92,7 @@ export default function StickyStack({ reducedMotion }) {
             />
             <div
               aria-hidden
-              className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/30"
+              className="absolute inset-0 bg-linear-to-t from-black/70 via-transparent to-black/30"
             />
             {/* Press veil — dims the card as the next one slides over it. */}
             <div

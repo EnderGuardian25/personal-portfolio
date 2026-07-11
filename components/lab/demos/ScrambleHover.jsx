@@ -57,7 +57,7 @@ function Scramble({ label, reducedMotion }) {
       parent.removeEventListener("pointerenter", run);
       parent.removeEventListener("focus", run);
       parent.removeEventListener("pointerleave", reset);
-      parent.removeEventListener("blur", reset);
+      parent.removeEventListener("blur-sm", reset);
     };
   }, [label, reducedMotion]);
 

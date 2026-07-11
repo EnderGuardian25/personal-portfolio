@@ -117,7 +117,7 @@ export default function HoverIndexList({ reducedMotion }) {
             className="group relative overflow-hidden border-t border-lab-line text-left transition-opacity duration-300 last:border-b"
           >
             <span
-              className="absolute inset-0 origin-bottom scale-y-0 bg-lab-text transition-transform duration-[350ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-y-100 group-focus-visible:scale-y-100"
+              className="absolute inset-0 origin-bottom scale-y-0 bg-lab-text transition-transform duration-350 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-y-100 group-focus-visible:scale-y-100"
               aria-hidden
             />
             <span className="relative z-10 grid grid-cols-[2.5rem_1fr_auto] items-baseline gap-3 px-1 py-[3cqw] sm:grid-cols-[3.5rem_1fr_auto]">

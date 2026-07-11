@@ -8,13 +8,13 @@ import MotionProvider from "@/components/MotionProvider";
 // so demos can animate font-variation-settings across the full axis.
 const display = Syne({
   subsets: ["latin"],
-  variable: "--font-lab-display",
+  variable: "--font-syne",
   display: "swap",
 });
 const mono = IBM_Plex_Mono({
   subsets: ["latin"],
   weight: ["400", "500"],
-  variable: "--font-lab-mono",
+  variable: "--font-ibm-plex-mono",
   display: "swap",
 });
 

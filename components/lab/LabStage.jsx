@@ -35,7 +35,7 @@ export default function LabStage({ demo, standalone = false }) {
         className={
           standalone
             ? "relative h-[calc(100dvh-6rem)] min-h-[420px] overflow-hidden"
-            : "relative aspect-[4/3] overflow-hidden sm:aspect-[16/10]"
+            : "relative aspect-4/3 overflow-hidden sm:aspect-16/10"
         }
         // Demos size their type in cqw so they scale to the card OR the
         // fullscreen stage, never the viewport.

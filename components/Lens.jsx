@@ -47,7 +47,7 @@ function Card({ p, i }) {
         transition={{ duration: 0.5, ease: EASE }}
         className="group relative overflow-hidden border border-rule bg-ivory"
       >
-        <div className="relative aspect-[4/5] overflow-hidden bg-mist">
+        <div className="relative aspect-4/5 overflow-hidden bg-mist">
           {isPlaceholder ? (
             <div className="absolute inset-0 flex items-center justify-center">
               <div

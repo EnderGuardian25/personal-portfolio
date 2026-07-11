@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Image from "next/image";
 
-// Accordion Gallery — a flex row of vertical slats whose flex-grow animates
+// Accordion Gallery — a flex row of vertical slats whose grow animates
 // through a springy cubic-bezier: the slat under the cursor (or keyboard
 // focus) breathes open while its siblings compress and dim. Click locks a
 // slat open and reveals its caption; clicking again (or locking another)
@@ -44,7 +44,7 @@ export default function AccordionGallery({ reducedMotion }) {
               "--i": i,
               borderColor: locked === i ? "rgb(59 130 246 / 0.75)" : undefined,
             }}
-            className="ag-slat relative h-full min-w-0 basis-0 cursor-pointer overflow-hidden border border-lab-line bg-lab-panel p-0 text-left outline-none"
+            className="ag-slat relative h-full min-w-0 basis-0 cursor-pointer overflow-hidden border border-lab-line bg-lab-panel p-0 text-left outline-hidden"
           >
             <Image
               src={s.src}
@@ -64,7 +64,7 @@ export default function AccordionGallery({ reducedMotion }) {
               {String(i + 1).padStart(2, "0")}
             </span>
             <span
-              className={`absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-3 pt-8 transition-all duration-500 ${
+              className={`absolute inset-x-0 bottom-0 bg-linear-to-t from-black/80 to-transparent p-3 pt-8 transition-all duration-500 ${
                 locked === i
                   ? "translate-y-0 opacity-100"
                   : "translate-y-2 opacity-0"
@@ -88,7 +88,7 @@ export default function AccordionGallery({ reducedMotion }) {
       <style jsx>{`
         .ag-slat {
           transition:
-            flex-grow 0.75s cubic-bezier(0.34, 1.25, 0.35, 1),
+            grow 0.75s cubic-bezier(0.34, 1.25, 0.35, 1),
             border-color 0.4s ease;
           animation: ag-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
           animation-delay: calc(var(--i) * 65ms);

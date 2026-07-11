@@ -175,10 +175,10 @@ export default function PixelDissolve({ reducedMotion }) {
       }`}
     >
       <canvas ref={canvasRef} aria-hidden className="absolute inset-0 h-full w-full" />
-      <div className="absolute left-4 top-4 z-10 bg-black/35 px-2 py-1 font-lab-mono text-[10px] uppercase tracking-[0.3em] text-white/85 backdrop-blur-sm">
+      <div className="absolute left-4 top-4 z-10 bg-black/35 px-2 py-1 font-lab-mono text-[10px] uppercase tracking-[0.3em] text-white/85 backdrop-blur-xs">
         <span ref={labelRef}>01 → 02</span>
       </div>
-      <p className="absolute bottom-4 left-4 z-10 bg-black/35 px-2 py-1 font-lab-mono text-[10px] uppercase tracking-[0.3em] text-white/85 backdrop-blur-sm">
+      <p className="absolute bottom-4 left-4 z-10 bg-black/35 px-2 py-1 font-lab-mono text-[10px] uppercase tracking-[0.3em] text-white/85 backdrop-blur-xs">
         Click — reshatter early
       </p>
     </div>

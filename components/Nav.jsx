@@ -146,7 +146,7 @@ export default function Nav() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -16 }}
             transition={{ duration: 0.35, ease: EASE }}
-            className="fixed inset-0 z-40 bg-ivory/95 backdrop-blur-sm flex flex-col items-start justify-center px-8 md:hidden"
+            className="fixed inset-0 z-40 bg-ivory/95 backdrop-blur-xs flex flex-col items-start justify-center px-8 md:hidden"
           >
             <nav className="flex flex-col gap-8">
               {NAV_LINKS.map((l, i) => (

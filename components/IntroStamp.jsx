@@ -53,7 +53,7 @@ export default function IntroStamp() {
           aria-hidden="true"
           exit={{ clipPath: "inset(0 0 100% 0)" }}
           transition={{ duration: 0.35, ease: EASE }}
-          className="fixed inset-0 z-[65] bg-ivory pointer-events-none grid place-items-center"
+          className="fixed inset-0 z-65 bg-ivory pointer-events-none grid place-items-center"
           style={{ clipPath: "inset(0 0 0% 0)" }}
         >
           <div className="text-center font-mono uppercase">

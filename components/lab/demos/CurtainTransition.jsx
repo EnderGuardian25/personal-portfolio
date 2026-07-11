@@ -127,7 +127,7 @@ export default function CurtainTransition({ reducedMotion }) {
         type="button"
         aria-label="Run the curtain transition again"
         onClick={run}
-        className="absolute bottom-3 right-4 z-20 border border-lab-line bg-black/40 px-3 py-1.5 font-lab-mono text-[10px] uppercase tracking-[0.25em] text-lab-dim backdrop-blur-sm transition-colors hover:border-white/40 hover:text-lab-text"
+        className="absolute bottom-3 right-4 z-20 border border-lab-line bg-black/40 px-3 py-1.5 font-lab-mono text-[10px] uppercase tracking-[0.25em] text-lab-dim backdrop-blur-xs transition-colors hover:border-white/40 hover:text-lab-text"
       >
         Run again ↻
       </button>

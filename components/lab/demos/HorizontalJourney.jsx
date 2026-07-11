@@ -122,7 +122,7 @@ export default function HorizontalJourney({ reducedMotion }) {
                 {panel.kind === "photo" ? (
                   <div
                     ref={(el) => (innerRefs.current[i] = el)}
-                    className="absolute -inset-x-[8cqw] inset-y-0 will-change-transform"
+                    className="absolute inset-x-[-8cqw] inset-y-0 will-change-transform"
                   >
                     <Image
                       src={panel.src}

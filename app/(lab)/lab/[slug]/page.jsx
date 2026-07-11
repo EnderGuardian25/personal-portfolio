@@ -9,13 +9,15 @@ export function generateStaticParams() {
   return DEMOS.map(({ slug }) => ({ slug }));
 }
 
-export function generateMetadata({ params }) {
-  const demo = getDemo(params.slug);
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
+  const demo = getDemo(slug);
   return demo ? { title: demo.title, description: demo.description } : {};
 }
 
-export default function DemoPage({ params }) {
-  const demo = getDemo(params.slug);
+export default async function DemoPage({ params }) {
+  const { slug } = await params;
+  const demo = getDemo(slug);
   if (!demo) notFound();
 
   const i = demoIndex(demo.slug);

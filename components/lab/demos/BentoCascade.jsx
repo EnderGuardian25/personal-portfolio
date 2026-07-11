@@ -193,7 +193,7 @@ export default function BentoCascade({ reducedMotion }) {
             aria-hidden
             animate={reducedMotion ? undefined : { x: ["0%", "-50%"] }}
             transition={{ duration: 16, ease: "linear", repeat: Infinity }}
-            className="flex whitespace-nowrap font-lab-display text-[3.2cqw] font-bold uppercase tracking-[0.06em] text-lab-dim"
+            className="flex whitespace-nowrap font-lab-display text-[3.2cqw] font-bold uppercase -tracking-tightest text-lab-dim"
           >
             <span>{MARQUEE.repeat(3)}</span>
             <span>{MARQUEE.repeat(3)}</span>

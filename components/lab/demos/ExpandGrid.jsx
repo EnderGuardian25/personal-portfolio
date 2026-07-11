@@ -72,7 +72,7 @@ export default function ExpandGrid({ reducedMotion }) {
         {open !== null && (
           <motion.div
             key="scrim"
-            className="absolute inset-0 z-[9] bg-black/55"
+            className="absolute inset-0 z-9 bg-black/55"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -130,7 +130,7 @@ export default function ExpandGrid({ reducedMotion }) {
         )}
       </AnimatePresence>
 
-      <p className="pointer-events-none absolute bottom-4 left-5 z-[5] font-lab-mono text-[10px] uppercase tracking-[0.3em] text-lab-dim">
+      <p className="pointer-events-none absolute bottom-4 left-5 z-5 font-lab-mono text-[10px] uppercase tracking-[0.3em] text-lab-dim">
         Tap a tile — shared-element handoff
       </p>
     </div>
