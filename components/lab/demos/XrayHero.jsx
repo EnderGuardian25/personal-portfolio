@@ -8,18 +8,21 @@ import useOgl from "../useOgl";
 // layer. Dissipation < 1 makes the trail heal itself closed; the trail's RG
 // velocity channels warp the front image at the reveal edge for the streak.
 //
-// Stationary hover is a SEPARATE system from the trail: a radial aperture
-// composited in the fragment shader (f = max(trail, aperture)), driven by a
-// smoothed "stillness" value — not by feeding the flowmap fake velocity. The
-// flowmap can only make velocity-shaped marks; pushing it to hold a full
-// reveal at rest meant swirl, pulse, and partial coverage.
+// The hover reveal is a SEPARATE system from the trail: a radial aperture
+// composited in the fragment shader (f = max(trail, aperture)) rides the
+// cursor at CONSTANT size — moving or resting — so there is no moving↔still
+// transition to read at all; movement just leaves the streaky trail healing
+// behind it. (Never feed the flowmap fake velocity for this: it can only
+// make velocity-shaped marks — swirl, pulse, partial coverage.) A smoothed
+// "stillness" value still drives dissipation, so a trail lingers while the
+// pointer rests and heals normally otherwise.
 const FRONT_SRC = "/lab/photo-2.webp";
 
 const APERTURE_R = 0.34; // aperture outer radius — fraction of stage height
 const APERTURE_CORE = 0.58; // inner fraction of R held at full reveal
-const STILL_SPEED = 220; // px/s — pointer speed at which stillness hits 0
-const RISE_TAU = 260; // ms — aperture open time constant (frame-rate independent)
-const FALL_TAU = 220; // ms — aperture close time constant
+const STILL_SPEED = 220; // px/s — pointer speed at which stillness hits 0 (trail linger only)
+const RISE_TAU = 260; // ms — aperture open time constant on enter (frame-rate independent)
+const FALL_TAU = 220; // ms — aperture close time constant on leave
 const DISS_BASE = 0.982; // trail heal rate while moving (half-life ~0.6s)
 const DISS_STILL = 0.996; // trail heal rate at rest (half-life ~2.9s)
 
@@ -280,15 +283,20 @@ export default function XrayHero({ reducedMotion }) {
           const stillness = hovering
             ? Math.max(0, 1 - speedEma / STILL_SPEED)
             : 0;
+          // Aperture: full whenever hovering — constant size moving or still,
+          // so the only fades are pointer enter/leave.
           hoverAmt +=
-            (stillness - hoverAmt) *
-            (1 - Math.exp(-dtMs / (stillness > hoverAmt ? RISE_TAU : FALL_TAU)));
+            ((hovering ? 1 : 0) - hoverAmt) *
+            (1 - Math.exp(-dtMs / (hovering ? RISE_TAU : FALL_TAU)));
           program.uniforms.uHover.value = hoverAmt;
           // Freeze uPointer on leave so the closing aperture fades in place —
           // copying the parked (-1,-1) mouse would teleport it offscreen.
           if (hovering) program.uniforms.uPointer.value.copy(mouse);
+          // Trail linger is still stillness-driven: slow the heal while the
+          // pointer rests, normal heal while sweeping (a slow rate while
+          // moving would accumulate into a fully revealed stage).
           flowmap.mesh.program.uniforms.uDissipation.value =
-            DISS_BASE + (DISS_STILL - DISS_BASE) * hoverAmt;
+            DISS_BASE + (DISS_STILL - DISS_BASE) * stillness;
 
           if (!velocity.needsUpdate) {
             // No event this frame: the aperture owns the resting reveal — the
