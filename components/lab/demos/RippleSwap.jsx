@@ -2,12 +2,17 @@
 import { useEffect, useRef } from "react";
 
 // Ripple Swap (signature). Two sentences occupy the same char cells; a per-cell
-// energy field driven by the pointer's recent path decides which sentence each
-// cell shows. Two forces feed the field: a direct streak along the swept path,
-// and a ripple ring expanding outward from every path point (distance ÷ speed
-// = delay, so the swap propagates instead of popping). Energy decays each
-// frame, so the line heals back to sentence A. All per-frame work is direct
-// class/style mutation via refs — the Marquee.jsx pattern — zero React state.
+// energy field driven by the pointer decides which sentence each cell shows.
+// Three forces feed the field: a direct streak along the swept path, a ripple
+// ring expanding outward from every path point (distance ÷ speed = delay, so
+// the swap propagates instead of popping), and a SUSTAINED source at the live
+// hover position — a resting pointer holds its neighborhood swapped to B
+// instead of healing out from under the cursor. Energy decays each frame, so
+// everything else heals back to sentence A. Cells render CONTINUOUSLY from
+// energy (per-frame rotateX/opacity writes, no class toggle) so the wave rolls
+// through intermediate flip angles instead of stepping all-or-nothing. All
+// per-frame work is direct style mutation via refs — the Marquee.jsx pattern —
+// zero React state.
 
 // The two sentences share identical word boundaries (spaces at the same
 // indices) so no cell ever pairs a space with a letter — mismatched cells
@@ -18,9 +23,12 @@ const B = "The surface has its system.";
 const RIPPLE_SPEED = 640; // px/s wavefront
 const RING_WIDTH = 42; // px ripple thickness
 const STREAK_RADIUS = 54; // px direct-path glow
+const HOVER_RADIUS = 96; // px sustained source around the live pointer
 const MAX_REACH = 230; // px — the ring dies out past this, it shouldn't cross the stage
 const POINT_LIFE = 900; // ms a path point keeps emitting
-const DECAY = 0.93; // per-frame energy retention
+const HEAL_TAU = 360; // ms energy decay time constant (continuous flips need a slower heal)
+const FLIP_LO = 0.12; // energy where a flip starts
+const FLIP_HI = 0.67; // energy where a flip completes
 
 export default function RippleSwap({ reducedMotion }) {
   const wrapRef = useRef(null);
@@ -34,11 +42,13 @@ export default function RippleSwap({ reducedMotion }) {
     if (!wrap || !line) return;
 
     const cells = Array.from(line.children);
+    const glyphAs = cells.map((c) => c.firstElementChild);
     const glyphBs = cells.map((c) => c.lastElementChild);
     let centers = [];
     const energy = new Float32Array(cells.length);
-    const on = new Uint8Array(cells.length);
+    const shown = new Float32Array(cells.length); // last written flip progress
     const points = []; // recent pointer path {x, y, t}
+    let hover = null; // live pointer position — sustained energy source
     let raf = null;
 
     // Hidden probe: sentence B laid out at its OWN natural flow, one span per
@@ -90,6 +100,7 @@ export default function RippleSwap({ reducedMotion }) {
       const r = wrap.getBoundingClientRect();
       const x = e.clientX - r.left;
       const y = e.clientY - r.top;
+      hover = { x, y }; // tracks every move — the sustained source must not lag
       const last = points[points.length - 1];
       if (!last || Math.hypot(x - last.x, y - last.y) > 8) {
         points.push({ x, y, t: performance.now() });
@@ -97,13 +108,41 @@ export default function RippleSwap({ reducedMotion }) {
       }
       start();
     };
+    // pointerleave fires after touch end too — releases the held swap so the
+    // line heals back to A.
+    const onPointerLeave = () => {
+      hover = null;
+    };
     wrap.addEventListener("pointermove", onPointerMove);
+    wrap.addEventListener("pointerleave", onPointerLeave);
 
+    // Continuous render: energy → eased flip progress → direct style writes.
+    // Mid-wave cells sit at intermediate rotateX angles, so the swap reads as
+    // one surface rolling across the line, and the heal is equally gradual.
+    const renderCell = (i, p) => {
+      if (Math.abs(p - shown[i]) < 0.003) return;
+      shown[i] = p;
+      // A fades out over the first ~60% of the flip, B fades in over the last
+      // ~60% — they cross mid-flip like the old CSS transition pair did.
+      const aOp = Math.max(0, 1 - p * 1.66);
+      const bOp = Math.max(0, Math.min(1, (p - 0.4) * 1.66));
+      glyphAs[i].style.transform = `rotateX(${(-88 * p).toFixed(2)}deg)`;
+      glyphAs[i].style.opacity = aOp.toFixed(3);
+      glyphBs[i].style.transform = `translateX(var(--btx, -50%)) rotateX(${(88 * (1 - p)).toFixed(2)}deg)`;
+      glyphBs[i].style.opacity = bOp.toFixed(3);
+    };
+
+    let prevTick = null;
     const tick = () => {
       const now = performance.now();
+      // Time-based decay — a per-frame retention factor would heal ~2.4x
+      // faster on a 144Hz display than on 60Hz.
+      const dt = prevTick == null ? 16.7 : Math.min(50, now - prevTick);
+      prevTick = now;
+      const decay = Math.exp(-dt / HEAL_TAU);
       while (points.length && now - points[0].t > POINT_LIFE) points.shift();
 
-      let alive = points.length > 0;
+      let alive = points.length > 0 || hover != null;
       for (let i = 0; i < cells.length; i++) {
         let target = 0;
         for (let p = 0; p < points.length; p++) {
@@ -123,28 +162,27 @@ export default function RippleSwap({ reducedMotion }) {
           const v = Math.max(streak, ring);
           if (v > target) target = v;
         }
-        const e = Math.max(energy[i] * DECAY, target);
-        energy[i] = e;
-        if (e > 0.005) alive = true;
-        // Hysteresis so cells don't flicker at the threshold.
-        if (!on[i] && e > 0.5) {
-          on[i] = 1;
-          cells[i].classList.add("on");
-        } else if (on[i] && e < 0.28) {
-          on[i] = 0;
-          cells[i].classList.remove("on");
+        if (hover) {
+          // Sustained source: no age, no fade — a resting pointer keeps its
+          // neighborhood swapped until it moves away or leaves.
+          const d = Math.hypot(centers[i].x - hover.x, centers[i].y - hover.y);
+          const hv = Math.exp((-d * d) / (2 * HOVER_RADIUS * HOVER_RADIUS));
+          if (hv > target) target = hv;
         }
+        const e = Math.max(energy[i] * decay, target);
+        energy[i] = e > 0.001 ? e : 0;
+        if (energy[i] > 0) alive = true;
+        let p = (e - FLIP_LO) / (FLIP_HI - FLIP_LO);
+        p = p < 0 ? 0 : p > 1 ? 1 : p;
+        renderCell(i, p * p * (3 - 2 * p)); // smoothstep ease
       }
 
       raf = alive ? requestAnimationFrame(tick) : null;
       if (!alive) {
         // Field fully decayed — make sure everything healed back to A.
         for (let i = 0; i < cells.length; i++) {
-          if (on[i]) {
-            on[i] = 0;
-            cells[i].classList.remove("on");
-          }
           energy[i] = 0;
+          renderCell(i, 0);
         }
       }
     };
@@ -154,6 +192,7 @@ export default function RippleSwap({ reducedMotion }) {
 
     return () => {
       wrap.removeEventListener("pointermove", onPointerMove);
+      wrap.removeEventListener("pointerleave", onPointerLeave);
       ro.disconnect();
       bProbe.remove();
       if (raf != null) cancelAnimationFrame(raf);
@@ -202,11 +241,12 @@ export default function RippleSwap({ reducedMotion }) {
           display: inline-block;
           perspective: 400px;
         }
+        /* No transitions on the JS path — every frame writes the exact flip
+           angle from the energy field, so a CSS transition would only smear
+           and lag the wave. The static values below are the p = 0 state and
+           the no-JS fallback. */
         .cell > span {
           backface-visibility: hidden;
-          transition:
-            transform 0.32s cubic-bezier(0.3, 0.9, 0.3, 1),
-            opacity 0.26s ease;
         }
         .glyph-a {
           display: inline-block;
@@ -221,14 +261,6 @@ export default function RippleSwap({ reducedMotion }) {
           color: rgb(59 130 246);
           transform: translateX(var(--btx, -50%)) rotateX(88deg);
           opacity: 0;
-        }
-        .cell.on .glyph-a {
-          transform: rotateX(-88deg);
-          opacity: 0;
-        }
-        .cell.on .glyph-b {
-          transform: translateX(var(--btx, -50%)) rotateX(0deg);
-          opacity: 1;
         }
         /* Reduced motion: plain crossfade of the whole line on hover. */
         .reduced .glyph-a {

@@ -7,7 +7,21 @@ import useOgl from "../useOgl";
 // pointer-trail texture — masks between the front image and a hidden text
 // layer. Dissipation < 1 makes the trail heal itself closed; the trail's RG
 // velocity channels warp the front image at the reveal edge for the streak.
+//
+// Stationary hover is a SEPARATE system from the trail: a radial aperture
+// composited in the fragment shader (f = max(trail, aperture)), driven by a
+// smoothed "stillness" value — not by feeding the flowmap fake velocity. The
+// flowmap can only make velocity-shaped marks; pushing it to hold a full
+// reveal at rest meant swirl, pulse, and partial coverage.
 const FRONT_SRC = "/lab/photo-2.webp";
+
+const APERTURE_R = 0.34; // aperture outer radius — fraction of stage height
+const APERTURE_CORE = 0.58; // inner fraction of R held at full reveal
+const STILL_SPEED = 220; // px/s — pointer speed at which stillness hits 0
+const RISE_TAU = 260; // ms — aperture open time constant (frame-rate independent)
+const FALL_TAU = 220; // ms — aperture close time constant
+const DISS_BASE = 0.982; // trail heal rate while moving (half-life ~0.6s)
+const DISS_STILL = 0.996; // trail heal rate at rest (half-life ~2.9s)
 
 const vertex = /* glsl */ `
   attribute vec2 uv;
@@ -26,6 +40,9 @@ const fragment = /* glsl */ `
   uniform sampler2D tFlow;
   uniform vec2 uPlaneRes;
   uniform vec2 uFrontRes;
+  uniform vec2 uPointer;
+  uniform float uHover;
+  uniform float uAspect;
   varying vec2 vUv;
 
   vec2 cover(vec2 uv, vec2 plane, vec2 img) {
@@ -38,6 +55,11 @@ const fragment = /* glsl */ `
   void main() {
     vec3 flow = texture2D(tFlow, vUv).rgb;
     float f = clamp(flow.b, 0.0, 1.0);
+    // Stationary-hover aperture: a soft circle around the resting pointer,
+    // composited over the trail so a stopped cursor reads FULLY through.
+    vec2 ap = vUv - uPointer;
+    ap.x *= uAspect;
+    f = max(f, uHover * (1.0 - smoothstep(${(APERTURE_R * APERTURE_CORE).toFixed(3)}, ${APERTURE_R.toFixed(3)}, length(ap))));
     float mask = smoothstep(0.12, 0.55, f);
     vec2 uvFront = cover(vUv, uPlaneRes, uFrontRes) + flow.rg * 0.05 * (1.0 - mask);
     vec3 front = texture2D(tFront, uvFront).rgb;
@@ -146,6 +168,9 @@ export default function XrayHero({ reducedMotion }) {
           tFlow: flowmap.uniform,
           uPlaneRes: { value: new Vec2(1, 1) },
           uFrontRes: { value: new Vec2(1, 1) },
+          uPointer: { value: new Vec2(-1, -1) },
+          uHover: { value: 0 },
+          uAspect: { value: 1 },
         },
       });
       const mesh = new Mesh(gl, { geometry, program });
@@ -157,6 +182,15 @@ export default function XrayHero({ reducedMotion }) {
       let lastTime = null;
       let interacted = false;
       let hovering = false;
+
+      // Stillness tracking: per-frame pointer speed, EMA-smoothed. Continuous
+      // 0..1 (not a moving/resting switch) so the aperture and dissipation
+      // crossfade — a binary regime flip is what made slow movement choppy.
+      const framePos = new Vec2();
+      let framePosInit = false;
+      let speedEma = 0;
+      let hoverAmt = 0;
+      let prevFrameMs = null;
 
       const onPointerLeave = () => {
         hovering = false;
@@ -202,6 +236,7 @@ export default function XrayHero({ reducedMotion }) {
       return {
         resize(w, h) {
           program.uniforms.uPlaneRes.value.set(w, h);
+          program.uniforms.uAspect.value = w / h;
           flowmap.aspect = w / h;
           repaintBack();
         },
@@ -224,19 +259,42 @@ export default function XrayHero({ reducedMotion }) {
             velocity.needsUpdate = true;
           }
 
+          // Stillness → aperture strength + trail heal rate. Speed is measured
+          // per FRAME from the last event position, so intermittent pointer
+          // events at slow speeds read as slow, not as bursts of fast/still.
+          const nowMs = performance.now();
+          const dtMs = prevFrameMs == null ? 16.7 : Math.min(50, nowMs - prevFrameMs);
+          prevFrameMs = nowMs;
+          let speed = 0;
+          if (hovering && framePosInit) {
+            speed =
+              (Math.hypot(lastMouse.x - framePos.x, lastMouse.y - framePos.y) /
+                dtMs) *
+              1000;
+          }
+          framePos.set(lastMouse.x, lastMouse.y);
+          framePosInit = hovering;
+          // Time-based smoothing (1 - e^(-dt/tau)) — per-frame lerp factors
+          // would run ~2.4x faster on a 144Hz display than on 60Hz.
+          speedEma += (speed - speedEma) * (1 - Math.exp(-dtMs / 70));
+          const stillness = hovering
+            ? Math.max(0, 1 - speedEma / STILL_SPEED)
+            : 0;
+          hoverAmt +=
+            (stillness - hoverAmt) *
+            (1 - Math.exp(-dtMs / (stillness > hoverAmt ? RISE_TAU : FALL_TAU)));
+          program.uniforms.uHover.value = hoverAmt;
+          // Freeze uPointer on leave so the closing aperture fades in place —
+          // copying the parked (-1,-1) mouse would teleport it offscreen.
+          if (hovering) program.uniforms.uPointer.value.copy(mouse);
+          flowmap.mesh.program.uniforms.uDissipation.value =
+            DISS_BASE + (DISS_STILL - DISS_BASE) * hoverAmt;
+
           if (!velocity.needsUpdate) {
-            if (hovering) {
-              // Stationary hover: keep a soft aperture open under the cursor.
-              // Flowmap splat strength scales with |velocity|, so a stopped
-              // pointer stamps nothing — feed it a faint wobble instead.
-              // The wobble must be a CIRCLE (same phase, constant magnitude):
-              // mismatched frequencies make |velocity| oscillate → the
-              // aperture visibly pulses under a resting cursor.
-              velocity.set(Math.cos(t * 1.8) * 0.12, Math.sin(t * 1.8) * 0.12);
-            } else {
-              mouse.set(-1, -1);
-              velocity.set(0, 0);
-            }
+            // No event this frame: the aperture owns the resting reveal — the
+            // flowmap just stops receiving energy (no fake wobble velocity).
+            if (!hovering) mouse.set(-1, -1);
+            velocity.set(0, 0);
           }
           velocity.needsUpdate = false;
           flowmap.mouse.copy(mouse);
