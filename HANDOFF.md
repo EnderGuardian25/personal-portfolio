@@ -1,5 +1,5 @@
 # DDC Portfolio — Session Handoff
-> Generated: 2026-06-06 | Updated: 2026-07-11 | Branch: `main`
+> Generated: 2026-06-06 | Updated: 2026-07-13 | Branch: `main`
 
 ---
 
@@ -23,7 +23,8 @@
 | Fonts | Portfolio: Instrument Serif (display/italic), Manrope (sans), JetBrains Mono (mono). `/lab`: Syne (display, variable wght), IBM Plex Mono (mono) |
 | Hosting | Hetzner VPS, Ubuntu 22.04 |
 | Process manager | PM2 (`damiandc-website`), port 3000 |
-| Reverse proxy | nginx |
+| Reverse proxy | nginx — one server block serves `damiandc.com` + `www` + `lab.damiandc.com` → `:3000`; HTTP/2 on; SAN cert covers all three (see *Server Info*) |
+| Subdomain routing | `proxy.js` (Next proxy/middleware) maps `lab.damiandc.com` onto the `/lab` routes; `damiandc.com/lab` 404s |
 
 ---
 
@@ -356,6 +357,8 @@ scripts/
   optimize-photos.mjs   — sharp resize: assets/photography-originals/ → public/photography/
 
 ecosystem.config.js     — PM2 config (name: damiandc-website, port: 3000)
+proxy.js                — Next proxy/middleware: routes lab.damiandc.com → /lab, 404s /lab on
+                          the main host (see Server Info → Lab subdomain)
 ```
 
 ---
@@ -365,6 +368,21 @@ ecosystem.config.js     — PM2 config (name: damiandc-website, port: 3000)
 - **PM2 process name:** `damiandc-website`
 - **deploy.sh does:** `git pull origin main → rm -rf .next → npm install → npm run build → pm2 restart damiandc-website`
 - **sharp note:** `sharp` is in `dependencies` — `npm install` (not `--production`) must run, which `deploy.sh` already does correctly
+
+### nginx + TLS (do not re-break)
+- **One server block** proxies `damiandc.com` + `www.damiandc.com` + `lab.damiandc.com` → `127.0.0.1:3000`. `proxy.js` handles per-host routing, so nginx just forwards to a single upstream.
+- **`proxy_set_header Host $host;`** must be in `location /` — the lab subdomain routing reads the `Host` header. Without it, `lab.damiandc.com` falls through to the portfolio.
+- **One SAN cert** (`--cert-name damiandc.com`) covers all three names. **Never** run `certbot --nginx -d lab.damiandc.com` alone: certbot rewrites the shared block's `ssl_certificate` to a lab-only cert and the main domain then serves a mismatched cert ("unsafe"). Reissue combined:
+  ```bash
+  sudo certbot --nginx --cert-name damiandc.com -d damiandc.com -d www.damiandc.com -d lab.damiandc.com
+  ```
+- **HTTP/2** is on via `http2 on;` inside each `listen 443 ssl` block (nginx ≥ 1.25.1 — this box runs 1.28.x; the old `listen … http2` form is deprecated). Verify with `openssl s_client -connect <host>:443 -alpn h2` → `ALPN protocol: h2` (note: server-side `curl` may report HTTP/1.1 if that curl build lacks h2 — trust the ALPN check).
+- **Editing nginx config:** edit files in `sites-available/` **directly**, not via the `sites-enabled/` symlink — `sed -i` on a symlink replaces it with a regular file and desyncs the two dirs. Keep `.bak` backups **out** of `sites-enabled/` (it's `include`-globbed, so a stray backup loads as a duplicate server block → "conflicting server name" + fragile routing). Session backups live in `/root/nginx-backups/` on the VPS.
+- **`dos.damiandc.com`** is a separate app (its own server block, `:3100`, own cert) — unrelated to the portfolio; leave it out of any `damiandc.com` cert/config commands.
+
+### Lab subdomain (`proxy.js`)
+- `proxy.js` at the repo root maps the `lab.damiandc.com` host onto the `(lab)` route group: `/` → rewrite `/lab`; clean slug `/xray-hero` → rewrite `/lab/xray-hero`; `/lab/*` served as-is (internal `<Link href="/lab/...">`s). On the main host, `/lab` and `/lab/*` rewrite to a non-route → styled 404, so the lab lives **only** on the subdomain (no redirect; nothing was shared). Dev: `lab.localhost:3000` mirrors the subdomain.
+- `app/(lab)/layout.jsx` `metadataBase` points at `https://lab.damiandc.com`. The lab stays `noindex` and out of the sitemap — the subdomain move doesn't change its unlisted status.
 
 ---
 
@@ -520,6 +538,8 @@ npm.cmd run dev
 # https://damiandc.com — dark mode toggle, favicon, sitemap, OG image, /services page
 # https://damiandc.com/sitemap.xml
 # https://damiandc.com/robots.txt
+# https://lab.damiandc.com — lab index loads, a demo opens
+# https://damiandc.com/lab — returns the styled 404 (lab lives only on the subdomain)
 
 # 3. Post-deploy GSC tasks
 # - Submit sitemap.xml in Google Search Console
