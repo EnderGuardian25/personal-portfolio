@@ -19,7 +19,8 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata = {
-  metadataBase: new URL("https://damiandc.com"),
+  // The lab's canonical home is the subdomain (see proxy.js).
+  metadataBase: new URL("https://lab.damiandc.com"),
   title: {
     default: "Lab — Damian De Cruz",
     template: "%s · Lab",
