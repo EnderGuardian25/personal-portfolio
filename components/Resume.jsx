@@ -1,6 +1,7 @@
 "use client";
 import Reveal from "./Reveal";
 import SplitLines from "./SplitLines";
+import { EMAIL } from "@/lib/site";
 
 export default function Resume() {
   return (
@@ -24,21 +25,20 @@ export default function Resume() {
         <div className="col-span-12 md:col-span-3 md:text-right">
           <Reveal delay={0.2}>
             <a
-              href="/damiandc-resume.pdf"
-              download
+              href={`mailto:${EMAIL}?subject=${encodeURIComponent("CV request — damiandc.com")}`}
               data-hover
-              aria-label="Download CV — PDF"
+              aria-label="Request CV by email"
               className="group inline-flex items-center gap-3 px-6 py-4 border border-ink rounded-full hover:bg-ink hover:text-ivory transition-colors duration-500"
             >
               <span className="font-mono text-[11px] uppercase tracking-[0.2em]">
-                Download CV
+                Request CV
               </span>
-              <span className="inline-block transition-transform duration-500 group-hover:translate-y-0.5">
-                ↓
+              <span className="inline-block transition-transform duration-500 group-hover:translate-x-0.5">
+                →
               </span>
             </a>
             <div className="mt-3 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-faint">
-              PDF · v1 · 2026
+              PDF · by email · 2026
             </div>
           </Reveal>
         </div>

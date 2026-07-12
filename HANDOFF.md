@@ -342,11 +342,12 @@ lib/
 
 public/
   og.jpg                — 1200×630 OG image (45KB JPEG)
-  damiandc-resume.pdf   — downloadable CV
-  photography/          — optimized 1600px-wide JPEGs for Lens.jsx
+  photography/          — optimized 1600px-wide JPEGs for Lens.jsx (EXIF stripped)
 
 assets/
-  photography-originals/ — raw phone JPEGs (gitignored)
+  photography-originals/ — raw phone JPEGs (gitignored — contain GPS EXIF, never commit)
+  private/               — full CV PDF with personal details (gitignored — Résumé section uses a
+                           mailto "Request CV" link instead; never commit or serve this file)
 
 posts/                    — local social media exports (gitignored — lives on this machine only)
   DDC-Services-Poster.png — 2160×2160 light-theme services poster, rendered from /poster route (now deleted)

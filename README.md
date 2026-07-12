@@ -25,7 +25,7 @@ Open http://localhost:3000 (falls back to 3001 if in use).
 
 Most site-wide content lives in **`lib/site.js`** (single source of truth) — year, email, WhatsApp, nav links, and socials. Edit there, not in individual components.
 
-- **Résumé PDF:** replace `public/damiandc-resume.pdf` (the Download CV button links there).
+- **Résumé:** the CV is **not** committed or served — it contains personal details (address, DOB, referee contacts) and lives in `assets/private/` (gitignored). The Résumé section's "Request CV" button opens a mailto instead. If you ever publish a PDF again, use a sanitized version (no home address, DOB, or referee contact details).
 - **Projects:** edit the `projects` array in `components/Projects.jsx` (set `status: "soon"` for an upcoming, dimmed card with the glitch backdrop).
 - **Timeline:** edit `entries` in `components/Timeline.jsx`.
 - **Skills:** edit `groups` in `components/Skills.jsx`.
