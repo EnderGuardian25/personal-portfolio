@@ -88,7 +88,7 @@ export default function AccordionGallery({ reducedMotion }) {
       <style jsx>{`
         .ag-slat {
           transition:
-            grow 0.75s cubic-bezier(0.34, 1.25, 0.35, 1),
+            flex-grow 0.75s cubic-bezier(0.34, 1.25, 0.35, 1),
             border-color 0.4s ease;
           animation: ag-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
           animation-delay: calc(var(--i) * 65ms);
