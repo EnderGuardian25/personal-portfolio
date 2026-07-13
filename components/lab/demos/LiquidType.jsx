@@ -114,11 +114,19 @@ export default function LiquidType({ reducedMotion }) {
         frozen = false; // reduced-motion frame may predate the webfont
       });
 
-      const rip = new Float32Array(RIPPLES * 4);
+      // Plain Array, NOT Float32Array: ogl recognises `uRipples[0]` as an
+      // array uniform via Array.isArray(value) — a typed array fails that
+      // test, so every frame logged "Active uniform uRipples[0] has not been
+      // supplied" (the data still uploaded; only the lookup complained).
+      const rip = new Array(RIPPLES * 4).fill(0);
       let ri = 0;
       let lastSpawn = -1e9;
       const spawn = (x, y, strength, birth) => {
-        rip.set([x, y, birth, strength], ri * 4);
+        const o = ri * 4;
+        rip[o] = x;
+        rip[o + 1] = y;
+        rip[o + 2] = birth;
+        rip[o + 3] = strength;
         ri = (ri + 1) % RIPPLES;
         lastSpawn = birth;
       };

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { DEMOS, getDemo, demoIndex } from "@/lib/lab";
+import { DEMOS, getDemo, demoIndex, labHref, LAB_INDEX_HREF } from "@/lib/lab";
 import LabStage from "@/components/lab/LabStage";
 
 // Fullscreen stage for one demo — the view for walking a client through the
@@ -29,16 +29,19 @@ export default async function DemoPage({ params }) {
       <LabStage demo={demo} standalone />
       <nav className="mt-4 flex items-center justify-between text-[11px] uppercase tracking-[0.18em] text-lab-dim">
         <Link
-          href={`/lab/${prev.slug}`}
+          href={labHref(prev.slug)}
           className="transition-colors hover:text-lab-text"
         >
           ← {prev.title}
         </Link>
-        <Link href="/lab" className="transition-colors hover:text-lab-text">
+        <Link
+          href={LAB_INDEX_HREF}
+          className="transition-colors hover:text-lab-text"
+        >
           Index
         </Link>
         <Link
-          href={`/lab/${next.slug}`}
+          href={labHref(next.slug)}
           className="transition-colors hover:text-lab-text"
         >
           {next.title} →

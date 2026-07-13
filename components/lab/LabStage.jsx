@@ -1,7 +1,7 @@
 "use client";
 import { useRef, useState } from "react";
 import Link from "next/link";
-import { CATEGORIES } from "@/lib/lab";
+import { CATEGORIES, labHref } from "@/lib/lab";
 import { DEMO_COMPONENTS } from "./registry";
 import { useActive, usePrefersReducedMotion } from "./hooks";
 import Poster from "./Poster";
@@ -75,7 +75,7 @@ export default function LabStage({ demo, standalone = false }) {
           </button>
           {!standalone && (
             <Link
-              href={`/lab/${demo.slug}`}
+              href={labHref(demo.slug)}
               className="transition-colors hover:text-lab-text"
               aria-label={`Open ${demo.title} fullscreen`}
             >

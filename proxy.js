@@ -3,8 +3,10 @@ import { NextResponse } from "next/server";
 // lab.damiandc.com serves the (lab) route group by rewriting the subdomain
 // onto the existing /lab routes — nothing is duplicated and no redirects fire:
 //   lab host   /             -> rewrite  /lab             (index; URL stays "/")
-//   lab host   /xray-hero    -> rewrite  /lab/xray-hero   (clean slug also works)
-//   lab host   /lab/<x>      -> served as-is              (internal <Link href="/lab/...">s)
+//   lab host   /xray-hero    -> rewrite  /lab/xray-hero   (canonical: internal
+//                                links are clean /<slug> hrefs, so the visible
+//                                URL never carries /lab)
+//   lab host   /lab/<x>      -> served as-is              (back-compat for old links)
 //   main host  /lab, /lab/<x> -> 404 (the lab lives only on the subdomain; no
 //                                redirect since nothing has been shared)
 // The matcher excludes /api, /_next, and anything with a file extension, so
@@ -34,7 +36,8 @@ export function proxy(request) {
     return;
   }
 
-  // Internal links point at /lab/... — serve those directly, no rewrite.
+  // Back-compat: old /lab/... links still resolve on the lab host (internal
+  // links are clean /<slug> hrefs from lib/lab.js labHref).
   if (onLabPath) return;
 
   // Map the subdomain root and clean slugs onto the /lab tree.

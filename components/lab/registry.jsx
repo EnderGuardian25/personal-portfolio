@@ -72,4 +72,31 @@ export const DEMO_COMPONENTS = {
   "mosaic-ripple": demo(() => import("./demos/MosaicRipple")),
   "bento-cascade": demo(() => import("./demos/BentoCascade")),
   "counter-columns": demo(() => import("./demos/CounterColumns")),
+  // Hero · wave 3
+  "aurora-veil-hero": demo(() => import("./demos/AuroraVeilHero")),
+  "terminal-hero": demo(() => import("./demos/TerminalHero")),
+  "floating-panels-hero": demo(() => import("./demos/FloatingPanelsHero")),
+  // Text · wave 3
+  "split-flap": demo(() => import("./demos/SplitFlap")),
+  "focus-type": demo(() => import("./demos/FocusType")),
+  "rag-doll-type": demo(() => import("./demos/RagDollType")),
+  // Carousel · wave 3
+  coverflow: demo(() => import("./demos/Coverflow")),
+  "ken-burns": demo(() => import("./demos/KenBurns")),
+  "shared-frame": demo(() => import("./demos/SharedFrame")),
+  // Cursor & hover · wave 3
+  "glow-cards": demo(() => import("./demos/GlowCards")),
+  "morph-cursor": demo(() => import("./demos/MorphCursor")),
+  "dot-field": demo(() => import("./demos/DotField")),
+  // Scroll effects · wave 3
+  "scroll-dolly": demo(() => import("./demos/ScrollDolly")),
+  "chapter-split": demo(() => import("./demos/ChapterSplit")),
+  // Transitions & loaders · wave 3
+  "lens-blur": demo(() => import("./demos/LensBlur")),
+  "skeleton-morph": demo(() => import("./demos/SkeletonMorph")),
+  "ink-bleed": demo(() => import("./demos/InkBleed")),
+  // Grids & layout · wave 3
+  "sort-grid": demo(() => import("./demos/SortGrid")),
+  "isometric-board": demo(() => import("./demos/IsometricBoard")),
+  "view-morph": demo(() => import("./demos/ViewMorph")),
 };
