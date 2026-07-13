@@ -7,8 +7,15 @@ import useOgl from "../useOgl";
 // uploaded as a texture, then viewed through "glass": a fragment shader sums a
 // height field of pointer-spawned ripples (round-robin vec4 buffer — center,
 // birth time, strength) and refracts the sample UVs along its gradient.
+//
+// Behaviour (per owner): a STILL pointer leaves still glass — there is no
+// ambient swell and no resting re-stir. Only movement disturbs the surface,
+// and each disturbance is a LOCAL damped bob (barely travels) that settles in
+// ~1s, so ripples don't keep following or spreading after the pointer stops.
+// The moving streak is smoothed by filling the gap between pointer samples
+// with evenly-spaced spawns, so a fast flick reads as one continuous wake.
 const WORD = "LIQUID";
-const RIPPLES = 10;
+const RIPPLES = 12;
 
 const vertex = /* glsl */ `
   attribute vec2 uv;
@@ -31,17 +38,21 @@ const fragment = /* glsl */ `
 
   float height(vec2 p) {
     float h = 0.0;
+    // Each stir is a LOCAL damped oscillation: it bobs in place (temporal
+    // term) and creeps outward only slightly (age * 0.08), so it reads as a
+    // real disturbance settling — not a ring spreading across the whole
+    // surface. Fast decay (exp(-age * 2.6)) means everything calms within ~1s
+    // of the last movement. Dense interpolated spawns overlap into a smooth
+    // wake. No ambient term — a still pointer leaves the glass still.
     for (int i = 0; i < ${RIPPLES}; i++) {
       vec4 r = uRipples[i];
       float age = uTime - r.z;
       if (r.w <= 0.001 || age < 0.0) continue;
-      // A wave packet travelling outward from the stir point, decaying.
-      float band = distance(p, r.xy) - age * 0.3;
-      h += cos(band * 34.0) * exp(-band * band * 130.0) * exp(-age * 1.15) * r.w;
+      float ring = distance(p, r.xy) - age * 0.08;
+      float env = exp(-ring * ring * 80.0);       // tight, near-stationary
+      float wave = cos(ring * 20.0 - age * 5.0);   // bob in place, don't travel
+      h += wave * env * exp(-age * 2.6) * r.w;
     }
-    // Ambient swell so the surface never reads as a still image.
-    h += 0.9 * sin(p.x * 6.0 + uTime * 0.9) * sin(p.y * 5.0 - uTime * 0.7);
-    h += 0.45 * sin(p.x * 11.0 - uTime * 0.6) * sin(p.y * 9.0 + uTime * 1.1);
     return h;
   }
 
@@ -110,8 +121,11 @@ export default function LiquidType({ reducedMotion }) {
         tex.needsUpdate = true;
       };
       document.fonts?.ready?.then(() => {
+        // The first frame(s) may predate the webfont; redraw the texture and
+        // force one more render so the real face shows even if already settled.
         drawText();
-        frozen = false; // reduced-motion frame may predate the webfont
+        stillDrawn = false;
+        dirty = true;
       });
 
       // Plain Array, NOT Float32Array: ogl recognises `uRipples[0]` as an
@@ -120,7 +134,7 @@ export default function LiquidType({ reducedMotion }) {
       // supplied" (the data still uploaded; only the lookup complained).
       const rip = new Array(RIPPLES * 4).fill(0);
       let ri = 0;
-      let lastSpawn = -1e9;
+      let lastActivity = -1e9; // last stir time — drives the settle/freeze
       const spawn = (x, y, strength, birth) => {
         const o = ri * 4;
         rip[o] = x;
@@ -128,7 +142,7 @@ export default function LiquidType({ reducedMotion }) {
         rip[o + 2] = birth;
         rip[o + 3] = strength;
         ri = (ri + 1) % RIPPLES;
-        lastSpawn = birth;
+        if (birth > lastActivity) lastActivity = birth;
       };
 
       const program = new Program(gl, {
@@ -146,47 +160,65 @@ export default function LiquidType({ reducedMotion }) {
 
       let aspect = 1;
       let last = null;
-      let hover = null; // pointer position while it rests over the surface
-      const onLeave = () => {
-        hover = null;
-      };
+
+      // Movement leaves a streak; a resting pointer leaves nothing. Fill the
+      // gap between the last and current sample with evenly-spaced spawns
+      // (capped) so a fast flick is one continuous wake, not a row of discrete
+      // rings. Sub-threshold jitter spawns nothing → still pointer, still glass.
+      const SPACING = 0.03; // aspect-uv distance between trail spawns
       const onMove = (e) => {
         const r = host.getBoundingClientRect();
         const x = ((e.clientX - r.left) / r.width) * aspect;
         const y = 1 - (e.clientY - r.top) / r.height;
-        hover = { x, y };
-        if (last && Math.hypot(x - last.x, y - last.y) < 0.04) return;
-        const s = last ? Math.min(1.15, 0.3 + Math.hypot(x - last.x, y - last.y) * 4) : 0.7;
+        if (!last) {
+          last = { x, y }; // seed the trail; entering isn't a stir
+          return;
+        }
+        const dx = x - last.x;
+        const dy = y - last.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist < 0.012) return; // stationary jitter — leave the surface calm
+        const birth = performance.now() / 1000;
+        const steps = Math.min(6, Math.ceil(dist / SPACING));
+        for (let s = 1; s <= steps; s++) {
+          const f = s / steps;
+          spawn(last.x + dx * f, last.y + dy * f, 0.6, birth);
+        }
         last = { x, y };
-        spawn(x, y, s, performance.now() / 1000);
       };
       const onDown = (e) => {
         const r = host.getBoundingClientRect();
         spawn(
           ((e.clientX - r.left) / r.width) * aspect,
           1 - (e.clientY - r.top) / r.height,
-          1.35,
+          1.2,
           performance.now() / 1000
         );
+      };
+      const onLeave = () => {
+        last = null; // re-entry starts a fresh trail, no streak across the gap
       };
       host.addEventListener("pointermove", onMove);
       host.addEventListener("pointerdown", onDown);
       host.addEventListener("pointerleave", onLeave);
 
-      let frozen = false;
+      let stillDrawn = false; // reduced motion: single settled frame guard
+      let dirty = false; // force one draw after a resize, even if settled
       let intro = true;
+      const HOLD = 1.5; // s of quiet before the surface freezes (ripples gone)
       return {
         resize(w, h) {
           aspect = w / h;
           program.uniforms.uRes.value.set(w, h);
           drawText();
-          frozen = false; // re-render the settled frame at the new size
+          stillDrawn = false;
+          dirty = true; // redraw once at the new size even if already settled
         },
         render(t) {
           const now = t / 1000;
           if (reducedRef.current) {
-            if (frozen) return;
-            frozen = true;
+            if (stillDrawn) return;
+            stillDrawn = true;
             program.uniforms.uStill.value = 1;
             renderer.render({ scene: mesh });
             return;
@@ -194,13 +226,15 @@ export default function LiquidType({ reducedMotion }) {
           if (intro) {
             // Entrance: three staggered stirs sweep across the word on mount.
             intro = false;
-            spawn(0.32 * aspect, 0.52, 1.1, now);
-            spawn(0.58 * aspect, 0.44, 0.95, now + 0.22);
-            spawn(0.78 * aspect, 0.58, 0.8, now + 0.44);
+            spawn(0.3 * aspect, 0.52, 0.9, now);
+            spawn(0.56 * aspect, 0.45, 0.8, now + 0.2);
+            spawn(0.8 * aspect, 0.57, 0.7, now + 0.4);
           }
-          // A resting pointer keeps gently stirring — hover must read even
-          // when the mouse doesn't move.
-          if (hover && now - lastSpawn > 0.75) spawn(hover.x, hover.y, 0.45, now);
+          // Once the surface has been quiet long enough for every ripple to
+          // decay, stop drawing and hold the last (calm) frame — movement
+          // refreshes lastActivity via spawn() and the loop resumes next frame.
+          if (!dirty && now - lastActivity > HOLD) return;
+          dirty = false;
           program.uniforms.uStill.value = 0;
           program.uniforms.uTime.value = now;
           renderer.render({ scene: mesh });
