@@ -2,6 +2,7 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import Reveal from "./Reveal";
+import EagerReveal from "./EagerReveal";
 import SplitLines from "./SplitLines";
 import { EMAIL, WHATSAPP_LINK } from "@/lib/site";
 import { EASE } from "@/lib/motion";
@@ -179,35 +180,37 @@ export default function Services() {
         </div>
 
         <div className="grid grid-cols-12 gap-6 relative">
+          {/* Above the fold: EagerReveal (not Reveal) so the hero paints in
+              the SSR HTML — the lead paragraph is the page's LCP element. */}
           <div className="col-span-12 md:col-span-3">
-            <Reveal>
+            <EagerReveal>
               <div className="section-label">Damian De Cruz</div>
               <div className="mt-3 font-mono text-[11px] uppercase tracking-[0.18em] text-ink-faint">
                 Web design & development
               </div>
-            </Reveal>
+            </EagerReveal>
           </div>
           <div className="col-span-12 md:col-span-9 md:col-start-4">
-            <Reveal delay={0.05}>
+            <EagerReveal delay={0.05}>
               <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-soft mb-5">
                 Freelance · Colombo, Sri Lanka
               </div>
-            </Reveal>
+            </EagerReveal>
             <SplitLines as="h1" delay={0.1} className="font-display text-5xl md:text-8xl leading-[0.92] tracking-tight text-ink">
               Clean, fast websites — <span className="italic text-electric">built in days</span>.
             </SplitLines>
-            <Reveal delay={0.2}>
+            <EagerReveal replay={false}>
               <p className="mt-8 max-w-xl text-lg md:text-xl leading-relaxed text-ink-soft">
                 I&rsquo;m Damian — a creative technologist and freelance web designer in Colombo. I design and
                 build custom websites for businesses and creatives: quick to load, sharp on every screen, and
                 ready for Google. Most projects ship in days, not months.
               </p>
-            </Reveal>
-            <Reveal delay={0.3}>
+            </EagerReveal>
+            <EagerReveal delay={0.3}>
               <div className="mt-10">
                 <CTAButtons />
               </div>
-            </Reveal>
+            </EagerReveal>
           </div>
         </div>
       </section>

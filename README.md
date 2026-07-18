@@ -1,14 +1,14 @@
 # Damian De Cruz — Portfolio
 
-Personal portfolio + landing page, plus a freelance **`/services`** page. Built with **Next.js 14** (App Router), **Tailwind CSS**, **Framer Motion**, and **Lenis** smooth scroll. Live at **[damiandc.com](https://damiandc.com)**.
+Personal portfolio + landing page, plus a freelance **`/services`** page. Built with **Next.js 16** (App Router), **Tailwind CSS 4**, **Framer Motion 12**, and **Lenis** smooth scroll. Live at **[damiandc.com](https://damiandc.com)**.
 
 ## Design
 
 - **Aesthetic:** Editorial / Swiss-modern — light, minimalist, professional, with a full **dark mode** (navy palette) toggled from the nav and persisted to `localStorage` (no-flash inline script sets it before first paint).
 - **Palette:** Ivory (`#F6F6F1`) + deep ink blue (`#0B1F3A`) + electric blue (`#2563EB`) + sky tint. All colours are CSS-variable-backed tokens, so the whole site re-themes by flipping one class.
 - **Typography:** Instrument Serif (display, italic accents) + Manrope (body) + JetBrains Mono (labels). All via `next/font/google`.
-- **Motion:** Oversized hero with letter-stagger reveal, an interactive grab-to-drag marquee, sticky section labels, scroll reveals, a custom magnetic cursor, an animated canvas "glitch/decrypt" field behind upcoming projects, and Lenis smooth scroll. All motion respects `prefers-reduced-motion`.
-- **Accessibility:** Lighthouse Accessibility / Best Practices / SEO all **100** (verified on a production build).
+- **Motion:** Oversized hero with line-mask reveal behind an every-load "decrypt" intro stamp, an interactive grab-to-drag marquee, sticky section labels, scroll reveals, a custom dot+ring cursor, an animated canvas "glitch/decrypt" field behind upcoming projects, and Lenis smooth scroll. All motion respects `prefers-reduced-motion`, and above-the-fold content stays SSR-visible so entrances never cost LCP.
+- **Lighthouse:** Accessibility / Best Practices / SEO all **100**; Performance **100 on desktop** for both pages (verified on a production build).
 
 ## Run locally
 
@@ -64,7 +64,7 @@ One nginx server block proxies **`damiandc.com`, `www.damiandc.com`, and `lab.da
 
 ## Lab
 
-**The lab is served at [lab.damiandc.com](https://lab.damiandc.com)** — an unlisted (noindex, not in nav/sitemap) reference gallery of 50 live animation/UI demos across 7 categories — hero sections, text animations, carousels, cursor/hover, scroll effects, transitions/loaders, and grids/layout. It runs as a second root layout (`app/(lab)/`, dark-studio theme, Syne + IBM Plex Mono, GSAP + ogl) fully isolated from the portfolio's theme and bundles. To add a demo: one component in `components/lab/demos/`, one data entry in `lib/lab.js`, one import line in `components/lab/registry.jsx`.
+**The lab is served at [lab.damiandc.com](https://lab.damiandc.com)** — an unlisted (noindex, not in nav/sitemap) reference gallery of 70 live animation/UI demos across 7 categories — hero sections, text animations, carousels, cursor/hover, scroll effects, transitions/loaders, and grids/layout. It runs as a second root layout (`app/(lab)/`, dark-studio theme, Syne + IBM Plex Mono, GSAP + ogl) fully isolated from the portfolio's theme and bundles. To add a demo: one component in `components/lab/demos/`, one data entry in `lib/lab.js`, one import line in `components/lab/registry.jsx`.
 
 **Subdomain routing (`proxy.js`):** the lab lives at the `/lab` path in the app, and `proxy.js` (the Next.js proxy/middleware file) maps the `lab.damiandc.com` host onto it — `/` → `/lab`, clean slugs → `/lab/<slug>`, and `/lab/*` served as-is for internal links. On the main host, `damiandc.com/lab` returns the styled 404 so the lab lives **only** on the subdomain (no redirect — nothing was ever shared under `/lab`). In dev, use `lab.localhost:3000` to exercise the subdomain path; plain `localhost:3000/lab` still works too. The routing depends on nginx passing the real host (`proxy_set_header Host $host;`) — see Deploy.
 

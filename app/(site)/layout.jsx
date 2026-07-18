@@ -45,7 +45,9 @@ export const metadata = {
 };
 
 // Runs before first paint so the saved/system theme is applied with no flash.
-const themeScript = `(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark');}}catch(e){}})();`;
+// Also stamps `js` on <html> — CSS uses it to hide JS-dependent chrome (the
+// IntroStamp curtain) from no-JS visitors before anything ever renders.
+const themeScript = `(function(){document.documentElement.classList.add('js');try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark');}}catch(e){}})();`;
 
 // JSON-LD Person structured data — helps Google associate this site with
 // the entity "Damian De Cruz" and link verified social profiles.
@@ -110,11 +112,14 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body className="font-sans bg-ivory text-ink antialiased">
+        {/* lazyOnload keeps the 163KB gtag bundle off the main thread until
+            after `load` — page views still fire; only visitors who bounce
+            within the first ~1–2s are missed. */}
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
-        <Script id="ga-init" strategy="afterInteractive">
+        <Script id="ga-init" strategy="lazyOnload">
           {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}');`}
         </Script>
         <div className="grain" aria-hidden />

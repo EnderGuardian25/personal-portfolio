@@ -1,6 +1,7 @@
 "use client";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
+import EagerReveal from "./EagerReveal";
 import { EASE, INTRO_OFFSET, shouldPlayIntro } from "@/lib/motion";
 
 function Word({ children, delay = 0 }) {
@@ -70,15 +71,17 @@ export default function Hero() {
       </div>
 
       <motion.div style={{ y, opacity }} className="relative px-6 md:px-10">
-        {/* Role kicker — fades in before the name animates */}
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: at(0.1), duration: 0.6, ease: EASE }}
+        {/* Role kicker — fades in before the name animates. EagerReveal keeps
+            it painted in the SSR HTML (early LCP) and replays the entrance
+            after hydration, invisible behind the intro curtain. */}
+        <EagerReveal
+          delay={at(0.1)}
+          y={8}
+          duration={0.6}
           className="mb-4 md:mb-6 font-mono text-[11px] uppercase tracking-[0.22em] text-ink-soft"
         >
           Creative Technologist · Freelance Web Designer
-        </motion.div>
+        </EagerReveal>
 
         <h1 className="font-display tracking-tightest leading-[0.82] text-ink text-[17vw] md:text-[13.5vw] uppercase">
           {/* Each line rises as one unit from behind its line-level mask. */}
@@ -94,26 +97,27 @@ export default function Hero() {
         </h1>
 
         <div className="mt-10 md:mt-16 grid grid-cols-12 gap-6 items-end">
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: at(0.8), duration: 1, ease: EASE }}
+          {/* The largest above-fold text block = the LCP element on both form
+              factors — replay={false} keeps it painted from the very first
+              frame (the intro curtain covers it until the entrance anyway). */}
+          <EagerReveal
+            as="p"
+            replay={false}
             className="col-span-12 md:col-span-5 text-lg md:text-xl leading-snug text-ink-soft max-w-md"
           >
             Reading <span className="italic font-display text-ink">BSc (Hons) Computer Science</span>{" "}
             at the Informatics Institute of Technology, Colombo — University of Westminster&rsquo;s
             campus in Sri Lanka. Building things on the internet at the seam of code, design, and curiosity.
-          </motion.p>
+          </EagerReveal>
 
           <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: at(0.95), duration: 0.9 }}
             className="hidden md:block col-span-3"
           />
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: at(0.95), duration: 1, ease: EASE }}
+          <EagerReveal
+            delay={at(0.95)}
+            y={20}
             className="col-span-12 md:col-span-4 flex flex-col gap-2 md:items-end"
           >
             <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-soft">
@@ -122,7 +126,7 @@ export default function Hero() {
             <div className="font-display text-3xl md:text-4xl italic text-ink leading-tight md:text-right">
               learning, shipping, breaking things.
             </div>
-          </motion.div>
+          </EagerReveal>
         </div>
       </motion.div>
 
