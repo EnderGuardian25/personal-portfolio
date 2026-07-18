@@ -35,6 +35,10 @@ export default function EagerReveal({
 
   useEffect(() => {
     if (reduced || !replay) return;
+    // Slow connection: by the time JS arrives the content has been on screen
+    // for seconds — blinking it away to replay an entrance reads as a glitch,
+    // so the entrance only plays when hydration is prompt.
+    if (performance.now() > 2500) return;
     controls.set({ opacity: 0, y });
     controls.start({
       opacity: 1,

@@ -49,15 +49,21 @@ export default function IntroStamp() {
       setActive(false);
       return;
     }
+    // Slow connection: the static stamp has already been on screen for
+    // seconds (SSR curtain) — resolve quickly instead of holding the page
+    // hostage for another full second. Prompt loads play the full timing.
+    const late = performance.now() > 2500;
+    const resolveMs = late ? 220 : RESOLVE_MS;
+    const holdMs = late ? 80 : HOLD_MS;
     const start = performance.now();
     const id = setInterval(() => {
       const t = performance.now() - start;
-      if (t >= RESOLVE_MS + HOLD_MS) {
+      if (t >= resolveMs + holdMs) {
         clearInterval(id);
         setActive(false);
         return;
       }
-      const p = Math.min(1, t / RESOLVE_MS);
+      const p = Math.min(1, t / resolveMs);
       setDisplay(LINES.map((l) => scramble(l, p)));
     }, 50);
     return () => clearInterval(id);
