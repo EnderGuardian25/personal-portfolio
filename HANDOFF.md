@@ -210,9 +210,10 @@ Both pages were 100/100/100/100 on a11y/BP/SEO/Agentic but **performance** sat a
 - "See services & pricing →" link removed (surfaced adequately via Hero and About)
 
 ### Content
-- **Projects:** Danella De Cruz added (04, `status: "soon"`, tags: Client Work / Music / Next.js)
-- **Projects:** Blurb reads `"Five projects out in the world. Two more in motion."` (updated as client sites shipped)
-- **Timeline:** Danella De Cruz entry added (2026 · "Client project · Portfolio & Booking") — positioned after "This Portfolio"
+- **Projects:** Danella De Cruz (06) — went `status: "live"` 2026-08-03, href `https://danelladc.com`; tags: Client Work / Music / Next.js. Blurb now reads "a Colombo cover artist" (was "an upcoming vocal artist" — the live site shows venue credits and a 10K+ following, so "upcoming" undersold it)
+- **Projects:** Kahatagaha Graphite added 2026-08-03 (07, `status: "live"`, tags: HTML/CSS/JS / Concept / Design) — a speculative pitch, not paid client work, hence the `Concept` tag. Coursework Archive renumbered 07 → 08
+- **Projects:** Blurb reads `"Seven projects out in the world. One more in motion."` (updated as client sites shipped)
+- **Timeline:** no Danella De Cruz entry — an earlier note here claimed one was added (2026 · "Client project · Portfolio & Booking"), but `components/Timeline.jsx` has never contained it. Corrected 2026-08-03; the Timeline stays education/personal-milestone only, with client work living in Projects
 
 ### Contact Details (single source of truth in `lib/site.js`)
 - `EMAIL` → `hello@damiandc.com`
@@ -261,7 +262,7 @@ A site-wide "refined editorial" motion pass. All shared values live in **`lib/mo
 - **Magnetic CTAs — built then REMOVED** (user: cursor-pull "reduces the professional effect"). `Magnetic.jsx` was deleted; buttons keep their colour-fill + arrow-nudge hovers only. Don't reintroduce magnetic/cursor-follow effects on buttons.
 
 ### Upcoming-Projects Glitch Field (2026-07-01)
-- `GlitchField.jsx` — a decorative, continuously-scrambling field of monospace glyphs rendered behind each "soon" project card (Danella De Cruz, Coursework Archive), matching the reference in `docs/Glitch Text.png` (untracked, local-only)
+- `GlitchField.jsx` — a decorative, continuously-scrambling field of monospace glyphs rendered behind each "soon" project card (Coursework Archive; Danella De Cruz until it went live 2026-08-03), matching the reference in `docs/Glitch Text.png` (untracked, local-only)
 - **Canvas-rendered, not DOM text — on purpose:** carries no accessible text (screen readers ignore it) and no DOM glyphs for the contrast audit to flag at its intentionally-faint opacity. Drawn in the real **JetBrains Mono** stack read from the wrapper's computed `font-family` (Canvas can't parse `var(--font-mono)`); redraws once `document.fonts.ready` resolves
 - Radial center-fade mask keeps the overlaid title/blurb readable; `aria-hidden`; glyph colour re-read on theme flip via a `MutationObserver` on `<html>` so it never lags the theme
 - **Reduced motion:** paints a single static frame, no loop
@@ -449,13 +450,14 @@ proxy.js                — Next proxy/middleware: routes lab.damiandc.com → /
 | 03 | Ranmal Flora | Live | https://enderguardian25.github.io/ranmal-flora/ |
 | 04 | Spades Solutions | Live | Client project — https://enderguardian25.github.io/spades-solutions/index.html |
 | 05 | Aloys Travels | Live | Client project — https://aloys-travels.pages.dev/ |
-| 06 | Danella De Cruz | Soon | Client project — portfolio & booking site for vocal artist |
-| 07 | Coursework Archive | Soon | dim + `cursor-default`, no hover |
+| 06 | Danella De Cruz | Live | Client project — portfolio & booking site for a Colombo cover artist — https://danelladc.com |
+| 07 | Kahatagaha Graphite | Live | Concept pitch — two home-page concepts for a crystalline graphite producer — https://enderguardian25.github.io/kgll-website/ |
+| 08 | Coursework Archive | Soon | dim + `cursor-default`, no hover |
 
-> Order rule: live projects sit above `soon` ones — Danella De Cruz is still in progress, so it follows the live client work.
-> `soon` cards (06, 07) render on an animated `GlitchField` canvas backdrop at `opacity-75` — see *Upcoming-Projects Glitch Field* under "What's in main".
+> Order rule: live projects sit above `soon` ones — Coursework Archive is the only `soon` card left, so it sits last.
+> `soon` cards (08) render on an animated `GlitchField` canvas backdrop at `opacity-75` — see *Upcoming-Projects Glitch Field* under "What's in main".
 
-Blurb: *"Five projects out in the world. Two more in motion."*
+Blurb: *"Seven projects out in the world. One more in motion."*
 
 Ranmal Flora description: *"Website for Sri Lanka's foremost tissue culture laboratory — producing 1.2 million pathogen-free plantlets annually and scaling to 6 million."* (tissue culture lab — NOT a local florist)
 
@@ -582,9 +584,9 @@ npm.cmd run dev
 - [ ] Verify live: dark mode, `/services`, OG image (sitemap/robots verified 2026-07-18)
 - [ ] Verify GA4 data flowing in Google Analytics dashboard (~24–48 hrs after deploy; note gtag now loads `lazyOnload`)
 - [ ] Personal Dashboard — add live link when ready
-- [ ] Danella De Cruz — update project card with live link when site is deployed
-- [ ] Spades Solutions — update project card with live link when site is deployed
-- [ ] Aloys Travels — update project card with live link when site is deployed
+- [x] ~~Danella De Cruz — update project card with live link when site is deployed~~ — DONE 2026-08-03: card is `live`, href `https://danelladc.com`
+- [x] ~~Spades Solutions — update project card with live link when site is deployed~~ — DONE (card already live)
+- [x] ~~Aloys Travels — update project card with live link when site is deployed~~ — DONE (card already live)
 - [ ] Coursework Archive — reveal when ready
 - [ ] Add a testimonial / client outcome to `/services` (biggest remaining trust gap)
 - [ ] Homepage: add WhatsApp CTA above the fold on mobile (Services button is desktop-only)

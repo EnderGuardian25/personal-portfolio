@@ -61,13 +61,23 @@ const projects = [
     title: "Danella De Cruz",
     year: "2026",
     blurb:
-      "Portfolio and booking site for an upcoming vocal artist — a clean, expressive stage for her music, story, and performance schedule.",
+      "Portfolio and booking site for a Colombo cover artist — a clean, expressive stage for her music, story, and performance schedule.",
     tags: ["Next.js", "Client Work", "Music"],
-    href: "#",
-    status: "soon",
+    href: "https://danelladc.com",
+    status: "live",
   },
   {
     n: "07",
+    title: "Kahatagaha Graphite",
+    year: "2026",
+    blurb:
+      "Two home-page concepts for a Sri Lankan crystalline graphite producer — one dark and technical, one light and editorial, drawn from the same content and eleven material grades.",
+    tags: ["HTML/CSS/JS", "Concept", "Design"],
+    href: "https://enderguardian25.github.io/kgll-website/",
+    status: "live",
+  },
+  {
+    n: "08",
     title: "Coursework Archive",
     year: "2026 →",
     blurb:
@@ -216,7 +226,7 @@ export default function Projects() {
           </SplitLines>
           <Reveal delay={0.1}>
             <p className="mt-6 max-w-xl text-base md:text-lg text-ink-soft">
-              Five projects out in the world. Two more in motion. This shelf will keep growing
+              Seven projects out in the world. One more in motion. This shelf will keep growing
               year over year — bookmark it.
             </p>
           </Reveal>

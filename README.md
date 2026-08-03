@@ -74,7 +74,7 @@ See **[`HANDOFF.md`](HANDOFF.md)** for the full session handoff: architecture, d
 
 ## Roadmap
 
-- Add live links to client project cards as each site ships (Personal Dashboard, Danella De Cruz, etc.)
+- Add live links to client project cards as each site ships (Personal Dashboard, etc.)
 - Reveal the Coursework Archive project when ready
 - Add a testimonial / client outcome to `/services`
 - Add a `/blog` route
