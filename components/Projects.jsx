@@ -28,16 +28,6 @@ const projects = [
   },
   {
     n: "03",
-    title: "Ranmal Flora",
-    year: "2026",
-    blurb:
-      "Website for Sri Lanka's foremost tissue culture laboratory — producing 1.2 million pathogen-free plantlets annually and scaling to 6 million.",
-    tags: ["HTML/CSS/JS", "Client Project", "Design"],
-    href: "https://enderguardian25.github.io/ranmal-flora/",
-    status: "live",
-  },
-  {
-    n: "04",
     title: "Spades Solutions",
     year: "2026",
     blurb:
@@ -47,7 +37,7 @@ const projects = [
     status: "live",
   },
   {
-    n: "05",
+    n: "04",
     title: "Aloys Travels",
     year: "2026",
     blurb:
@@ -57,7 +47,7 @@ const projects = [
     status: "live",
   },
   {
-    n: "06",
+    n: "05",
     title: "Danella De Cruz",
     year: "2026",
     blurb:
@@ -67,7 +57,7 @@ const projects = [
     status: "live",
   },
   {
-    n: "07",
+    n: "06",
     title: "Kahatagaha Graphite",
     year: "2026",
     blurb:
@@ -77,7 +67,7 @@ const projects = [
     status: "live",
   },
   {
-    n: "08",
+    n: "07",
     title: "Coursework Archive",
     year: "2026 →",
     blurb:
@@ -226,7 +216,7 @@ export default function Projects() {
           </SplitLines>
           <Reveal delay={0.1}>
             <p className="mt-6 max-w-xl text-base md:text-lg text-ink-soft">
-              Seven projects out in the world. One more in motion. This shelf will keep growing
+              Six projects out in the world. One more in motion. This shelf will keep growing
               year over year — bookmark it.
             </p>
           </Reveal>

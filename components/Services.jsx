@@ -82,7 +82,6 @@ const steps = [
 
 const work = [
   { title: "This Portfolio", note: "Personal portfolio built with Next.js, Tailwind & Framer Motion — see the full body of work.", href: "/", tag: "Portfolio" },
-  { title: "Ranmal Flora", note: "Website for Sri Lanka's foremost tissue-culture laboratory.", href: "https://enderguardian25.github.io/ranmal-flora/", tag: "Business site" },
   { title: "Spades Solutions", note: "A sharp, professional web presence for a growing solutions company.", href: "https://enderguardian25.github.io/spades-solutions/index.html", tag: "Business site" },
   { title: "Aloys Travels", note: "Web presence for a travel company — clean booking flows and an inviting, journey-led design.", href: "https://aloys-travels.pages.dev/", tag: "Travel site" },
 ];
@@ -329,7 +328,7 @@ export default function Services() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-rule border-y border-rule">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-rule border-y border-rule">
           {work.map((w, i) => {
             const external = w.href.startsWith("http");
             return (

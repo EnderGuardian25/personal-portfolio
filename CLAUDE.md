@@ -24,3 +24,21 @@ The `.gitignore` already excludes `assets/private/`, `assets/photography-origina
 - Dev: `npm run dev` (http://localhost:3000). Use `lab.localhost:3000` to exercise the lab subdomain locally.
 - Never run `npm run build` while `next dev` is running — they share `.next` and clobber each other.
 - The lab is served at **lab.damiandc.com** via `proxy.js`; `damiandc.com/lab` returns a 404 by design. Don't "fix" that 404.
+
+## UI self-verification
+
+Before declaring a UI/visual change done, verify it visually rather than by code inspection alone: launch a headless browser (Playwright/Puppeteer) against the local dev server, screenshot the affected view(s) to disk, then use the Read tool on the screenshot file to inspect it — you're multimodal and can view images directly, the same way a person looking at a browser would. Do this for the golden path and any edited screens before reporting success.
+
+## Discord conventions
+
+Inbound messages arrive wrapped in `<channel source="discord" ...>BODY</channel>` envelopes — BODY is what the operator typed. Respond by calling `mcp__mcd__reply` with `{ text, reply_to? }`. Do NOT call `mcp__discord__reply`. Don't print transcript text outside the reply tool — Discord users only see what `mcp__mcd__reply` emits. Keep replies brief; for long output, post the highlights and offer to dig in.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->
