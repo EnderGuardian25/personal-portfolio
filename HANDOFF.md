@@ -167,7 +167,7 @@ Both pages were 100/100/100/100 on a11y/BP/SEO/Agentic but **performance** sat a
 - Uses its own `ServicesNav` (logo **DDC / Services '26**, section links Pricing · Process · Work · FAQ)
 - **Hero corner block mirrors the homepage hero**: `(002) Services / Hire` label (fades on scroll) with **Portfolio →** button, desktop only
 - Hero left-column label reads **Damian De Cruz**
-- Recent Work (`§ 03`): **See the full portfolio →** link + **4 project cards in a 2×2 grid** (`sm:grid-cols-2`, hairline `gap-px bg-rule` dividers) — This Portfolio (`/`) · Ranmal Flora · Spades Solutions · Aloys Travels. `work[]` array lives at the top of `Services.jsx`
+- Recent Work (`§ 03`): **See the full portfolio →** link + **3 project cards in a 1×3 row** (`sm:grid-cols-3`, hairline `gap-px bg-rule` dividers) — This Portfolio (`/`) · Spades Solutions · Aloys Travels. `work[]` array lives at the top of `Services.jsx`
 - Not in the homepage navbar — surfaced via hero corner button (desktop) and nav hamburger overlay (mobile)
 
 ### Navigation
@@ -447,19 +447,18 @@ proxy.js                — Next proxy/middleware: routes lab.damiandc.com → /
 |---|---|---|---|
 | 01 | This Portfolio | Live | href: #top — "You're here ↑" |
 | 02 | Personal Dashboard | Live | https://enderguardian25.github.io/personal-dashboard/ |
-| 03 | Ranmal Flora | Live | https://enderguardian25.github.io/ranmal-flora/ |
-| 04 | Spades Solutions | Live | Client project — https://enderguardian25.github.io/spades-solutions/index.html |
-| 05 | Aloys Travels | Live | Client project — https://aloys-travels.pages.dev/ |
-| 06 | Danella De Cruz | Live | Client project — portfolio & booking site for a Colombo cover artist — https://danelladc.com |
-| 07 | Kahatagaha Graphite | Live | Concept pitch — two home-page concepts for a crystalline graphite producer — https://enderguardian25.github.io/kgll-website/ |
-| 08 | Coursework Archive | Soon | dim + `cursor-default`, no hover |
+| 03 | Spades Solutions | Live | Client project — https://enderguardian25.github.io/spades-solutions/index.html |
+| 04 | Aloys Travels | Live | Client project — https://aloys-travels.pages.dev/ |
+| 05 | Danella De Cruz | Live | Client project — portfolio & booking site for a Colombo cover artist — https://danelladc.com |
+| 06 | Kahatagaha Graphite | Live | Concept pitch — two home-page concepts for a crystalline graphite producer — https://enderguardian25.github.io/kgll-website/ |
+| 07 | Coursework Archive | Soon | dim + `cursor-default`, no hover |
 
 > Order rule: live projects sit above `soon` ones — Coursework Archive is the only `soon` card left, so it sits last.
-> `soon` cards (08) render on an animated `GlitchField` canvas backdrop at `opacity-75` — see *Upcoming-Projects Glitch Field* under "What's in main".
+> `soon` cards (07) render on an animated `GlitchField` canvas backdrop at `opacity-75` — see *Upcoming-Projects Glitch Field* under "What's in main".
 
-Blurb: *"Seven projects out in the world. One more in motion."*
+Blurb: *"Six projects out in the world. One more in motion."*
 
-Ranmal Flora description: *"Website for Sri Lanka's foremost tissue culture laboratory — producing 1.2 million pathogen-free plantlets annually and scaling to 6 million."* (tissue culture lab — NOT a local florist)
+Note (2026-08-26): Ranmal Flora (formerly `03`) removed from Projects and Services `work[]` — client site was taken down.
 
 ### Timeline (newest → oldest)
 - 2026 — This Portfolio *(accent color)*
@@ -592,3 +591,51 @@ npm.cmd run dev
 - [ ] Homepage: add WhatsApp CTA above the fold on mobile (Services button is desktop-only)
 - [x] ~~Lighthouse audit after deploy~~ — DONE 2026-07-18 (see *Performance Pass*); optional follow-up: confirm on Google PSI
 - [ ] D: drive (KINGSTON NVMe) — check Event Viewer → System for disk/nvme/Ntfs errors; consider reseating M.2 drive (intermittent PCIe bus dropouts caused file corruption in a prior session)
+
+---
+
+## Headless Chrome in this sandbox
+
+This dev sandbox has no browser system libs and no `sudo`. Playwright's bundled Chromium fails to launch here — `ldd` on the Chromium binary shows missing `.so`s (`libnss3`, `libatk`, `libcups`, `libx11`, `libcairo`, `libpango`, etc). This is required for the **UI self-verification** step above (screenshotting the local dev server). Fix below needs no root anywhere; do it once per sandbox, then reuse.
+
+**1. Download the missing `.deb`s** (`apt-get download` doesn't need root):
+```bash
+SCRATCH=/tmp/claude-1000/<session-scratchpad-path>   # this session's scratchpad dir
+mkdir -p "$SCRATCH/libs" && cd "$SCRATCH/libs"
+apt-get download libnss3 libnssutil3 libsmime3 libatk1.0-0t64 libatk-bridge2.0-0t64 \
+  libcups2t64 libxcb1 libasound2t64 libgbm1 libx11-6 libxext6 libcairo2 \
+  libpango-1.0-0 libpangocairo-1.0-0 libxcomposite1 libxdamage1 libxfixes3 \
+  libxrandr2 libatspi2.0-0
+```
+
+**2. Extract into a local rootfs** (`dpkg -x` also doesn't need root):
+```bash
+mkdir -p "$SCRATCH/rootfs"
+for f in "$SCRATCH"/libs/*.deb; do dpkg -x "$f" "$SCRATCH/rootfs"; done
+```
+
+**3. Fonts.** Use the full Chromium binary — **not** `chrome-headless-shell` (that had font/rendering issues). Point `LD_LIBRARY_PATH` at the extracted libs, and point fontconfig at the rootfs's font config plus a writable fake `$HOME` (fontconfig needs to build a cache), with DejaVu TTFs copied in:
+```bash
+mkdir -p "$SCRATCH/fchome/.local/share/fonts" "$SCRATCH/fchome/.cache/fontconfig"
+cp "$SCRATCH/rootfs"/usr/share/fonts/truetype/dejavu/*.ttf "$SCRATCH/fchome/.local/share/fonts/"
+```
+
+**4. Playwright launch** — point `executablePath` at the installed Chromium (check the revision under `~/.cache/ms-playwright/`, e.g. `chromium-1234`):
+```js
+const browser = await chromium.launch({
+  executablePath: '/home/damian/.cache/ms-playwright/chromium-1234/chrome-linux64/chrome',
+  args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu'],
+});
+```
+
+**5. Run with the env pointed at the rootfs:**
+```bash
+LIBPATH="$SCRATCH/rootfs/usr/lib/x86_64-linux-gnu:$SCRATCH/rootfs/usr/lib/x86_64-linux-gnu/gbm"
+LD_LIBRARY_PATH="$LIBPATH" \
+FONTCONFIG_FILE="$SCRATCH/rootfs/etc/fonts/fonts.conf" \
+FONTCONFIG_PATH="$SCRATCH/rootfs/etc/fonts" \
+HOME="$SCRATCH/fchome" XDG_CACHE_HOME="$SCRATCH/fchome/.cache" XDG_DATA_HOME="$SCRATCH/fchome/.local/share" \
+node shot.js
+```
+
+Once `$SCRATCH/rootfs` and `$SCRATCH/fchome` are built, reuse them for later screenshots in the same sandbox — no need to redo steps 1–2.
